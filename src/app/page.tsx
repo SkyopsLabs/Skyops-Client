@@ -13,7 +13,7 @@ export default function Home() {
         src={"/images/background_sky.png"}
         alt="Logo"
         fill
-        className="absolute"
+        className="absolute object-cover"
       />
       {/* </div> */}
       {/* <div className="absolute bottom-[18vh] h-[95vw] w-[100vw] sm:bottom-1/2  sm:translate-y-1/2 sm:opacity-50  lg:h-[48vw] lg:w-[55vw]">
