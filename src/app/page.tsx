@@ -10,7 +10,7 @@ export default function Home() {
     <div className="bord relative flex h-screen w-full items-center justify-center bg-[#B2BA6] ">
       {/* <div className="absolute top-[18vh] h-[95vw] w-[100vw] sm:top-1/2 sm:-translate-y-1/2 lg:h-[48vw] lg:w-[55vw]"> */}
       <Image
-        src={"/images/background_sky.png"}
+        src={"/images/bg_new.jpg"}
         alt="Logo"
         fill
         className="absolute object-cover"
