@@ -3,7 +3,7 @@ name: Deploy frontend to VPS
 on:
   push:
     branches:
-      - deploy  # Change this if your default branch is different
+      - main  # Change this if your default branch is different
 
 jobs:
   deploy:
@@ -22,10 +22,10 @@ jobs:
           script: |
             set -e  # Exit on first error
 
-            cd fe || { echo "Error: 'fe' directory not found"; exit 1; }
+            cd client || { echo "Error: 'fe' directory not found"; exit 1; }
 
             # Pull latest changes
-            git pull origin deploy || { echo "Error: Git pull failed"; exit 1; }
+            git pull origin main || { echo "Error: Git pull failed"; exit 1; }
 
             # Ensure Node.js and npm are available
             export NVM_DIR=~/.nvm
@@ -48,6 +48,6 @@ jobs:
             npm run build || { echo "Error: npm build failed"; exit 1; }
 
             # Restart frontend with PM2
-            pm2 restart fe || { echo "Error: PM2 restart failed"; exit 1; }
+            pm2 restart client || { echo "Error: PM2 restart failed"; exit 1; }
 
             echo "✅ Deployment successful!"

@@ -31,7 +31,7 @@ const Login: NextPage = () => {
   };
 
   return (
-    <div className="w-[250px] ">
+    <div className="z-10 w-[250px] ">
       <QueryClientProvider client={queryClient}>
         {/* <appkit-button /> */}
         <div className="flex h-full w-full flex-col items-center justify-center">
@@ -48,7 +48,7 @@ const Login: NextPage = () => {
           </p>
           <p className="mb-8 mt-4 flex flex-col p-0 text-center text-lg font-medium leading-tight text-[#a3a3a3]">
             <span>Connect your wallet</span>
-            <span>to continue to SkyOps app</span>
+            <span>to continue to Skyops app</span>
           </p>
           <button
             className="flex w-full items-center justify-center rounded-lg border border-[#F7FF98] bg-[#0100fb] py-2 transition-all duration-300 ease-in-out hover:bg-[#004cff] hover:text-white"

@@ -12,14 +12,14 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 
 export const metadata: Metadata = {
-  title: "SkyOps",
-  description: "Rebranding Enterprise solutions",
+  title: "Skyops App | Scalable. Efficient. Unstoppable.",
+  description:
+    "Skyops is a decentralized AI computing platform that leverages unused GPU power worldwide to significantly reduce AI development costs while providing GPU owners with a way to earn from their idle hardware.",
 
   openGraph: {
-    title:
-      "SkyOps - Building a Global DeOS to Redefine AI Workload Orchestration.",
+    title: "Skyops App | Scalable. Efficient. Unstoppable.",
     description:
-      "At SkyOps, we're transforming this landscape by creating the first decentralized GPU computing network. By connecting unused GPU power worldwide, we reduce AI computing costs by 70% while enabling GPU owners to earn from their idle resources.",
+      "Skyops is a decentralized AI computing platform that leverages unused GPU power worldwide to significantly reduce AI development costs while providing GPU owners with a way to earn from their idle hardware.",
     images: "https://app.skyopslabs.ai/opengraph-image.png",
   },
 };
