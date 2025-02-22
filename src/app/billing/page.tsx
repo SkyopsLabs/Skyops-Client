@@ -97,22 +97,15 @@ const BillingPage = () => {
   return (
     <div
       className="
-        mt-5
-        overflow-auto
-        rounded-[10px]
-        bg-white
-        shadow-1
-        dark:bg-gray-dark
-        dark:shadow-card
-        sm:h-[80vh]
+       p-2
       "
     >
-      <div className="flex flex-col">
-        <p className="m-5 text-body-2xlg font-bold text-dark dark:text-lime-50">
+      <div className="w-full rounded-[10px] border border-stroke bg-white px-7 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
+        <p className="my-4 text-body-2xlg font-bold text-dark dark:text-lime-50">
           Billing
         </p>
-        <div className="flex">
-          <div className="mx-5 mb-3 w-64 rounded-lg border border-gray-300 p-3">
+        <div className="my-4 flex">
+          <div className="mb-3 w-64 rounded-lg border border-gray-300 p-3">
             <h2 className="text-md font-bold">Balance</h2>
             <p className="pt-2 text-lg font-bold text-gray-600">
               {user ? user.balance : "0.00"}
@@ -126,8 +119,8 @@ const BillingPage = () => {
           </div>
         </div>
         <div className="flex flex-col text-base">
-          <p className="m-5">Add Credits</p>
-          <div className="mx-5 flex flex-col sm:flex-row">
+          <p className="mb-4">Add Credits</p>
+          <div className="flex flex-col sm:flex-row">
             <RadioButton setAmount={setAmount} />
             <div className="my-2 sm:my-0">
               <input
@@ -148,9 +141,9 @@ const BillingPage = () => {
         </div>
 
         {/* Top up transactions */}
-        <p className="mx-5 mt-10 font-bold">Top Up Transactions</p>
-        <div className="p-4">
-          <div className="grid grid-cols-8 border-t border-gray-300 px-4 py-4.5 dark:border-dark-3 md:px-6 2xl:px-7.5">
+        <p className="mb-3 mt-10 font-bold">Top Up Transactions</p>
+        <div className="">
+          <div className="grid grid-cols-8 border-t border-gray-300  py-4.5 dark:border-dark-3">
             <div className="col-span-3 mb-10 flex items-center sm:col-span-3">
               <p className="md:text-md text-sm">Date</p>
             </div>

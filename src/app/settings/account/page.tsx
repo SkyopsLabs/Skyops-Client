@@ -26,20 +26,8 @@ const SettingsAccountPage = () => {
   };
 
   return (
-    <div
-      className="
-        mt-5
-        h-[80vh]
-        max-w-7xl
-        rounded-[10px]
-        bg-white
-        px-5
-        shadow-1
-        dark:bg-gray-dark
-        dark:shadow-card
-      "
-    >
-      <div className="flex flex-col">
+    <div className="p-2">
+      <div className="flex w-full flex-1 flex-col rounded-[10px] border border-stroke bg-white p-2 px-7 py-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
         <h3 className="my-5 text-body-2xlg font-bold text-dark dark:text-white">
           Account setting
         </h3>

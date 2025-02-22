@@ -129,11 +129,12 @@ const AIExplorerTextPage = () => {
   }
 
   return (
-    <div className="flex w-full flex-col sm:flex-row">
+    <div className="flex  w-full flex-1 flex-col gap-2 p-2  sm:flex-row">
       {/* Left section */}
       <div
         className="
-            mt-5
+            
+            h-full
             w-full
             rounded-[10px]
             bg-white
@@ -174,7 +175,7 @@ const AIExplorerTextPage = () => {
             </div>
           </div>
         </div>
-        <div className="  flex h-[65vh] w-full flex-col gap-2 overflow-y-scroll border p-5">
+        <div className="  flex h-[70%] w-full flex-col gap-2 overflow-y-scroll border p-5">
           <div className="flex items-center gap-2 p-1">
             <Image
               className=""
@@ -222,13 +223,13 @@ const AIExplorerTextPage = () => {
       {/* Right sidebar */}
       <div
         className="
-            mt-5
-            h-[82vh]
+            
+            h-full
             w-full
             rounded-[10px]
             bg-white
             p-4
-            shadow-1 dark:bg-gray-dark dark:shadow-card sm:ml-2
+            shadow-1 dark:bg-gray-dark dark:shadow-card
             sm:w-1/4
           "
         style={{ overflowY: "auto", overflowX: "hidden" }}

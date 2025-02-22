@@ -22,8 +22,8 @@ const TableCluster = () => {
   };
 
   return (
-    <div className="dark:bg-gray-dark">
-      <div className="flex justify-between items-center px-4 py-6 md:px-6 xl:px-9">
+    <div className="w-full rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
+      <div className="flex items-center justify-between px-4 py-6 md:px-7">
         <h4 className="text-body-2xlg font-bold text-dark dark:text-white">
           Cluster
         </h4>
@@ -36,25 +36,25 @@ const TableCluster = () => {
           Request
         </button>
       </div>
-      <div className="grid grid-cols-7 border-t border-stroke px-4 py-4.5 dark:border-dark-3 sm:grid-cols-8 md:px-6 2xl:px-7.5">
+      <div className="grid grid-cols-7 border-t border-stroke px-4 py-4.5 dark:border-dark-3 sm:grid-cols-8 md:px-7">
         <div className="col-span-2 flex items-center">
           <Checkbox />
-          <p className="text-sm md:text-md">Name</p>
+          <p className="md:text-md text-sm">Name</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="text-sm md:text-md">Region</p>
+          <p className="md:text-md text-sm">Region</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="text-sm md:text-md">Nodes</p>
+          <p className="md:text-md text-sm">Nodes</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="text-sm md:text-md">CPUs</p>
+          <p className="md:text-md text-sm">CPUs</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="text-sm md:text-md">Status</p>
+          <p className="md:text-md text-sm">Status</p>
         </div>
         <div className="col-span-1 flex items-center">
-          <p className="text-sm md:text-md">Cloud IDE</p>
+          <p className="md:text-md text-sm">Cloud IDE</p>
         </div>
       </div>
 

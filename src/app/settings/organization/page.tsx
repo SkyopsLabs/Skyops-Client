@@ -2,7 +2,7 @@ import SettingBoxes from "@/components/SettingBoxes";
 
 const SettingsOrganization = () => {
   return (
-    <div className="mx-auto w-full max-w-7xl mt-5">
+    <div className="flex  w-full flex-1  p-2">
       <SettingBoxes />
     </div>
   );

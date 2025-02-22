@@ -49,7 +49,7 @@ const Header = ({
       // suppressHydrationWarning={true}
       className={`${pathname == "/" ? "hidden" : "flex"} sticky top-0 z-999 flex w-full border-b border-stroke bg-white dark:border-stroke-dark dark:bg-gray-dark`}
     >
-      <div className="flex flex-grow items-center justify-between px-4 py-3 shadow-2 md:px-5 2xl:px-10">
+      <div className="flex flex-grow items-center justify-between px-4 py-3 shadow-2 md:px-5 2xl:px-8">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           {/* Hamburger Toggle BTN */}
           <button
@@ -74,35 +74,31 @@ const Header = ({
         </div>
 
         <div className="hidden xl:block">
-          <div>
-            <div className="flex items-center ">
-              <button
-                className="active:scale-95"
-                onClick={() => {
-                  setSidebarOpen(!sidebarOpen);
-                }}
-              >
-                <Image
-                  className="mx-1 my-2 dark:hidden"
-                  src={"/images/header_logo.png"}
-                  alt="Logo"
-                  width={20}
-                  height={15}
-                />
-                <Image
-                  className="mx-1 my-2 hidden dark:flex"
-                  src={
-                    "https://i.ibb.co/BHKWH3Vj/header-logo-dark-version.webp"
-                  }
-                  alt="Logo"
-                  width={20}
-                  height={15}
-                />
-              </button>
-              <h5 className="text-heading-7 m-2  flex  font-bold capitalize text-dark dark:text-white">
-                {pathname.slice(1)}
-              </h5>
-            </div>
+          <div className="flex items-center ">
+            <button
+              className="active:scale-95"
+              onClick={() => {
+                setSidebarOpen(!sidebarOpen);
+              }}
+            >
+              <Image
+                className="mx-1 my-2 dark:hidden"
+                src={"/images/header_logo.png"}
+                alt="Logo"
+                width={20}
+                height={15}
+              />
+              <Image
+                className="mx-1 my-2 hidden dark:flex"
+                src={"https://i.ibb.co/BHKWH3Vj/header-logo-dark-version.webp"}
+                alt="Logo"
+                width={20}
+                height={15}
+              />
+            </button>
+            <h5 className="text-heading-7 m-2  flex  font-bold capitalize text-dark dark:text-white">
+              {pathname.slice(1)}
+            </h5>
           </div>
         </div>
 
