@@ -13,7 +13,7 @@ export async function POST(req: Request) {
         const chatId = data.message.chat.id;
         const groupId = process.env.TG_GROUP_ID // Replace with your actual group ID
 
-        if (chatId !== groupId) return NextResponse.json({ message: "Not from our group" });
+        if (chatId != groupId) return NextResponse.json({ message: "Not from our group" },{status:403});
 
         // Save user message activity
         const client = await clientPromise;
