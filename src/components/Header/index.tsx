@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
+import SkyopsBalance from "../SkyopsBalance";
 
 const Header = ({
   sidebarOpen,
@@ -47,72 +48,80 @@ const Header = ({
   return (
     <header
       // suppressHydrationWarning={true}
-      className={`${pathname == "/" ? "hidden" : "flex"} sticky top-0 z-999 flex w-full border-b border-stroke bg-white dark:border-stroke-dark dark:bg-gray-dark`}
+      className={`${pathname == "/" ? "hidden" : "flex"} relative top-0 z-9999  flex h-[64px] w-full items-center justify-end border-b border-[#EBEBEC] bg-appGray  px-5  dark:border-stroke-dark dark:bg-gray-dark lg:sticky lg:min-h-[80px] lg:px-10`}
     >
-      <div className="flex flex-grow items-center justify-between px-4 py-3 shadow-2 md:px-5 2xl:px-8">
-        <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-          {/* Hamburger Toggle BTN */}
-          <button
-            aria-controls="sidebar"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSidebarOpen(!sidebarOpen);
-            }}
-            className="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-dark-3 dark:bg-dark-2 lg:hidden"
-          >
-            {/* Your Hamburger Icon Logic */}
-          </button>
-
-          <Link className="block flex-shrink-0 lg:hidden" href="/">
-            <Image
-              width={32}
-              height={32}
-              src={"/images/logo/logo-icon.svg"}
-              alt="Logo"
-            />
-          </Link>
-        </div>
-
-        <div className="hidden xl:block">
-          <div className="flex items-center ">
-            <button
-              className="active:scale-95"
-              onClick={() => {
-                setSidebarOpen(!sidebarOpen);
-              }}
-            >
-              <Image
-                className="mx-1 my-2 dark:hidden"
-                src={"/images/header_logo.png"}
-                alt="Logo"
-                width={20}
-                height={15}
-              />
-              <Image
-                className="mx-1 my-2 hidden dark:flex"
-                src={"https://i.ibb.co/BHKWH3Vj/header-logo-dark-version.webp"}
-                alt="Logo"
-                width={20}
-                height={15}
-              />
-            </button>
-            <h5 className="text-heading-7 m-2  flex  font-bold capitalize text-dark dark:text-white">
-              {pathname.slice(1)}
-            </h5>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-normal gap-2 2xsm:gap-4 lg:w-full lg:justify-between xl:w-auto xl:justify-normal">
-          {/* Dark Mode Toggle */}
-          <DarkModeSwitcher />
-
-          {/* User Area */}
-          <DropdownUser
-            address={address?.toString() || ""}
-            onDisconnect={handleDisconnect}
+      {/* <!-- SIDEBAR HEADER --> */}
+      <div className="mr-auto flex w-full items-center  lg:hidden">
+        <Link className="flex w-full items-center gap-2" href="/">
+          <Image
+            width={96}
+            height={32}
+            src={"/images/logos/logo-blue-text.png"}
+            alt="Logo"
+            priority
+            className="dark:hidden"
           />
-        </div>
+          <Image
+            width={96}
+            height={32}
+            src={"/images/logos/logo-white-text.png"}
+            alt="Logo"
+            priority
+            className="hidden dark:block"
+          />
+        </Link>
       </div>
+      <div className="mr-auto hidden gap-1 lg:flex lg:items-center">
+        <p className="text-[#01020C47] dark:text-dark-6 ">
+          {sidebarOpen ? "Hide" : "Show"}
+        </p>
+        <button
+          className="flex h-6  w-6"
+          onClick={() => {
+            setSidebarOpen(!sidebarOpen);
+          }}
+        >
+          <p className="m-auto flex h-[18px] w-[18px] items-center  justify-center rounded-[3px] border-[1.2px] border-border text-[8px] text-[#01020C47] active:scale-95 dark:border-dark-6  dark:text-dark-6">
+            {sidebarOpen ? "H" : "S"}
+          </p>
+        </button>
+        {/* <h5 className="text-heading-7 m-2  flex  font-bold capitalize text-dark dark:text-white">
+            {pathname.slice(1)}
+          </h5> */}
+      </div>
+
+      {/* Skyops Balance */}
+      <div className="absolute left-0 top-full mt-[1px] flex h-[64px] w-full items-center justify-center border-b border-l border-border bg-white   px-5  py-4 dark:border-dark-3 dark:bg-dark-3 lg:relative lg:top-0 lg:mt-0 lg:h-full lg:w-[163px] lg:border-b-0 lg:bg-transparent lg:px-6">
+        <SkyopsBalance />
+      </div>
+      <div className="flex h-full items-center justify-normal gap-2 border-l  border-border dark:border-dark-3 2xsm:gap-4 lg:w-[350px] lg:justify-between xl:justify-normal">
+        {/* Dark Mode Toggle */}
+        <div className="ml-4  hidden w-[120px] lg:flex">
+          <DarkModeSwitcher />
+        </div>
+
+        {/* User Area */}
+        <DropdownUser
+          address={address?.toString() || ""}
+          onDisconnect={handleDisconnect}
+        />
+      </div>
+      {/* Hamburger Toggle BTN */}
+      <button
+        aria-controls="sidebar"
+        onClick={(e) => {
+          e.stopPropagation();
+          setSidebarOpen(!sidebarOpen);
+        }}
+        className="z-99999 flex h-16 min-w-12 items-center justify-end border-l border-border   dark:border-dark-6 lg:hidden"
+      >
+        <Image
+          src={sidebarOpen ? "/images/icon/close.svg" : "/images/icon/menu.svg"}
+          width={24}
+          height={24}
+          alt="menu"
+        />
+      </button>
     </header>
   );
 };

@@ -13,7 +13,7 @@ const useColorMode = () => {
       : bodyClass.remove(className);
   }, [colorMode]);
 
-  return [colorMode, setColorMode];
+  return { colorMode, setColorMode };
 };
 
 export default useColorMode;

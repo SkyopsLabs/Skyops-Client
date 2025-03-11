@@ -6,6 +6,7 @@ interface ButtonPropTypes {
   link: string;
   customClasses: string;
   children?: React.ReactNode;
+  onClick: (e: string) => void;
 }
 
 const ButtonSmall = ({
@@ -13,18 +14,17 @@ const ButtonSmall = ({
   link,
   customClasses,
   children,
+  onClick,
 }: ButtonPropTypes) => {
   return (
-    <>
-      <Link
-        className={`inline-flex items-center justify-center gap-2.5 text-center font-small hover:bg-opacity-90 text-[14px] ${customClasses}`}
-        style={{ padding: '4px', paddingLeft: '20px', paddingRight: '20px' }}
-        href={link}
-      >
-        {children}
-        {label}
-      </Link>
-    </>
+    <button
+      onClick={() => onClick(label)}
+      className={`font-small inline-flex items-center justify-center gap-2.5 text-center text-[14px] hover:bg-opacity-90 ${customClasses}`}
+      style={{ padding: "4px", paddingLeft: "20px", paddingRight: "20px" }}
+    >
+      {children}
+      {label}
+    </button>
   );
 };
 

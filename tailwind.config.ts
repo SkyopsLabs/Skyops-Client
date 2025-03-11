@@ -21,7 +21,13 @@ const config: Config = {
     extend: {
       colors: {
         prim: "#0100fb",
+        prim2: "#290DF6",
+        prim3: "#201F96",
+        border: "#EBEBEC",
+        border2: "#f8f8f8",
+        appBlack: "#01020C",
         current: "currentColor",
+        appGray: "#F8F8F8",
         transparent: "transparent",
         white: "#FFFFFF",
         primary: "#5750F1",

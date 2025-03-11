@@ -10,6 +10,9 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Toaster } from "react-hot-toast";
 import { Metadata } from "next";
 import { headers } from "next/headers";
+import { Archivo } from "next/font/google";
+
+const archivo = Archivo({ subsets: ["latin", "latin-ext", "vietnamese"] });
 
 export const metadata: Metadata = {
   title: "Skyops App | Scalable. Efficient. Unstoppable.",
@@ -33,7 +36,11 @@ export default function RootLayout({
   const cookies = headersObj.get("cookie");
   return (
     <html lang="en">
-      <body suppressHydrationWarning={false}>
+      <body
+        style={archivo.style}
+        className={`bg-appGray`}
+        suppressHydrationWarning={false}
+      >
         <DefaultLayout cookies={cookies}>
           {children}
 

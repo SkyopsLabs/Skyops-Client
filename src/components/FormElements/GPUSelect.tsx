@@ -96,9 +96,9 @@ const MultiSelect: React.FC<DropdownProps> = ({ id }) => {
 
   return (
     <div className="relative z-50">
-      <label className="mb-3 block text-body-sm font-medium text-dark dark:text-white">
+      {/* <label className="text-appBlack mb-2 block  text-sm dark:text-white">
         Which Types of GPUs Are You Interested In*
-      </label>
+      </label> */}
       <div>
         <select className="hidden" id={id}>
           <option value="1">Nvidia H100s</option>
@@ -110,15 +110,20 @@ const MultiSelect: React.FC<DropdownProps> = ({ id }) => {
           <div className="relative z-20 inline-block w-full">
             <div className="relative flex flex-col items-center">
               <div ref={trigger} onClick={open} className="w-full">
-                <div className="mb-2 flex rounded-[7px] border-[1.5px] border-stroke py-[9px] pl-3 pr-3 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2">
+                <div className="mb-2 flex h-[60px] rounded-[7px] border-[1.5px] border-stroke py-[9px] pl-3 pr-3 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2">
                   <div className="flex flex-auto flex-wrap gap-3">
                     {selected.map((index) => (
                       <div
                         key={index}
                         className="flex items-center justify-center rounded-[5px] border-[.5px] border-stroke bg-gray-2 px-2.5 py-[3px] text-body-sm font-medium dark:border-dark-3 dark:bg-dark"
                       >
-
-                        <Image width={20} height={20} src={"/images/clusters/nvidia.png"} alt="Logo" className="m-1"/>
+                        <Image
+                          width={20}
+                          height={20}
+                          src={"/images/clusters/nvidia.png"}
+                          alt="Logo"
+                          className="m-1"
+                        />
                         <div className="max-w-full flex-initial">
                           {options[index].text}
                         </div>
@@ -184,8 +189,9 @@ const MultiSelect: React.FC<DropdownProps> = ({ id }) => {
               </div>
               <div className="w-full px-4">
                 <div
-                  className={`max-h-select absolute left-0 top-full z-40 w-full overflow-y-auto rounded bg-white shadow-1 dark:bg-dark-2 dark:shadow-card ${isOpen() ? "" : "hidden"
-                    }`}
+                  className={`max-h-select absolute left-0 top-full z-40 w-full overflow-y-auto rounded bg-white shadow-1 dark:bg-dark-2 dark:shadow-card ${
+                    isOpen() ? "" : "hidden"
+                  }`}
                   ref={dropdownRef}
                   onFocus={() => setShow(true)}
                   onBlur={() => setShow(false)}
@@ -198,8 +204,9 @@ const MultiSelect: React.FC<DropdownProps> = ({ id }) => {
                           onClick={(event) => select(index, event)}
                         >
                           <div
-                            className={`relative flex w-full items-center border-l-2 border-transparent p-2 pl-2 ${option.selected ? "border-primary" : ""
-                              }`}
+                            className={`relative flex w-full items-center border-l-2 border-transparent p-2 pl-2 ${
+                              option.selected ? "border-primary" : ""
+                            }`}
                           >
                             <div className="flex w-full items-center">
                               <div className="mx-2 leading-6">

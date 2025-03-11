@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
-import { createAppKit } from "@reown/appkit/react";
+import { createAppKit, ThemeMode } from "@reown/appkit/react";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 
 import { type Config, cookieToInitialState, WagmiProvider } from "wagmi";
@@ -12,11 +12,10 @@ import { projectId, wagmiAdapter } from "@/config";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider } from "./AppProvider";
+import useColorMode from "@/hooks/useColorMode";
+import { usePathname } from "next/navigation";
 
 const queryClient = new QueryClient();
-if (!projectId) {
-  throw new Error("Project ID is not defined");
-}
 
 const metadata = {
   name: "SkyOps - Building a Global DeOS to Redefine AI Workload Orchestration.",
@@ -27,29 +26,6 @@ const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-createAppKit({
-  adapters: [wagmiAdapter],
-  networks: [sepolia],
-  metadata: metadata,
-  projectId,
-  features: {
-    connectMethodsOrder: ["wallet"],
-    email: true, // default to true
-    socials: [
-      "google",
-      // "x",
-      // "github",
-      // "discord",
-      // "apple",
-      // "facebook",
-      // "farcaster",
-    ],
-    emailShowWallets: true, // default to true
-    analytics: true,
-  },
-  allWallets: "SHOW", // default to SHOW
-});
-
 export default function DefaultLayout({
   children,
   cookies,
@@ -57,11 +33,44 @@ export default function DefaultLayout({
   children: React.ReactNode;
   cookies: string | null;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(
+    typeof window !== "undefined" && window.innerWidth > 1024 ? true : false,
+  );
+
   const initialState = cookieToInitialState(
     wagmiAdapter.wagmiConfig as Config,
     cookies,
   );
+
+  const { colorMode } = useColorMode();
+  const path = usePathname();
+
+  if (!projectId) {
+    throw new Error("Project ID is not defined");
+  }
+  createAppKit({
+    adapters: [wagmiAdapter],
+    networks: [sepolia],
+    metadata: metadata,
+    themeMode: colorMode as ThemeMode,
+    projectId,
+    features: {
+      connectMethodsOrder: ["wallet"],
+      email: true, // default to true
+      socials: [
+        "google",
+        // "x",
+        // "github",
+        // "discord",
+        // "apple",
+        // "facebook",
+        // "farcaster",
+      ],
+      emailShowWallets: true, // default to true
+      analytics: true,
+    },
+    allWallets: "SHOW", // default to SHOW
+  });
 
   return (
     <>
@@ -90,7 +99,12 @@ export default function DefaultLayout({
                 {/* <!-- ===== Header End ===== --> */}
 
                 {/* <!-- ===== Main Content Star ===== --> */}
-                <main className="flex h-full flex-col">{children}</main>
+                <main
+                  style={{ marginTop: path == "/" ? "0" : "initial" }}
+                  className="mt-[64px] flex h-full flex-col lg:mt-0"
+                >
+                  {children}
+                </main>
                 {/* <!-- ===== Main Content End ===== --> */}
               </div>
               {/* <!-- ===== Content Area End ===== --> */}

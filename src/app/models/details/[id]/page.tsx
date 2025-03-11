@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getAiModelById, topUpTokens } from "@/apis/api-v1";
 
@@ -14,6 +14,7 @@ const MarketplacePage = () => {
   const params = useParams();
   const { id } = params;
   const [model, setModel] = useState<IModel | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!id) return;
@@ -38,109 +39,99 @@ const MarketplacePage = () => {
             flex
             w-full
             flex-col
-            rounded-[10px]
-            bg-white
-            p-5
-            shadow-1 dark:bg-gray-dark dark:shadow-card
           "
     >
-      <Link
-        href="/models/marketplace"
-        className="text-dark-200 p-1 text-xs font-bold dark:text-white"
-      >
-        {"< back"}
-      </Link>
-      <div className="flex items-center justify-between border-b">
-        <div className="flex gap-2 py-2">
+      <div className="border-border   grid h-auto  w-full grid-cols-1 grid-rows-[64px,64px] items-center border-b  dark:border-dark-3 lg:flex lg:h-[64px] lg:justify-start lg:px-10">
+        <button
+          onClick={() => router.back()}
+          className="border-border flex h-[64px] items-center gap-2 border-b px-5 dark:border-dark-3 lg:hidden"
+        >
           <Image
-            className="object-contain"
-            src={model?.image ?? "/images/icon/meta.svg"}
-            alt="Logo"
-            width={50}
-            height={32}
+            src={"/images/icon/back.svg"}
+            width={24}
+            height={24}
+            alt="back"
           />
-          <div className=" flex flex-col dark:text-white">
-            <p className="text-large font-bold">
-              {model ? model.name : "[Model Name]"}
-            </p>
-            <div className="flex items-center justify-start">
-              <p className="mr-1  bg-gray-4 px-1 text-xs font-medium">
-                {model ? model.type : "[Model Type]"}
-              </p>
-              {/* <p className="mx-1 bg-gray-4 px-1 text-xs font-medium">
-                    Meta
-                  </p> */}
-              <p>|</p>
-              <p className="mx-2 text-xs">{model ? model.downloads : 0}</p>
-              <p className="mx-2 text-xs">
-                Update{" "}
-                {model
-                  ? new Date(model.updated_at.toString()).toLocaleDateString()
-                  : "[Model is updated at]"}
-              </p>
+          <p>Back</p>
+        </button>
+        <h4 className="text-appBlack border-border flex h-[64px] items-center border-b px-5 text-xl font-medium  capitalize dark:border-dark-3 dark:text-white lg:border-none lg:px-0  lg:text-2xl lg:text-[28px]">
+          {model.name}
+        </h4>
+        <div className=" flex h-[64px] items-center px-5 lg:px-0">
+          <div className="flex w-max items-center justify-center rounded-[24px] bg-black/10 px-2 py-1 lg:mx-3">
+            <p className=" text-xs capitalize text-black/50">{model.type}</p>
+          </div>
+          <div className="border-border flex w-max items-center justify-between  border-l dark:border-dark-3">
+            <div className="text-appBlack/50 ml-1 px-3 text-base dark:text-white">
+              {model.downloads ?? "50"}
+            </div>
+            <div className="text-appBlack/50 border-border border-l px-3 text-base dark:border-dark-3 dark:text-white">
+              Update at{" "}
+              {new Date(model.updated_at.toString()).toLocaleDateString()}.
             </div>
           </div>
+          <div className="flex items-center gap-1">
+            <p className="text-prim2">License</p>
+            <Image
+              src={"/images/icon/license.svg"}
+              width={16}
+              height={16}
+              alt="license"
+            />
+          </div>
         </div>
-        <div className="flex items-center justify-center gap-3">
-          <div
-            className="text-dark-300 mx-3 cursor-pointer rounded-[5px] border-2 px-3 py-2 text-sm font-bold duration-200 hover:bg-primary hover:text-white"
-            onClick={handleTopUpTokens}
-          >
+      </div>
+      <div className="mx-4 my-6 flex flex-col bg-white p-6">
+        <h6 className="mb-3 text-lg font-medium text-black">About</h6>
+        <p className="text-black/50 dark:text-white  lg:max-w-[600px]">
+          {model ? model.description : "[Model Description]"}
+        </p>
+        <div className="mt-5 grid w-full grid-cols-2 lg:flex lg:w-auto lg:items-center">
+          <button className="bg-prim2 col-span-2 mb-5 h-[40px] w-auto font-medium text-white lg:mb-0 lg:w-[116px]">
             Top Up
+          </button>
+          <div className="border-border  col-span-1 flex h-[64px]  items-center gap-[6px] border-r dark:border-dark-3 lg:ml-5 lg:w-auto lg:pr-4">
+            <p className="text-black/50">Explorer</p>
+            <Image
+              src={"/images/icon/info.svg"}
+              width={16}
+              height={16}
+              alt="info"
+            />
           </div>
-          <Link
-            className="text-dark-300 mx-3 rounded-[5px] border-2 px-3 py-2 text-sm font-bold"
-            href="/ai-explorer/text"
+          <a
+            href={model ? model.link : "#"}
+            className="dark:bg-dark-500  col-span-1 flex  items-center justify-center gap-1 lg:ml-4 lg:w-auto"
           >
-            Explorer
-          </Link>
+            <p className="hidden text-black/50 lg:flex">View on Hugging Face</p>
+            <p className="flex text-black/50 lg:hidden">Hugging Face</p>
+            <Image
+              className=""
+              src={"/images/icon/license_light.svg"}
+              alt="license"
+              width={16}
+              height={16}
+            />
+          </a>
         </div>
-      </div>
-
-      <div className="flex">
-        <p className="text-dark-200 dark:text-500 my-4 text-xs">License</p>
-        <a
-          href="#"
-          className="mx-4 my-4 text-xs font-bold text-primary underline"
-        >
-          {model ? model.name : "[Model Name]"}
-        </a>
-      </div>
-      <p className="text-dark-200 my-2 text-sm font-bold dark:text-white">
-        {model ? model.description : "[Model Description]"}
-      </p>
-      <div className="mt-5 flex">
-        <a
-          href={model ? model.link : "#"}
-          className="bg-dark-100 dark:bg-dark-500 flex rounded-[5px] border-2 border-primary px-3 py-3 text-sm text-primary"
-        >
-          <p className="my-1">View on Hugging Face</p>
-          <Image
-            className="my-1 ml-2"
-            src={"/images/models/link.png"}
-            alt="Logo"
-            width={18}
-            height={7}
-          />
-        </a>
-      </div>
-      <div className="mt-5 flex gap-6">
-        <div className="mr-3 flex flex-col text-black dark:text-white">
-          <div className="text-xs font-bold">Inference</div>
-          <div className="text-2xl font-bold">
-            ${model?.pricePerInference ?? 0}
+        <div className="border-border2  flex w-full border-t dark:border-dark-3 lg:mt-6 lg:w-auto  lg:gap-6">
+          <div className="border-border2 flex h-full w-1/2  flex-col border-r py-6 text-black dark:border-dark-3 dark:text-white lg:ml-6 lg:w-auto lg:flex-none lg:flex-grow-0 lg:pr-10">
+            <div className="mb-10 font-medium">Inference</div>
+            <div className="text-[32px] font-medium">
+              ${model?.pricePerInference ?? 0}
+            </div>
+            <div className="text-xs text-black/50  dark:text-gray-300">
+              Per 1M Tokens
+            </div>
           </div>
-          <div className="text-xs text-gray-600 dark:text-gray-300">
-            Per 1M Tokens
-          </div>
-        </div>
-        <div className="mx-3 flex flex-col text-black dark:text-white">
-          <div className="text-xs font-bold">Fine-Tune</div>
-          <div className="text-2xl font-bold">
-            ${model?.pricePerFineTune ?? 0}
-          </div>
-          <div className="text-xs text-gray-600 dark:text-gray-300">
-            Per 1M Tokens
+          <div className="flex w-1/2 flex-col p-6 text-black dark:text-white lg:w-auto lg:flex-none">
+            <div className="mb-10 font-medium">Fine-Tune</div>
+            <div className="text-[32px] font-medium">
+              ${model?.pricePerFineTune ?? 0}
+            </div>
+            <div className="text-xs text-black/50  dark:text-gray-300">
+              Per 1M Tokens
+            </div>
           </div>
         </div>
       </div>

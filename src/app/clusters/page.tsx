@@ -2,7 +2,7 @@ import TableCluster from "@/components/Tables/TableCluster";
 
 const CalendarPage = () => {
   return (
-    <div className="flex h-full p-2">
+    <div className="flex h-full">
       <TableCluster />
     </div>
   );
