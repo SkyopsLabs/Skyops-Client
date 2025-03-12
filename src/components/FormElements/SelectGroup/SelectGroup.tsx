@@ -37,21 +37,21 @@ const SelectGroup = ({
         ))}
       </select>
 
-      <span className="absolute right-4 top-1/2  -translate-y-1/2">
-        <Image
-          alt="down"
-          src={"/images/icon/chevron-down.svg"}
-          className={`  duration-200 ease-in dark:hidden ${"rotate-180"}`}
+      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-appBlack  dark:text-white">
+        <svg
           width="24"
           height="24"
-        />
-        <Image
-          alt="down"
-          src={"/images/icon/chevron-down-white.svg"}
-          className={`hidden duration-200  ease-in dark:flex ${"rotate-180"}`}
-          width="24"
-          height="24"
-        />
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8 10l4 4 4-4"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
       </span>
     </div>
   );

@@ -47,7 +47,7 @@ const SidebarDropdown = ({ item, show, setSidebarOpen }: any) => {
 
             {item.label}
             {item.disabled && (
-              <sup className="bg-prim3 absolute right-3.5 top-1/3 -translate-y-1/3 rounded-md px-1.5 py-px text-[10px] font-medium leading-[17px] text-white">
+              <sup className="absolute right-3.5 top-1/3 -translate-y-1/3 rounded-md bg-prim3 px-1.5 py-px text-[10px] font-medium leading-[17px] text-white dark:bg-[#373737] dark:text-[#979797]">
                 Soon
               </sup>
             )}
@@ -66,7 +66,7 @@ const SidebarDropdown = ({ item, show, setSidebarOpen }: any) => {
 
             {item.label}
             {item.disabled && (
-              <sup className="bg-prim3 absolute right-3.5 top-1/3 -translate-y-1/3 rounded-md px-1.5 py-px text-[10px] font-medium leading-[17px] text-white">
+              <sup className="absolute right-3.5 top-1/3 -translate-y-1/3 rounded-md bg-prim3 px-1.5 py-px text-[10px] font-medium leading-[17px] text-white dark:bg-[#373737] dark:text-[#979797]">
                 Soon
               </sup>
             )}

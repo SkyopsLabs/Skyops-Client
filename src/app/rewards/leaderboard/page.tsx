@@ -14,8 +14,8 @@ const LeaderBoard = () => {
 
   return (
     <div className="mt-16 flex flex-1 flex-col lg:mt-0">
-      <div className="grid w-full grid-cols-2 grid-rows-[64px,64px] items-center justify-end border-b border-border px-5 dark:border-dark-3 lg:flex lg:h-[64px] lg:px-10">
-        <h4 className="mr-auto text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
+      <div className="grid w-full grid-cols-2 grid-rows-[64px,64px] items-center justify-end border-b border-border  dark:border-dark-3 lg:flex lg:h-[64px] lg:px-10">
+        <h4 className="mr-auto px-5 text-2xl font-medium text-appBlack dark:text-white  lg:px-0 lg:text-[28px]">
           LeaderBoard
         </h4>
 
@@ -24,7 +24,9 @@ const LeaderBoard = () => {
           options={["By Points", "By Growth"]}
         />
         <SearchForm
-          className={"col-span-2 flex lg:hidden"}
+          className={
+            "col-span-2 flex border-t-[1px] border-border px-5 dark:border-dark-3  lg:hidden"
+          }
           search={search}
           placeholder={"Search by address"}
           setSearch={setSearch}
@@ -47,7 +49,7 @@ const LeaderBoard = () => {
           <p className="hidden items-center text-sm text-appBlack/[.48] dark:text-white/[.48] lg:flex">
             Invited By
           </p>
-          <p className="flex items-center justify-end text-sm text-appBlack/[.48] lg:justify-start">
+          <p className="flex items-center justify-end text-sm text-appBlack/[.48] dark:text-white/[.48] lg:justify-start">
             Total Points
           </p>
         </div>

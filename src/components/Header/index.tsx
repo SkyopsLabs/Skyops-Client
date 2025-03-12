@@ -99,14 +99,38 @@ const Header = ({
           e.stopPropagation();
           setSidebarOpen(!sidebarOpen);
         }}
-        className="z-99999 flex h-16 min-w-12 items-center justify-end border-l border-border   dark:border-dark-6 lg:hidden"
+        className="z-99999 flex h-16 min-w-12 items-center justify-end border-l border-border text-appBlack dark:border-dark-6   dark:text-white lg:hidden"
       >
-        <Image
-          src={sidebarOpen ? "/images/icon/close.svg" : "/images/icon/menu.svg"}
-          width={24}
-          height={24}
-          alt="menu"
-        />
+        {!sidebarOpen ? (
+          <svg
+            width="24"
+            height="24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 7h18M3 12h18M3 17h18"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+            />
+          </svg>
+        ) : (
+          <svg
+            width="24"
+            height="24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 6L6 18M6 6l12 12"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        )}
       </button>
     </header>
   );

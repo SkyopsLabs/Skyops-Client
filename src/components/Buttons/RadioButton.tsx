@@ -7,7 +7,7 @@ const RadioButton = ({
   setAmount: (option: number | null) => void;
 }) => {
   const [selectedOption, setSelectedOption] = React.useState("");
-  const options = ["$25", "$50", "$100", "$200", "$500"];
+  const options = ["$25", "$50", "$100"];
 
   return (
     <div className="flex items-center gap-2 ">

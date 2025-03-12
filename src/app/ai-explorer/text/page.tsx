@@ -8,6 +8,7 @@ import { generateAiText, getAiModels } from "@/apis/api-v1";
 import toast from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
 import { AnimatePresence, motion } from "framer-motion";
+import SelectComponent from "@/components/FormElements/SelectGroup/SelectComponent";
 
 const initialState = {
   temperature: 0,
@@ -211,19 +212,27 @@ const AIExplorerTextPage = () => {
                   placeholder="Choose a model before you write"
                   value={prompt ? prompt : ""}
                   onChange={(e) => setPrompt(e.target.value)}
-                  className="w-full rounded-[47px] border-[1px] border-black/10 bg-appGray  px-5.5 py-2  pr-[5%] text-black/50 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:border-dark-3 dark:bg-dark dark:text-white/[.48] dark:focus:border-primary"
+                  className="w-full rounded-[47px] border-[1px] border-black/10 bg-appGray px-5.5 py-2  pr-[5%] text-sm  text-black/50 outline-none transition placeholder:text-sm focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:border-dark-3 dark:bg-dark dark:text-white/[.48] dark:focus:border-primary"
                 />
                 <button
                   type="submit"
-                  className="absolute right-5 top-1/2 -translate-y-1/2"
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-black/[.65] dark:text-white/[.75]"
                 >
-                  <Image
-                    className="mx-1 my-2"
-                    src={"/images/icon/send.svg"}
-                    alt="Logo"
-                    width={18}
-                    height={18}
-                  />
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.877 9H3.752m-.063.219l-1.752 5.23c-.137.412-.206.617-.157.744.043.11.135.193.249.225.13.036.328-.053.724-.23l12.533-5.64c.386-.174.579-.261.638-.382a.375.375 0 000-.332c-.06-.12-.252-.207-.638-.381L2.748 2.81c-.394-.177-.59-.266-.722-.23a.375.375 0 00-.248.225c-.05.126.018.331.154.741L3.69 8.839c.023.07.035.106.04.142a.375.375 0 010 .096c-.005.036-.017.071-.04.142z"
+                      stroke="currentColor"
+                      stroke-opacity=".28"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </button>
               </form>
             </div>
@@ -272,19 +281,27 @@ const AIExplorerTextPage = () => {
                     placeholder="Choose a model before you write"
                     value={prompt ? prompt : ""}
                     onChange={(e) => setPrompt(e.target.value)}
-                    className="z-50 w-full rounded-[47px] border-[1px] border-black/10 bg-appGray px-5.5 py-2  pr-[5%] text-black/50 outline-none transition focus:border-primary active:border-primary  disabled:cursor-default dark:border-dark-3 dark:bg-dark dark:text-white/[.48] dark:focus:border-primary"
+                    className="z-50 w-full rounded-[47px] border-[1px] border-black/10 bg-appGray px-5.5 py-2 pr-[5%] text-sm  text-black/50 outline-none transition placeholder:text-sm focus:border-primary active:border-primary  disabled:cursor-default dark:border-dark-3 dark:bg-dark dark:text-white/[.48] dark:focus:border-primary"
                   />
                   <button
                     type="submit"
-                    className="absolute right-5 top-1/2 -translate-y-1/2"
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-black/[.65] dark:text-white/[.75]"
                   >
-                    <Image
-                      className="mx-1 my-2"
-                      src={"/images/icon/send.svg"}
-                      alt="Logo"
-                      width={18}
-                      height={18}
-                    />
+                    <svg
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.877 9H3.752m-.063.219l-1.752 5.23c-.137.412-.206.617-.157.744.043.11.135.193.249.225.13.036.328-.053.724-.23l12.533-5.64c.386-.174.579-.261.638-.382a.375.375 0 000-.332c-.06-.12-.252-.207-.638-.381L2.748 2.81c-.394-.177-.59-.266-.722-.23a.375.375 0 00-.248.225c-.05.126.018.331.154.741L3.69 8.839c.023.07.035.106.04.142a.375.375 0 010 .096c-.005.036-.017.071-.04.142z"
+                        stroke="currentColor"
+                        stroke-opacity=".28"
+                        stroke-width="1.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
                   </button>
                 </form>
               </div>
@@ -313,10 +330,18 @@ const AIExplorerTextPage = () => {
                 <p className="mb-4 mt-1 text-sm text-black/50 dark:text-white/[.48]">
                   Choose the model you will work with
                 </p>
-                <SelectGroupAIModel
+                <SelectComponent
+                  zIndex={5000}
+                  models={false}
+                  label=""
+                  placeholder="Choose the model"
+                  items={models as IModel[]}
+                  onChange={setSelectedModel}
+                />
+                {/* <SelectGroupAIModel
                   models={models}
                   handleChangeModel={setSelectedModel}
-                />
+                /> */}
               </div>
 
               <div className="mt-3 flex w-full flex-col bg-white p-4 dark:bg-dark-2">

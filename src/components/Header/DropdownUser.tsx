@@ -37,20 +37,24 @@ const DropdownUser = ({
               {address.slice(0, 4)}...
               {address.slice(-4)}
             </span>
-            <Image
-              alt="down"
-              src={"/images/icon/chevron-down.svg"}
-              className={` flex duration-200  ease-in dark:hidden ${dropdownOpen && "rotate-180"}`}
-              width="24"
-              height="24"
-            />
-            <Image
-              alt="down"
-              src={"/images/icon/chevron-down-white.svg"}
-              className={`hidden duration-200  ease-in dark:flex ${dropdownOpen && "rotate-180"}`}
-              width="24"
-              height="24"
-            />
+            <span
+              className={` flex duration-200  ease-in  ${dropdownOpen && "rotate-180"}`}
+            >
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8 10l4 4 4-4"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
           </div>
         </Link>
       </div>

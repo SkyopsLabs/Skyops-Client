@@ -119,7 +119,7 @@ const BillingPage = () => {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="mt-[64px] flex flex-col lg:mt-0">
       <div className="mx-auto w-full   bg-white p-6 dark:bg-dark-2 lg:mt-4 lg:w-[726px]">
         <div className="flex h-[64px] items-center justify-between">
           <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
@@ -159,14 +159,14 @@ const BillingPage = () => {
           />
           <RadioButton setAmount={setAmount} />
           <button
-            className="mt-5 h-[60px] w-full bg-prim px-5 py-1 text-white dark:bg-white dark:text-black lg:mt-6 lg:px-8 xl:px-10"
+            className="mt-5 h-[40px] w-full bg-prim px-5 py-1 font-medium text-white dark:bg-white dark:text-black lg:mt-6 lg:h-[60px] lg:px-8 xl:px-10"
             onClick={handleAddCredits}
           >
             Add Tokens
           </button>
         </div>
       </div>
-      <div className="mx-auto w-full   bg-white p-6 dark:bg-dark-2 lg:mt-4 lg:w-[726px]">
+      <div className="mx-auto mt-4   w-full bg-white p-6 dark:bg-dark-2 lg:w-[726px]">
         {/* Top up transactions */}
         <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
           History

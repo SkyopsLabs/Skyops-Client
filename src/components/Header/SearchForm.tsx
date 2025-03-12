@@ -3,9 +3,9 @@ import React, { useState } from "react";
 const SearchForm = ({ search, setSearch, className, placeholder }: any) => {
   return (
     <div
-      className={`border-border ${className} relative h-full w-full max-w-[350px] bg-transparent dark:border-dark-3 lg:border-l`}
+      className={`border-border ${className} relative h-full w-full max-w-[350px] bg-transparent dark:border-dark-3 lg:border-l lg:px-5`}
     >
-      <button className="absolute left-1 top-1/2 -translate-y-1/2 text-appBlack/50 hover:text-primary dark:text-dark-6 dark:hover:text-primary lg:left-5">
+      <button className=" text-appBlack/50 hover:text-primary dark:text-dark-6 dark:hover:text-primary lg:left-5">
         <svg
           className="fill-current"
           width="18"
@@ -35,7 +35,7 @@ const SearchForm = ({ search, setSearch, className, placeholder }: any) => {
         placeholder={placeholder ?? "Search"}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="h-full w-full bg-transparent pl-7 pr-5 text-dark focus:border-primary focus:outline-none dark:border-dark-4 dark:text-white/[.68]  dark:placeholder:text-white/[.28] dark:focus:border-primary lg:pl-13.5 xl:w-[300px]"
+        className="h-full w-full bg-transparent px-2 text-dark focus:border-primary focus:outline-none dark:border-dark-4 dark:text-white/[.68]  dark:placeholder:text-white/[.28] dark:focus:border-primary  xl:w-[300px]"
       />
     </div>
   );

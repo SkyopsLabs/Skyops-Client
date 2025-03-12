@@ -1,11 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import SidebarDropdown from "@/components/Sidebar/SidebarDropdown";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
+  const path = usePathname();
   const handleClick = () => {
     const updatedPageName =
       pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
@@ -20,14 +22,17 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
     hidden: { x: -500 },
     show: { x: 0 },
   };
+  useEffect(() => {
+    setPageName(path.slice(1));
+  }, []);
 
   return (
     <motion.li
       className={` ${
         pageName === item.label.toLowerCase()
-          ? "bg-transparent text-primary dark:bg-white/10 dark:text-white"
+          ? "bg-transparent text-primary dark:bg-dark-2 dark:text-white "
           : !item.disabled
-            ? "text-dark-4 hover:bg-gray-2 hover:text-dark dark:text-gray-5 dark:hover:bg-white/10 dark:hover:text-white"
+            ? "text-dark-4 hover:bg-gray-2 hover:text-dark dark:text-white/70 dark:hover:bg-dark-2 dark:hover:text-white"
             : ""
       } flex h-full  min-h-[64px] w-full flex-col   justify-center border-b border-border px-5 py-4 dark:border-dark-3 lg:px-10  `}
       variants={listItem}
@@ -41,76 +46,116 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
         style={{ cursor: item.disabled ? "not-allowed" : "pointer" }}
       >
         {/* {item.icon} */}
-        <Image
-          src={item.image ?? "/images/icon/icon.svg"}
-          width={24}
-          height={24}
-          alt={item.label}
-          className="flex dark:hidden"
-        />
-        <Image
-          src={item.image_dark ?? "/images/icon/icon.svg"}
-          width={24}
-          height={24}
-          alt={item.label}
-          className="hidden dark:flex"
-        />
+        <i
+          className={`duration-0 ease-linear ${pageName !== item.label.toLowerCase() && !item.image ? "opacity-[.28] dark:text-dark-6 dark:opacity-100 " : "opacity-100 "}`}
+        >
+          {item.image ? (
+            <>
+              <Image
+                src={item.image ?? "/images/icon/icon.svg"}
+                width={24}
+                height={24}
+                alt={item.label}
+                className="flex dark:hidden"
+              />
+              <Image
+                src={item.image_dark ?? "/images/icon/icon.svg"}
+                width={24}
+                height={24}
+                alt={item.label}
+                className="hidden dark:flex"
+              />
+            </>
+          ) : (
+            item.icon
+          )}
+        </i>
         <p className="min-w-[60%]">{item.label}</p>
         {item.disabled && (
-          <sup className="mt-3 rounded-lg bg-prim3 p-2  text-xs  text-white">
+          <sup className="mt-3 rounded-lg bg-prim3 p-2 text-xs text-white  dark:bg-[#373737]  dark:text-[#979797]">
             Soon
           </sup>
         )}
         {item.children && (
-          <button onClick={handleClick}>
-            <Image
-              alt="down"
-              src={"/images/icon/chevron-down.svg"}
-              className={`duration-200  ease-in dark:hidden ${pageName == item.label.toLowerCase() && "rotate-180"}`}
+          <button
+            className={`text-appBlack duration-200 ease-in   dark:text-white  ${pageName == item.label.toLowerCase() && "rotate-180"}`}
+            onClick={handleClick}
+          >
+            <svg
               width="24"
               height="24"
-            />
-            <Image
-              alt="down"
-              src={"/images/icon/chevron-down-white.svg"}
-              className={`  hidden duration-200 ease-in dark:flex ${pageName == item.label.toLowerCase() && "rotate-180"}`}
-              width="24"
-              height="24"
-            />
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 10l4 4 4-4"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
         )}
       </Link>
       {/* Link for Mobile */}
-
       <Link
         href={!item.disabled ? item.route : "#"}
         onClick={item.children ? handleClick : closeSideBar}
         className={`
-            item-center group relative flex h-full w-full items-center justify-start gap-3 rounded-[7px] font-medium duration-300 ease-in-out lg:hidden`}
+            item-center group  relative flex h-full w-full items-center justify-start gap-3 rounded-[7px] font-medium duration-300 ease-in-out lg:hidden`}
         style={{ cursor: item.disabled ? "not-allowed" : "pointer" }}
       >
         {/* {item.icon} */}
-        <Image
-          src={item.image ?? "/images/icon/icon.svg"}
-          width={24}
-          height={24}
-          alt={item.label}
-        />
+        <i
+          className={`duration-0 ease-linear ${pageName !== item.label.toLowerCase() && !item.image ? "opacity-[.28] dark:text-dark-6 dark:opacity-100 " : "opacity-100 "}`}
+        >
+          {item.image ? (
+            <>
+              <Image
+                src={item.image ?? "/images/icon/icon.svg"}
+                width={24}
+                height={24}
+                alt={item.label}
+                className="flex dark:hidden"
+              />
+              <Image
+                src={item.image_dark ?? "/images/icon/icon.svg"}
+                width={24}
+                height={24}
+                alt={item.label}
+                className="hidden dark:flex"
+              />
+            </>
+          ) : (
+            item.icon
+          )}
+        </i>
         <p className="min-w-[60%]">{item.label}</p>
         {item.disabled && (
-          <sup className="mt-3 rounded-lg bg-prim3 p-2  text-xs  text-white">
+          <sup className="mt-3 rounded-lg bg-prim3 p-2 text-xs text-white  dark:bg-[#373737]  dark:text-[#979797]">
             Soon
           </sup>
         )}
         {item.children && (
-          <button onClick={handleClick}>
-            <Image
-              alt="down"
-              src={"/images/icon/chevron-down.svg"}
-              className={`  duration-200 ease-in ${pageName == item.label.toLowerCase() && "rotate-180"}`}
+          <button
+            className={`text-appBlack duration-200 ease-in   dark:text-white  ${pageName == item.label.toLowerCase() && "rotate-180"}`}
+            onClick={handleClick}
+          >
+            <svg
               width="24"
               height="24"
-            />
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8 10l4 4 4-4"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </button>
         )}
       </Link>

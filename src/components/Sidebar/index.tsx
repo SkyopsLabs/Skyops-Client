@@ -23,37 +23,21 @@ const menuGroups = [
   {
     menuItems: [
       {
-        image: "/images/icon/instances.svg",
         icon: (
           <svg
-            style={{ width: "30px", height: "30px" }}
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Instances.tsx"
           >
             <path
-              d="M0 8C0 3.58172 3.58172 0 8 0H20C24.4183 0 28 3.58172 28 8V20C28 24.4183 24.4183 28 20 28H8C3.58172 28 0 24.4183 0 20V8Z"
-              data-sentry-element="path"
-              data-sentry-source-file="Instances.tsx"
-            ></path>
-            <path
-              d="M6.08973 9.43296L13.9999 4.86603L21.9101 9.43296V18.5668L13.9999 23.1338L6.08973 18.5668V9.43296Z"
+              d="M20.5 7.209L12 12m0 0L3.5 7.209M12 12v9.639m9-5.521V7.882c0-.347 0-.521-.05-.676a1.018 1.018 0 00-.215-.37c-.109-.12-.258-.204-.558-.373l-7.4-4.171c-.284-.16-.425-.24-.575-.271a.987.987 0 00-.403 0c-.15.031-.292.111-.576.27l-7.4 4.172c-.3.169-.45.253-.558.373-.097.107-.17.233-.215.37C3 7.36 3 7.535 3 7.882v8.236c0 .348 0 .521.05.676.045.137.118.263.215.37.109.12.258.204.558.373l7.4 4.171c.284.16.425.24.575.271.133.028.27.028.403 0 .15-.031.292-.111.576-.27l7.4-4.172c.3-.169.45-.253.558-.373.097-.107.17-.233.215-.37.05-.155.05-.329.05-.676z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Instances.tsx"
-            ></path>
-            <path
-              d="M11.2858 12.433L13.9998 10.866L16.7139 12.433V15.5669L13.9998 17.1339L11.2858 15.5669V12.433Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Instances.tsx"
-            ></path>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Instances",
@@ -63,231 +47,53 @@ const menuGroups = [
       {
         icon: (
           <svg
-            style={{ width: "30px", height: "30px" }}
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Clusters.tsx"
           >
             <path
-              d="M0 8C0 3.58172 3.58172 0 8 0H20C24.4183 0 28 3.58172 28 8V20C28 24.4183 24.4183 28 20 28H8C3.58172 28 0 24.4183 0 20V8Z"
-              data-sentry-element="path"
-              data-sentry-source-file="Clusters.tsx"
-            ></path>
-            <path
-              d="M10.42 7.76602L14.0001 5.69903L17.5802 7.76602V11.9L14.0001 13.967L10.42 11.9V7.76602Z"
+              d="M20 9.333H4m16 5.334H4m16-6.4v7.466c0 1.494 0 2.24-.29 2.811-.256.502-.664.91-1.166 1.165-.57.291-1.317.291-2.81.291H8.266c-1.494 0-2.24 0-2.811-.29a2.667 2.667 0 01-1.165-1.166C4 17.974 4 17.227 4 15.734V8.266c0-1.494 0-2.24.29-2.811.256-.502.664-.91 1.166-1.165C6.026 4 6.773 4 8.266 4h7.467c1.494 0 2.24 0 2.811.29.502.256.91.664 1.165 1.166.291.57.291 1.317.291 2.81z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Clusters.tsx"
-            ></path>
-            <path
-              d="M5.41987 16.099L9 14.032L12.5801 16.099V20.233L9 22.3L5.41987 20.233V16.099Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Clusters.tsx"
-            ></path>
-            <path
-              d="M15.4199 16.099L19 14.032L22.5801 16.099V20.233L19 22.3L15.4199 20.233V16.099Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Clusters.tsx"
-            ></path>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Clusters",
         route: "/clusters", // /calendar
-        image: "/images/icon/clusters.svg",
 
         // disabled: true,
       },
       {
         icon: (
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Model.tsx"
           >
-            <rect
-              width="28"
-              height="28"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              width="1440"
-              height="1129"
-              transform="translate(-28 -282)"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              x="-28"
-              y="-282"
-              width="236"
-              height="1129"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              x="4"
-              y="4"
-              width="20"
-              height="20"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
             <path
-              d="M14 5.25V13.5834L21.9167 18.5834L21.5 9.41668L14 5.25Z"
-              fill="#1C1C1C"
-              fillOpacity="0.1"
-              data-sentry-element="path"
-              data-sentry-source-file="Model.tsx"
-            ></path>
-            <path
-              d="M13.875 4.93819C13.9524 4.89354 14.0477 4.89354 14.125 4.93819L21.7853 9.36086C21.8627 9.40551 21.9103 9.48805 21.9103 9.57736V18.4227C21.9103 18.512 21.8627 18.5945 21.7853 18.6392L14.125 23.0619C14.0477 23.1065 13.9524 23.1065 13.875 23.0619L6.21475 18.6392C6.1374 18.5945 6.08975 18.512 6.08975 18.4227V9.57736C6.08975 9.48805 6.1374 9.40551 6.21475 9.36086L13.875 4.93819Z"
+              d="M9 2v3m6-3v3M9 19v3m6-3v3m4-13h3m-3 5h3M2 9h3m-3 5h3m4.8 5h4.4c1.68 0 2.52 0 3.162-.327a3 3 0 001.311-1.311C19 16.72 19 15.88 19 14.2V9.8c0-1.68 0-2.52-.327-3.162a3 3 0 00-1.311-1.311C16.72 5 15.88 5 14.2 5H9.8c-1.68 0-2.52 0-3.162.327a3 3 0 00-1.311 1.311C5 7.28 5 8.12 5 9.8v4.4c0 1.68 0 2.52.327 3.162a3 3 0 001.311 1.311C7.28 19 8.12 19 9.8 19z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              data-sentry-element="path"
-              data-sentry-source-file="Model.tsx"
-            ></path>
-            <path
-              d="M14.0001 9.41699V14.0003M14.0001 14.0003L9.41675 16.5003M14.0001 14.0003L18.5834 16.5003"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Model.tsx"
-            ></path>
-            <rect
-              x="-3235.5"
-              y="-437.5"
-              width="7014"
-              height="1398"
-              stroke="#1C1C1C"
-              strokeDasharray="14 14"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="square"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Models",
         route: "#",
-        image: "/images/icon/models.svg",
 
         children: [{ label: "Marketplace", route: "/models/marketplace" }],
       },
       {
-        icon: (
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Model.tsx"
-          >
-            <rect
-              width="28"
-              height="28"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              width="1440"
-              height="1129"
-              transform="translate(-28 -282)"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              x="-28"
-              y="-282"
-              width="236"
-              height="1129"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <rect
-              x="4"
-              y="4"
-              width="20"
-              height="20"
-              fill="transparent"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-            <path
-              d="M14 5.25V13.5834L21.9167 18.5834L21.5 9.41668L14 5.25Z"
-              fill="#1C1C1C"
-              fillOpacity="0.1"
-              data-sentry-element="path"
-              data-sentry-source-file="Model.tsx"
-            ></path>
-            <path
-              d="M13.875 4.93819C13.9524 4.89354 14.0477 4.89354 14.125 4.93819L21.7853 9.36086C21.8627 9.40551 21.9103 9.48805 21.9103 9.57736V18.4227C21.9103 18.512 21.8627 18.5945 21.7853 18.6392L14.125 23.0619C14.0477 23.1065 13.9524 23.1065 13.875 23.0619L6.21475 18.6392C6.1374 18.5945 6.08975 18.512 6.08975 18.4227V9.57736C6.08975 9.48805 6.1374 9.40551 6.21475 9.36086L13.875 4.93819Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              data-sentry-element="path"
-              data-sentry-source-file="Model.tsx"
-            ></path>
-            <path
-              d="M14.0001 9.41699V14.0003M14.0001 14.0003L9.41675 16.5003M14.0001 14.0003L18.5834 16.5003"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Model.tsx"
-            ></path>
-            <rect
-              x="-3235.5"
-              y="-437.5"
-              width="7014"
-              height="1398"
-              stroke="#1C1C1C"
-              strokeDasharray="14 14"
-              data-sentry-element="rect"
-              data-sentry-source-file="Model.tsx"
-            ></rect>
-          </svg>
-        ),
         label: "AI Explorer",
         image: "/images/icon/icon.svg",
-        image_dark: "/images/icon/icon-white.svg",
+        image_dark: "/images/icon/icon-glossy.svg",
 
         route: "#",
         children: [
@@ -299,128 +105,45 @@ const menuGroups = [
       {
         icon: (
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Inference.tsx"
           >
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              data-sentry-element="rect"
-              data-sentry-source-file="Inference.tsx"
-            ></rect>
             <path
-              d="M16.43 6.7002C19.7163 7.75653 22.1 10.8986 22.1 14.6104C22.1 15.6268 21.9213 16.6004 21.5943 17.5002M11.57 6.7002C8.28377 7.75653 5.90002 10.8986 5.90002 14.6104C5.90002 15.6268 6.07874 16.6004 6.40576 17.5002M19.0403 21.1002C17.657 22.2269 15.9053 22.9002 14 22.9002C12.0203 22.9002 10.2064 22.1733 8.79936 20.9661"
+              d="M10 17.659V20a2 2 0 104 0v-2.341M12 2v1m-9 9H2m3.5-6.5l-.6-.6m13.6.6l.6-.6M22 12h-1m-3 0a6 6 0 11-12 0 6 6 0 0112 0z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Inference.tsx"
-            ></path>
-            <circle
-              cx="14"
-              cy="6.7"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="20.3"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="7.7"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="square"
+            />
           </svg>
         ),
         label: "Inference",
         route: "/inference",
-        image: "/images/icon/inference.svg",
 
         // disabled: true,
       },
       {
         icon: (
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Inference.tsx"
           >
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              data-sentry-element="rect"
-              data-sentry-source-file="Inference.tsx"
-            ></rect>
             <path
-              d="M16.43 6.7002C19.7163 7.75653 22.1 10.8986 22.1 14.6104C22.1 15.6268 21.9213 16.6004 21.5943 17.5002M11.57 6.7002C8.28377 7.75653 5.90002 10.8986 5.90002 14.6104C5.90002 15.6268 6.07874 16.6004 6.40576 17.5002M19.0403 21.1002C17.657 22.2269 15.9053 22.9002 14 22.9002C12.0203 22.9002 10.2064 22.1733 8.79936 20.9661"
+              d="M16 12a4 4 0 01-8 0m8 0a4 4 0 00-8 0m8 0h6M8 12H2"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Inference.tsx"
-            ></path>
-            <circle
-              cx="14"
-              cy="6.7"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="20.3"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="7.7"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="square"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Fine-Tune",
         route: "/fine-tune",
-        image: "/images/icon/fine-tune.svg",
 
         disabled: true,
       },
@@ -428,126 +151,43 @@ const menuGroups = [
       {
         icon: (
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Inference.tsx"
           >
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              data-sentry-element="rect"
-              data-sentry-source-file="Inference.tsx"
-            ></rect>
             <path
-              d="M16.43 6.7002C19.7163 7.75653 22.1 10.8986 22.1 14.6104C22.1 15.6268 21.9213 16.6004 21.5943 17.5002M11.57 6.7002C8.28377 7.75653 5.90002 10.8986 5.90002 14.6104C5.90002 15.6268 6.07874 16.6004 6.40576 17.5002M19.0403 21.1002C17.657 22.2269 15.9053 22.9002 14 22.9002C12.0203 22.9002 10.2064 22.1733 8.79936 20.9661"
+              d="M15.544 14.544a6.301 6.301 0 10-7.088-7.088M15.6 13.7a6.3 6.3 0 11-12.6 0 6.3 6.3 0 0112.6 0z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Inference.tsx"
-            ></path>
-            <circle
-              cx="14"
-              cy="6.7"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="20.3"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="7.7"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="square"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Top-up",
-        image: "/images/icon/top-up.svg",
 
         route: "/top-up",
       },
       {
         icon: (
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Inference.tsx"
           >
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              data-sentry-element="rect"
-              data-sentry-source-file="Inference.tsx"
-            ></rect>
             <path
-              d="M16.43 6.7002C19.7163 7.75653 22.1 10.8986 22.1 14.6104C22.1 15.6268 21.9213 16.6004 21.5943 17.5002M11.57 6.7002C8.28377 7.75653 5.90002 10.8986 5.90002 14.6104C5.90002 15.6268 6.07874 16.6004 6.40576 17.5002M19.0403 21.1002C17.657 22.2269 15.9053 22.9002 14 22.9002C12.0203 22.9002 10.2064 22.1733 8.79936 20.9661"
+              d="M7 15.09V22l4.703-1.881c.11-.044.165-.066.221-.075a.5.5 0 01.152 0c.056.009.111.03.221.075L17 22v-6.91m2.5-5.59a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Inference.tsx"
-            ></path>
-            <circle
-              cx="14"
-              cy="6.7"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="20.3"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="7.7"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Rewards",
-        image: "/images/icon/rewards.svg",
 
         route: "#",
         children: [
@@ -561,63 +201,22 @@ const menuGroups = [
       {
         icon: (
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="24"
+            height="24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            data-sentry-element="svg"
-            data-sentry-source-file="Inference.tsx"
           >
-            <rect
-              width="28"
-              height="28"
-              rx="8"
-              data-sentry-element="rect"
-              data-sentry-source-file="Inference.tsx"
-            ></rect>
             <path
-              d="M16.43 6.7002C19.7163 7.75653 22.1 10.8986 22.1 14.6104C22.1 15.6268 21.9213 16.6004 21.5943 17.5002M11.57 6.7002C8.28377 7.75653 5.90002 10.8986 5.90002 14.6104C5.90002 15.6268 6.07874 16.6004 6.40576 17.5002M19.0403 21.1002C17.657 22.2269 15.9053 22.9002 14 22.9002C12.0203 22.9002 10.2064 22.1733 8.79936 20.9661"
+              d="M3 8h12m0 0a3 3 0 106 0 3 3 0 00-6 0zm-6 8h12M9 16a3 3 0 11-6 0 3 3 0 016 0z"
               stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="path"
-              data-sentry-source-file="Inference.tsx"
-            ></path>
-            <circle
-              cx="14"
-              cy="6.7"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="20.3"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
-            <circle
-              cx="7.7"
-              cy="19.2996"
-              r="1.95"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              data-sentry-element="circle"
-              data-sentry-source-file="Inference.tsx"
-            ></circle>
+              stroke-opacity="currentOpacity"
+              stroke-width="1.2"
+              stroke-linecap="square"
+              stroke-linejoin="round"
+            />
           </svg>
         ),
         label: "Settings",
-        image: "/images/icon/settings.svg",
 
         route: "#",
         children: [
