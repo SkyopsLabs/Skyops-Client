@@ -244,7 +244,7 @@ const Tasks = () => {
             </h6>
             <ul className="flex list-outside list-decimal flex-col gap-1 pl-3">
               <li className="text-sm text-appBlack dark:text-white/[.48]">
-                You'll earn 50 points when your invited user reaches a total of
+                You&apos;ll earn 50 points when your invited user reaches a total of
                 100 USDT in transactions for the first time.
               </li>
               <li className="text-sm text-appBlack dark:text-white/[.48]">
