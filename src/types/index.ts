@@ -58,3 +58,14 @@ export interface IChat {
   tokens: number;
   created_at: string;
 }
+
+export interface AppSession {
+  x_id: number;
+  x_username: string;
+  tg_id: number;
+  tg_username: string;
+  discord_id: number;
+  discord_username: string;
+  expires: string;
+  email: string;
+}

@@ -24,7 +24,7 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
   };
   useEffect(() => {
     setPageName(path.slice(1));
-  }, []);
+  }, [path]);
 
   return (
     <motion.li
@@ -90,9 +90,9 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
               <path
                 d="M8 10l4 4 4-4"
                 stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </button>
@@ -151,9 +151,9 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
               <path
                 d="M8 10l4 4 4-4"
                 stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           </button>

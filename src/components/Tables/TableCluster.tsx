@@ -79,7 +79,10 @@ const TableCluster = () => {
           </div>
         </div>
         {clusters.map((item, index) => (
-          <div className="mx-4 mb-[6px] grid  h-[72px] w-full min-w-[700px] grid-cols-[1fr,1fr,0.5fr,0.5fr,1fr,0.7fr] border-stroke bg-white px-5 py-4.5 dark:border-dark-3 md:px-10  lg:w-auto">
+          <div
+            key={index.toString()}
+            className="mx-4 mb-[6px] grid  h-[72px] w-full min-w-[700px] grid-cols-[1fr,1fr,0.5fr,0.5fr,1fr,0.7fr] border-stroke bg-white px-5 py-4.5 dark:border-dark-3 md:px-10  lg:w-auto"
+          >
             <div className="flex items-center">
               <Checkbox />
               <p className="md:text-md text-sm text-appBlack">{item.name}</p>
@@ -138,7 +141,7 @@ const TableCluster = () => {
           />
           <div className="mt-[56px] flex flex-col items-center   gap-[6px]">
             <h6 className=" text-[22px] font-semibold text-black dark:text-white lg:text-[28px]">
-              Oh, it's empty
+              Oh, it&apos;s empty
             </h6>
             <p className="text-base text-black/50 dark:text-white/[.48]">
               The table is still empty for now

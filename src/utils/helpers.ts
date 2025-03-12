@@ -56,3 +56,66 @@ export const getRandomColor = () => {
     .toString(16)
     .padStart(6, "0")}`;
 };
+
+export const history = [
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "04.03.2025",
+    type: "New user reward",
+    points: "+50",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "04.03.2025",
+    type: "New user reward",
+    points: "+50",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "04.03.2025",
+    type: "New user reward",
+    points: "+50",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+  {
+    date: "05.03.2025",
+    type: "Chat with AI to earn",
+    points: "+10",
+  },
+];

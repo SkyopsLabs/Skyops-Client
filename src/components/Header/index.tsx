@@ -111,8 +111,8 @@ const Header = ({
             <path
               d="M3 7h18M3 12h18M3 17h18"
               stroke="currentColor"
-              stroke-width="1.2"
-              stroke-linecap="round"
+              strokeWidth="1.2"
+              strokeLinecap="round"
             />
           </svg>
         ) : (
@@ -125,9 +125,9 @@ const Header = ({
             <path
               d="M18 6L6 18M6 6l12 12"
               stroke="currentColor"
-              stroke-width="1.2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         )}

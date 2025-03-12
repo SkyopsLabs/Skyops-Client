@@ -47,9 +47,9 @@ const SelectGroup = ({
           <path
             d="M8 10l4 4 4-4"
             stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </span>

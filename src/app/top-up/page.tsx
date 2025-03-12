@@ -190,7 +190,10 @@ const BillingPage = () => {
             </div>
           </div>
           {billing.map((item, index) => (
-            <div className="grid h-[56px] grid-cols-[1.5fr,1.5fr,1.5fr] place-content-center border-b border-border2  dark:border-dark-3 lg:h-[64px]">
+            <div
+              key={index.toString()}
+              className="grid h-[56px] grid-cols-[1.5fr,1.5fr,1.5fr] place-content-center border-b border-border2  dark:border-dark-3 lg:h-[64px]"
+            >
               <div className=" flex items-center justify-start ">
                 <p className="text-sm text-appBlack dark:text-white">
                   {item.date}

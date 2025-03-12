@@ -50,7 +50,13 @@ const Login: NextPage = () => {
           <div className="flex items-center gap-2 rounded-[16px] bg-white p-2 dark:bg-dark-2">
             <div className="hidden items-center gap-3 lg:flex ">
               {images.map((item) => (
-                <Image src={item} width={56} height={56} alt={item} />
+                <Image
+                  key={item}
+                  src={item}
+                  width={56}
+                  height={56}
+                  alt={item}
+                />
               ))}
             </div>
             <button

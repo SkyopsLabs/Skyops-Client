@@ -14,6 +14,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider } from "./AppProvider";
 import useColorMode from "@/hooks/useColorMode";
 import { usePathname } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
+import { AppSession } from "@/types";
 
 const queryClient = new QueryClient();
 
@@ -29,9 +32,11 @@ const metadata = {
 export default function DefaultLayout({
   children,
   cookies,
+  session,
 }: {
   children: React.ReactNode;
   cookies: string | null;
+  session: string;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(
     typeof window !== "undefined" && window.innerWidth > 1024 ? true : false,
@@ -74,45 +79,47 @@ export default function DefaultLayout({
 
   return (
     <>
-      <WagmiProvider
-        config={wagmiAdapter.wagmiConfig as Config}
-        initialState={initialState}
-      >
-        <QueryClientProvider client={queryClient}>
-          <AppProvider>
-            {/* <!-- ===== Page Wrapper Star ===== --> */}
-            <div className="relative flex h-screen w-full overflow-hidden">
-              {/* <!-- ===== Sidebar Star ===== --> */}
-              <Sidebar
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-              {/* <!-- ===== Sidebar End ===== --> */}
-
-              {/* <!-- ===== Content Area Star ===== --> */}
-              <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-                {/* <!-- ===== Header Star ===== --> */}
-                <Header
+      <SessionProvider session={session as unknown as AppSession}>
+        <WagmiProvider
+          config={wagmiAdapter.wagmiConfig as Config}
+          initialState={initialState}
+        >
+          <QueryClientProvider client={queryClient}>
+            <AppProvider>
+              {/* <!-- ===== Page Wrapper Star ===== --> */}
+              <div className="relative flex h-screen w-full overflow-hidden">
+                {/* <!-- ===== Sidebar Star ===== --> */}
+                <Sidebar
                   sidebarOpen={sidebarOpen}
                   setSidebarOpen={setSidebarOpen}
                 />
-                {/* <!-- ===== Header End ===== --> */}
+                {/* <!-- ===== Sidebar End ===== --> */}
 
-                {/* <!-- ===== Main Content Star ===== --> */}
-                <main
-                  style={{ marginTop: path == "/" ? "0" : "initial" }}
-                  className="mt-[64px] flex h-full flex-col lg:mt-0"
-                >
-                  {children}
-                </main>
-                {/* <!-- ===== Main Content End ===== --> */}
+                {/* <!-- ===== Content Area Star ===== --> */}
+                <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+                  {/* <!-- ===== Header Star ===== --> */}
+                  <Header
+                    sidebarOpen={sidebarOpen}
+                    setSidebarOpen={setSidebarOpen}
+                  />
+                  {/* <!-- ===== Header End ===== --> */}
+
+                  {/* <!-- ===== Main Content Star ===== --> */}
+                  <main
+                    style={{ marginTop: path == "/" ? "0" : "initial" }}
+                    className="mt-[64px] flex h-full flex-col lg:mt-0"
+                  >
+                    {children}
+                  </main>
+                  {/* <!-- ===== Main Content End ===== --> */}
+                </div>
+                {/* <!-- ===== Content Area End ===== --> */}
               </div>
-              {/* <!-- ===== Content Area End ===== --> */}
-            </div>
-            {/* <!-- ===== Page Wrapper End ===== --> */}
-          </AppProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
+              {/* <!-- ===== Page Wrapper End ===== --> */}
+            </AppProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </SessionProvider>
     </>
   );
 }

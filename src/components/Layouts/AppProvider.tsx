@@ -24,7 +24,7 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
         setAuthToken(localStorage.getItem("authToken"));
         // get User Info
         (async () => {
-          router.push("/instances");
+          // router.push("/instances");
           const _ = await getCurrentUser();
           setUser(_);
         })();

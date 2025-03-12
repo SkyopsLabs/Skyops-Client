@@ -86,7 +86,10 @@ const LeaderBoard = () => {
                 : true,
             )
             .map((item, index) => (
-              <div className="mb-[6px] grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-white px-5 dark:bg-dark-2 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
+              <div
+                key={index.toString()}
+                className="mb-[6px] grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-white px-5 dark:bg-dark-2 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10"
+              >
                 <p className="flex items-center text-sm text-appBlack dark:text-white">
                   {index + 1}
                 </p>

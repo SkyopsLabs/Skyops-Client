@@ -5,6 +5,7 @@ const DarkModeSwitcher = () => {
 
   return (
     <div
+      suppressHydrationWarning
       onClick={() => {
         if (typeof setColorMode === "function") {
           setColorMode(colorMode === "light" ? "dark" : "light");
