@@ -8,6 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import SkyopsBalance from "../SkyopsBalance";
+import Logo from "../Logo";
 
 const Header = ({
   sidebarOpen,
@@ -48,27 +49,12 @@ const Header = ({
   return (
     <header
       // suppressHydrationWarning={true}
-      className={`${pathname == "/" ? "hidden" : "flex"} relative top-0 z-9999  flex h-[64px] w-full items-center justify-end border-b border-[#EBEBEC] bg-appGray  px-5  dark:border-stroke-dark dark:bg-gray-dark lg:sticky lg:min-h-[80px] lg:px-10`}
+      className={`${pathname == "/" ? "hidden" : "flex"} relative top-0 z-9999  flex h-[64px] w-full items-center justify-end border-b border-[#EBEBEC] bg-appGray  px-5  dark:border-stroke-dark dark:bg-dark lg:sticky lg:min-h-[80px] lg:px-10`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="mr-auto flex w-full items-center  lg:hidden">
         <Link className="flex w-full items-center gap-2" href="/">
-          <Image
-            width={96}
-            height={32}
-            src={"/images/logos/logo-blue-text.png"}
-            alt="Logo"
-            priority
-            className="dark:hidden"
-          />
-          <Image
-            width={96}
-            height={32}
-            src={"/images/logos/logo-white-text.png"}
-            alt="Logo"
-            priority
-            className="hidden dark:block"
-          />
+          <Logo />
         </Link>
       </div>
       <div className="mr-auto hidden gap-1 lg:flex lg:items-center">
@@ -91,7 +77,7 @@ const Header = ({
       </div>
 
       {/* Skyops Balance */}
-      <div className="absolute left-0 top-full mt-[1px] flex h-[64px] w-full items-center justify-center border-b border-l border-border bg-white   px-5  py-4 dark:border-dark-3 dark:bg-dark-3 lg:relative lg:top-0 lg:mt-0 lg:h-full lg:w-[163px] lg:border-b-0 lg:bg-transparent lg:px-6">
+      <div className="absolute left-0 top-full mt-[1px] flex h-[64px] w-full items-center justify-center border-b border-l border-border bg-white   px-5  py-4 dark:border-dark-3 dark:bg-dark lg:relative lg:top-0 lg:mt-0 lg:h-full lg:w-[163px] lg:border-b-0 lg:bg-transparent lg:px-6">
         <SkyopsBalance />
       </div>
       <div className="flex h-full items-center justify-normal gap-2 border-l  border-border dark:border-dark-3 2xsm:gap-4 lg:w-[350px] lg:justify-between xl:justify-normal">

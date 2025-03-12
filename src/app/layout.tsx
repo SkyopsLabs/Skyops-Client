@@ -12,7 +12,7 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import { Archivo } from "next/font/google";
 
-const archivo = Archivo({ subsets: ["latin", "latin-ext", "vietnamese"] });
+const archivo = Archivo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Skyops App | Scalable. Efficient. Unstoppable.",
@@ -38,7 +38,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         style={archivo.style}
-        className={`bg-appGray`}
+        className={`bg-appGray dark:bg-dark`}
         suppressHydrationWarning={false}
       >
         <DefaultLayout cookies={cookies}>

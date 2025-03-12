@@ -31,7 +31,7 @@ const SelectGroupAIModel = ({ models, handleChangeModel }: ISelector) => {
             handleChangeModel(e.target.value);
             changeTextColor();
           }}
-          className={`relative z-20 w-full appearance-none border  border-black/10 bg-transparent px-5.5 py-3 text-black/30 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary ${
+          className={`relative z-20 w-full appearance-none border  border-black/10 bg-transparent px-5.5 py-3 text-black/30 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white/[.48] dark:focus:border-primary ${
             isOptionSelected ? "text-sm text-dark dark:text-white" : ""
           }`}
         >
@@ -51,7 +51,14 @@ const SelectGroupAIModel = ({ models, handleChangeModel }: ISelector) => {
           <Image
             alt="down"
             src={"/images/icon/chevron-down.svg"}
-            className={`  duration-200 ease-in`}
+            className={`  duration-200 ease-in dark:hidden`}
+            width="24"
+            height="24"
+          />
+          <Image
+            alt="down"
+            src={"/images/icon/chevron-down-white.svg"}
+            className={`hidden duration-200  ease-in dark:flex`}
             width="24"
             height="24"
           />

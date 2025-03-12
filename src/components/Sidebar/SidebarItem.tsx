@@ -29,7 +29,7 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
           : !item.disabled
             ? "text-dark-4 hover:bg-gray-2 hover:text-dark dark:text-gray-5 dark:hover:bg-white/10 dark:hover:text-white"
             : ""
-      } border-border flex  h-full min-h-[64px] w-full   flex-col justify-center border-b px-5 py-4 dark:border-dark-3 lg:px-10  `}
+      } flex h-full  min-h-[64px] w-full flex-col   justify-center border-b border-border px-5 py-4 dark:border-dark-3 lg:px-10  `}
       variants={listItem}
     >
       {/* Link for Desktop */}
@@ -46,10 +46,18 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
           width={24}
           height={24}
           alt={item.label}
+          className="flex dark:hidden"
+        />
+        <Image
+          src={item.image_dark ?? "/images/icon/icon.svg"}
+          width={24}
+          height={24}
+          alt={item.label}
+          className="hidden dark:flex"
         />
         <p className="min-w-[60%]">{item.label}</p>
         {item.disabled && (
-          <sup className="bg-prim3 mt-3 rounded-lg p-2  text-xs  text-white">
+          <sup className="mt-3 rounded-lg bg-prim3 p-2  text-xs  text-white">
             Soon
           </sup>
         )}
@@ -58,7 +66,14 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
             <Image
               alt="down"
               src={"/images/icon/chevron-down.svg"}
-              className={`  duration-200 ease-in ${pageName == item.label.toLowerCase() && "rotate-180"}`}
+              className={`duration-200  ease-in dark:hidden ${pageName == item.label.toLowerCase() && "rotate-180"}`}
+              width="24"
+              height="24"
+            />
+            <Image
+              alt="down"
+              src={"/images/icon/chevron-down-white.svg"}
+              className={`  hidden duration-200 ease-in dark:flex ${pageName == item.label.toLowerCase() && "rotate-180"}`}
               width="24"
               height="24"
             />
@@ -83,7 +98,7 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
         />
         <p className="min-w-[60%]">{item.label}</p>
         {item.disabled && (
-          <sup className="bg-prim3 mt-3 rounded-lg p-2  text-xs  text-white">
+          <sup className="mt-3 rounded-lg bg-prim3 p-2  text-xs  text-white">
             Soon
           </sup>
         )}

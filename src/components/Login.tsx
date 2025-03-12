@@ -10,6 +10,7 @@ import MetamaskSvg from "@/components/MetamaskSvg";
 import { useAppKit } from "@reown/appkit/react";
 import Image from "next/image";
 import Loader from "./common/Loader";
+import Logo from "./Logo";
 const queryClient = new QueryClient();
 
 const images = [
@@ -39,24 +40,14 @@ const Login: NextPage = () => {
   };
 
   return (
-    <div className="relative flex h-full flex-col items-center justify-start gap-10 bg-appGray lg:gap-20">
+    <div className="relative flex h-full flex-col items-center justify-start gap-10 bg-appGray dark:bg-dark lg:gap-20">
       <div
         id="header"
         className="flex w-full items-center justify-between px-5 pt-6 lg:px-8  lg:pt-8"
       >
-        <div id="logo" className=" flex items-center gap-3  ">
-          <Image
-            src={"/images/logos/logo-blue.png"}
-            width={37}
-            height={32}
-            alt="logo"
-          />
-          <h6 className="text-[22px] font-bold leading-[24px] tracking-[-2%] text-[#01020C]">
-            Skyops
-          </h6>
-        </div>
+        <Logo />
         <div className="flex gap-3">
-          <div className="flex items-center gap-2 rounded-[16px] bg-white p-2">
+          <div className="flex items-center gap-2 rounded-[16px] bg-white p-2 dark:bg-dark-2">
             <div className="hidden items-center gap-3 lg:flex ">
               {images.map((item) => (
                 <Image src={item} width={56} height={56} alt={item} />
@@ -64,23 +55,23 @@ const Login: NextPage = () => {
             </div>
             <button
               onClick={onConnect}
-              className="rounded-[12px] bg-prim2 p-4 font-medium text-white duration-100 hover:bg-appBlack/70 active:scale-95 lg:bg-appBlack"
+              className="rounded-[12px] bg-prim2 p-4 font-medium text-white duration-100 active:scale-95 dark:bg-white dark:text-black lg:bg-appBlack lg:hover:bg-appBlack/70 lg:dark:bg-white/10 lg:dark:text-white"
             >
               Connect Wallet
             </button>
           </div>
-          <div className="hidden rounded-[16px] bg-white p-2 lg:flex">
-            <button className="durationn-100 rounded-[12px] bg-prim2 p-4 font-medium text-white hover:bg-prim2/80">
+          <div className="hidden rounded-[16px] bg-white  p-2 dark:bg-dark-2 lg:flex">
+            <button className="durationn-100 rounded-[12px] bg-prim2 p-4 font-medium text-white hover:bg-prim2/80 dark:bg-white dark:text-black">
               Use Referral Code
             </button>
           </div>
         </div>
       </div>
       <section className=" flex flex-col items-center">
-        <h1 className="text-[48px] font-medium text-appBlack lg:text-[64px]">
+        <h1 className="text-[48px] font-medium text-appBlack dark:text-white lg:text-[64px]">
           Join Skyops
         </h1>
-        <p className="max-w-[243px] text-center text-lg leading-6 text-appBlack/[.48]">
+        <p className="max-w-[243px] text-center text-lg leading-6 text-appBlack/[.48] dark:text-white/[.48]">
           Revolutionize AI Scalability and Accessibility
         </p>
       </section>
@@ -88,7 +79,13 @@ const Login: NextPage = () => {
         <Image
           src={"/images/login_banner.png"}
           fill
-          className="object-contain"
+          className="object-contain dark:hidden"
+          alt="banner"
+        />
+        <Image
+          src={"/images/login-banner-white.svg"}
+          fill
+          className="hidden object-contain dark:flex"
           alt="banner"
         />
       </div>

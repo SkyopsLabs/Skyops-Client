@@ -52,7 +52,7 @@ export default function DefaultLayout({
     adapters: [wagmiAdapter],
     networks: [sepolia],
     metadata: metadata,
-    themeMode: colorMode as ThemeMode,
+    themeMode: !Boolean(colorMode) as unknown as ThemeMode,
     projectId,
     features: {
       connectMethodsOrder: ["wallet"],

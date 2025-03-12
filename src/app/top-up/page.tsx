@@ -120,22 +120,30 @@ const BillingPage = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="mx-auto w-full   bg-white p-6 dark:bg-gray-dark lg:mt-4 lg:w-[726px]">
+      <div className="mx-auto w-full   bg-white p-6 dark:bg-dark-2 lg:mt-4 lg:w-[726px]">
         <div className="flex h-[64px] items-center justify-between">
           <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
             Top-up
           </h4>
           <div className=" flex w-max  justify-between gap-1.5">
-            <p className="text-sm text-[#01020C7A]  opacity-50 dark:text-dark-6">
+            <p className="text-sm text-[#01020C7A]  opacity-50 dark:text-white/[.48]">
               SKYOPS Balance:
             </p>
             <div className="flex items-center  gap-1">
-              <p className="text-[#01020C] dark:text-dark-6">{0}</p>
+              <p className="text-[#01020C] dark:text-white">{0}</p>
               <Image
                 width={16}
                 height={16}
                 alt="icon"
+                className="dark:hidden"
                 src={"/images/icon/icon.svg"}
+              />
+              <Image
+                width={16}
+                height={16}
+                alt="icon"
+                src={"/images/icon/icon-white.svg"}
+                className="hidden dark:flex"
               />
             </div>
           </div>
@@ -145,20 +153,20 @@ const BillingPage = () => {
           <input
             type="number"
             placeholder="Add Tokens"
-            className="mb-3 h-[60px] w-full appearance-none border-[1px]  border-black/10 bg-transparent px-5.5 py-2 text-dark outline-none transition placeholder:text-black/30 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary "
+            className="mb-3 h-[60px] w-full appearance-none border-[1px]  border-black/10 bg-transparent px-5.5 py-2 text-dark outline-none transition placeholder:text-black/30 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:placeholder:text-white/[.48] dark:focus:border-primary "
             value={amount ?? ""}
             onChange={(e) => setAmount(Number(e.target.value))}
           />
           <RadioButton setAmount={setAmount} />
           <button
-            className="mt-5 h-[60px] w-full bg-prim  px-5 py-1 text-white lg:mt-6 lg:px-8 xl:px-10"
+            className="mt-5 h-[60px] w-full bg-prim px-5 py-1 text-white dark:bg-white dark:text-black lg:mt-6 lg:px-8 xl:px-10"
             onClick={handleAddCredits}
           >
             Add Tokens
           </button>
         </div>
       </div>
-      <div className="mx-auto w-full   bg-white p-6 dark:bg-gray-dark lg:mt-4 lg:w-[726px]">
+      <div className="mx-auto w-full   bg-white p-6 dark:bg-dark-2 lg:mt-4 lg:w-[726px]">
         {/* Top up transactions */}
         <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
           History
@@ -166,25 +174,37 @@ const BillingPage = () => {
         <div className="">
           <div className="grid h-[56px] grid-cols-[1.5fr,1.5fr,1.5fr] place-content-center border-b border-border2  dark:border-dark-3 lg:h-[64px]">
             <div className=" flex items-center justify-start ">
-              <p className="text-sm text-appBlack/[.48]">Date</p>
+              <p className="text-sm text-appBlack/[.48] dark:text-white/[.48]">
+                Date
+              </p>
             </div>
             <div className="flex items-center justify-center ">
-              <p className="text-sm text-appBlack/[.48]">Amount</p>
+              <p className="text-sm text-appBlack/[.48] dark:text-white/[.48]">
+                Amount
+              </p>
             </div>
             <div className="flex items-center justify-end">
-              <p className="text-sm text-appBlack/[.48]">Currency</p>
+              <p className="text-sm text-appBlack/[.48] dark:text-white/[.48]">
+                Currency
+              </p>
             </div>
           </div>
           {billing.map((item, index) => (
             <div className="grid h-[56px] grid-cols-[1.5fr,1.5fr,1.5fr] place-content-center border-b border-border2  dark:border-dark-3 lg:h-[64px]">
               <div className=" flex items-center justify-start ">
-                <p className="text-sm text-appBlack">{item.date}</p>
+                <p className="text-sm text-appBlack dark:text-white">
+                  {item.date}
+                </p>
               </div>
               <div className="flex items-center justify-center ">
-                <p className="text-sm text-appBlack">{item.amount}</p>
+                <p className="text-sm text-appBlack dark:text-white">
+                  {item.amount}
+                </p>
               </div>
               <div className="flex items-center justify-end">
-                <p className="text-sm text-appBlack">{item.currency}</p>
+                <p className="text-sm text-appBlack dark:text-white">
+                  {item.currency}
+                </p>
               </div>
             </div>
           ))}
@@ -192,16 +212,16 @@ const BillingPage = () => {
       </div>
       {/* Pagination */}
       <div className="mx-auto my-5 flex w-full items-center justify-between px-5 lg:max-w-[726px] lg:px-0">
-        <p className="text-sm text-black/[.48]">Prev</p>
+        <p className="text-sm text-black/[.48] dark:text-white/[.48]">Prev</p>
         <div className="flex items-center gap-1.5">
-          <button className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-black text-sm font-medium text-white">
+          <button className="flex h-8 w-8 items-center justify-center rounded-[11px] bg-black text-sm font-medium text-white dark:bg-[#1e1e1e]">
             1
           </button>
-          <button className="flex h-8 w-8 items-center justify-center rounded-[11px] border border-black/10 text-sm font-medium text-black/[.48]">
+          <button className="flex h-8 w-8 items-center justify-center rounded-[11px] border border-black/10  text-sm font-medium text-black/[.48] dark:border-white/10 dark:text-white/[.48]">
             2
           </button>
         </div>
-        <p className="text-sm text-black/[.48]">Next</p>
+        <p className="text-sm text-black/[.48] dark:text-white/[.48]">Next</p>
       </div>
     </div>
   );

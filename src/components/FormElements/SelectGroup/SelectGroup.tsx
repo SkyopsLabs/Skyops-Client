@@ -18,7 +18,7 @@ const SelectGroup = ({
 
   return (
     <div
-      className={`border-border ${className} relative z-50 h-full border-l bg-transparent dark:border-dark-3 dark:bg-dark-2`}
+      className={`border-border ${className} relative z-50 h-full border-l bg-transparent dark:border-dark-3 `}
     >
       <select
         value={selectedOption}
@@ -26,7 +26,7 @@ const SelectGroup = ({
           setSelectedOption(e.target.value);
           changeTextColor();
         }}
-        className={`relative z-20 h-full w-full appearance-none bg-transparent px-5.5 py-2.5 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary ${
+        className={`relative z-20 h-full w-full appearance-none bg-transparent px-5.5 py-2.5 outline-none transition focus:border-primary active:border-primary dark:border-dark-3  dark:focus:border-primary ${
           isOptionSelected ? "text-appBlack dark:text-white" : ""
         }`}
       >
@@ -41,7 +41,14 @@ const SelectGroup = ({
         <Image
           alt="down"
           src={"/images/icon/chevron-down.svg"}
-          className={`  duration-200 ease-in ${"rotate-180"}`}
+          className={`  duration-200 ease-in dark:hidden ${"rotate-180"}`}
+          width="24"
+          height="24"
+        />
+        <Image
+          alt="down"
+          src={"/images/icon/chevron-down-white.svg"}
+          className={`hidden duration-200  ease-in dark:flex ${"rotate-180"}`}
           width="24"
           height="24"
         />

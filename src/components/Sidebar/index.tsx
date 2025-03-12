@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import path from "path";
 import Loader from "../common/Loader";
 import DarkModeSwitcher from "../Header/DarkModeSwitcher";
+import Logo from "../Logo";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -286,6 +287,7 @@ const menuGroups = [
         ),
         label: "AI Explorer",
         image: "/images/icon/icon.svg",
+        image_dark: "/images/icon/icon-white.svg",
 
         route: "#",
         children: [
@@ -553,7 +555,7 @@ const menuGroups = [
             label: "Tasks",
             route: "/rewards/tasks",
           },
-          { label: "Leaderboard", route: "/rewards/leaderbord" },
+          { label: "Leaderboard", route: "/rewards/leaderboard" },
         ],
       },
       {
@@ -652,29 +654,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   return (
     <aside
-      className={`absolute   top-[128px] z-9999  h-[85vh] flex-col overflow-y-scroll border-r  border-stroke  bg-appGray duration-300 ease-linear  dark:border-stroke-dark dark:bg-gray-dark lg:relative lg:top-0 lg:h-screen  ${
+      className={`absolute   top-[128px] z-9999  h-[85vh] flex-col overflow-y-scroll border-r  border-stroke  bg-appGray duration-300 ease-linear  dark:border-stroke-dark dark:bg-dark lg:relative lg:top-0 lg:h-screen  ${
         sidebarOpen ? "w-full lg:w-[300px]" : "w-0 "
       } ${pathname == "/" ? "hidden" : "flex"}`}
     >
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="hidden max-h-[80px] min-h-[80px] w-full items-center justify-between border-b border-border pl-10 dark:border-dark-3 lg:flex">
         <Link className="flex w-full items-center" href="/">
-          <Image
-            width={123}
-            height={40}
-            src={"/images/logos/logo-blue-text.png"}
-            alt="Logo"
-            priority
-            className="dark:hidden"
-          />
-          <Image
-            width={123}
-            height={40}
-            src={"/images/logos/logo-white-text.png"}
-            alt="Logo"
-            priority
-            className="hidden dark:block"
-          />
+          <Logo />
         </Link>
       </div>
       {/* <!-- SIDEBAR HEADER --> */}

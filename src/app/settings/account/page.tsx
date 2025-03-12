@@ -32,7 +32,7 @@ const SettingsAccountPage = () => {
           Account Settings
         </h4>
       </div>
-      <div className="mb-4 bg-white p-5 dark:bg-dark-3 lg:mx-4 lg:mb-3 lg:mt-6 lg:p-6">
+      <div className="mb-4 bg-white p-5 dark:bg-dark-2  lg:mx-4 lg:mb-3 lg:mt-6 lg:p-6">
         {/* General Part */}
         <h3 className="mb-4 text-[20px] font-medium text-appBlack  dark:text-white lg:mb-6 lg:text-[22px]">
           Profile
@@ -40,7 +40,7 @@ const SettingsAccountPage = () => {
         <div className="flex flex-col gap-2 lg:flex-row lg:gap-3">
           {/* Organization ID */}
           <input
-            className=" h-[60px]  w-full  border-[1px] border-black/10 bg-white px-4.5 py-2.5 text-black/30 focus:border-primary  focus-visible:outline-none dark:border-white/10 dark:bg-dark-2 dark:bg-dark-3 dark:text-white dark:focus:border-primary lg:w-1/3"
+            className=" h-[60px]  w-full  border-[1px] border-black/10 bg-white px-4.5 py-2.5 text-black/30 focus:border-primary focus-visible:outline-none  dark:border-white/10 dark:bg-dark-2   dark:text-white/[.48] dark:focus:border-primary lg:w-1/3"
             type="text"
             name="name"
             placeholder=""
@@ -51,7 +51,7 @@ const SettingsAccountPage = () => {
           {/* Organization Name */}
 
           <input
-            className=" h-[60px] w-full   border-[1px] border-black/10 bg-white px-4.5 py-2.5 text-appBlack focus:border-primary  focus-visible:outline-none dark:border-white/10 dark:bg-dark-2 dark:bg-dark-3 dark:text-white dark:focus:border-primary lg:w-1/3"
+            className=" h-[60px] w-full   border-[1px] border-black/10 bg-white px-4.5 py-2.5 text-appBlack focus:border-primary focus-visible:outline-none  dark:border-white/10 dark:bg-dark-2   dark:text-white/[.48] dark:focus:border-primary lg:w-1/3"
             type="text"
             name="address"
             placeholder=""
@@ -62,7 +62,7 @@ const SettingsAccountPage = () => {
           {/* Create Time */}
 
           <input
-            className=" h-[60px] w-full   border-[1px] border-black/10 bg-white px-4.5 py-2.5 text-appBlack focus:border-primary  focus-visible:outline-none dark:border-white/10 dark:bg-dark-2 dark:bg-dark-3 dark:text-white dark:focus:border-primary lg:w-1/3"
+            className=" h-[60px] w-full   border-[1px] border-black/10 bg-white px-4.5 py-2.5 text-appBlack focus:border-primary focus-visible:outline-none  dark:border-white/10 dark:bg-dark-2   dark:text-white/[.48] dark:focus:border-primary lg:w-1/3"
             type="text"
             name="joined"
             placeholder=""
@@ -72,11 +72,11 @@ const SettingsAccountPage = () => {
         </div>
       </div>
       {/* Password */}
-      <div className="mb-4 bg-white p-5 dark:bg-dark-3 lg:mx-4 lg:mb-3 lg:mt-6 lg:p-6">
+      <div className="mb-4 bg-white p-5 dark:bg-dark-2  lg:mx-4 lg:mb-3 lg:mt-6 lg:p-6">
         <h3 className="mb-4 text-[20px] font-medium text-appBlack  dark:text-white lg:mb-3 lg:text-[22px]">
           Password
         </h3>
-        <p className="text-black/50">
+        <p className="text-black/50 dark:text-white/[.48]">
           If yu log in with third party auth provider, you can&apos;t change
           password here.
         </p>

@@ -19,7 +19,7 @@ const DropdownUser = ({
   return (
     <ClickOutside
       onClick={() => setDropdownOpen(false)}
-      className="border-border relative flex h-full w-full    items-center justify-center border-l  dark:border-dark-3 lg:w-[230px] lg:border-r-0  "
+      className="relative flex h-full w-full items-center    justify-center border-l border-border  dark:border-dark-3 lg:w-[230px] lg:border-r-0  "
     >
       <div className="flex h-max w-max items-center gap-2 px-[19px]  lg:gap-3  lg:px-0 lg:pl-7">
         <div className="h-6 w-6 rounded-full bg-[#F24924] " />
@@ -28,7 +28,7 @@ const DropdownUser = ({
           className="flex items-center gap-4"
           href="#"
         >
-          <div className="flex items-center gap-2 text-sm font-medium text-dark dark:text-dark-6 lg:text-base">
+          <div className="flex items-center gap-2 text-sm  text-appBlack  dark:text-white lg:text-base">
             <span suppressHydrationWarning className="hidden lg:flex">
               {address.slice(0, 7)}...
               {address.slice(-6)}
@@ -40,7 +40,14 @@ const DropdownUser = ({
             <Image
               alt="down"
               src={"/images/icon/chevron-down.svg"}
-              className={`  duration-200 ease-in ${dropdownOpen && "rotate-180"}`}
+              className={` flex duration-200  ease-in dark:hidden ${dropdownOpen && "rotate-180"}`}
+              width="24"
+              height="24"
+            />
+            <Image
+              alt="down"
+              src={"/images/icon/chevron-down-white.svg"}
+              className={`hidden duration-200  ease-in dark:flex ${dropdownOpen && "rotate-180"}`}
               width="24"
               height="24"
             />
