@@ -253,7 +253,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   return (
     <aside
-      className={`absolute   top-[128px] z-9999  h-[85vh] flex-col overflow-y-scroll border-r  border-stroke  bg-appGray duration-300 ease-linear  dark:border-stroke-dark dark:bg-dark lg:relative lg:top-0 lg:h-screen  ${
+      className={`absolute   top-[128px] z-9999  h-[85vh] flex-col overflow-y-scroll border-r border-stroke  bg-appGray  duration-300 ease-linear dark:border-stroke-dark  dark:bg-dark lg:relative lg:top-0 lg:h-screen lg:overflow-y-auto  ${
         sidebarOpen ? "w-full lg:w-[300px]" : "w-0 "
       } ${pathname == "/" ? "hidden" : "flex"}`}
     >

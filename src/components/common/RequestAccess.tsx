@@ -25,7 +25,7 @@ const RequestAccess = ({
       </div>
       <p className="text-bold max-w-3xl text-base">
         {
-          "We're currently testing our latest features, and we'd love for you to join us. If you're interested in Instances, sign up for the waitlist, and you'll be among the first to get access. We'll keep you updated and reach out as soon as it's available. Thanks for your support!"
+          "Exciting things are on the way! We're working on new features and want to give early access to those who are interested. If Instances sound like something you'd like to explore, sign up for the waitlist. We'll keep you informed and let you know the moment it's ready. Appreciate your enthusiasm!"
         }
       </p>
 

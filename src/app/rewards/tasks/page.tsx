@@ -1,9 +1,4 @@
 "use client";
-import Image from "next/image";
-import { useAccount } from "wagmi";
-import { signIn, useSession } from "next-auth/react";
-import { AppSession } from "@/types";
-import { useEffect, useState } from "react";
 import {
   authenticateDiscord,
   authenticateGmail,
@@ -11,16 +6,25 @@ import {
   authenticateTwitter,
   getUserDetails,
 } from "@/actions/verify";
-import { init, initData } from "@telegram-apps/sdk-react";
+import { useAppSelector } from "@/redux/hooks";
+import { setUser } from "@/redux/slices/userSlice";
+import { AppSession } from "@/types";
 import { history } from "@/utils/helpers";
-import { createScript } from "@telegram-auth/react";
 import telegramAuth from "@use-telegram-auth/client";
+import { signIn, useSession } from "next-auth/react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useAccount } from "wagmi";
 
 const Tasks = () => {
   // --------------------------------------------VARIABLES
   const { address } = useAccount();
   const { data, status } = useSession();
-  const [user, setUser] = useState<any>();
+  const { user } = useAppSelector((state) => state.user);
+  const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
+  const dispatch = useDispatch();
 
   const appSession: AppSession = data?.user as AppSession;
 
@@ -76,8 +80,9 @@ const Tasks = () => {
     }
   };
   const signInwithTeleGram = async () => {
+    let message = "";
     console.log(status);
-    if (user?.telegram_id) {
+    if (user?.tg_id) {
       console.log(data);
       return;
     }
@@ -85,12 +90,18 @@ const Tasks = () => {
       const res = await telegramAuth("7902207050", {
         windowFeatures: { popup: true },
       });
-      await authenticateTelegram(address as string, res.id, res.username);
+      message = await authenticateTelegram(
+        address as string,
+        res.id,
+        res.username,
+      );
+      toast.success(message);
       const userDetails = await getUserDetails(address as string);
-      setUser(userDetails);
+      dispatch(setUser(userDetails));
       console.log(res, userDetails, "response");
-    } catch (error) {
+    } catch (error: any) {
       console.log(error, "error");
+      toast.error(error?.message ?? "Error connecting telegram");
     }
   };
   const tasks = [
@@ -125,7 +136,7 @@ const Tasks = () => {
       image: "/images/icon/telegram.svg",
       points: "+10",
       label: "Connect Telegram",
-      verified: user?.telegram_id,
+      verified: user?.tg_id,
       setter: signInwithTeleGram,
       desc: "Connect Telegram to your Skyops to get points!",
     },
@@ -223,8 +234,9 @@ const Tasks = () => {
       points: "+10",
       label: "Join us on Discord",
       verified:
-        new Date(new Date().setHours(0, 0, 0, 0)) < user?.lastDiscordMessage &&
-        user?.lastDiscordMessage <
+        new Date(new Date().setHours(0, 0, 0, 0)) <
+          (user?.lastDiscordMessage ?? 0) &&
+        (user?.lastDiscordMessage ?? 0) <
           new Date(new Date().setHours(23, 59, 59, 999)),
       setter: signInwithTwitter,
       desc: "Send at least one message in Discord per day",
@@ -315,44 +327,58 @@ const Tasks = () => {
   //------------------------------------------------------------------USE EFFECTS
 
   useEffect(() => {
+    let isMounted = true;
+
     if (status == "authenticated") {
     }
     const auth = async () => {
-      if (appSession) {
-        if (!user?.x_id) {
-          await authenticateTwitter(
-            address as string,
-            appSession.x_id,
-            appSession.x_username,
-          );
+      if (!isMounted) return;
+      console.log(appSession);
+      let message = "";
+
+      try {
+        if (appSession) {
+          if (appSession?.x_id) {
+            message = await authenticateTwitter(
+              address as string,
+              appSession.x_id,
+              appSession.x_username,
+            );
+          }
+          if (appSession?.discord_id) {
+            message = await authenticateDiscord(
+              address as string,
+              appSession.discord_id,
+              appSession.discord_username,
+            );
+          }
+          if (appSession?.email) {
+            message = await authenticateGmail(
+              address as string,
+              appSession.email,
+            );
+          }
         }
-        if (!user?.discord_id) {
-          await authenticateDiscord(
-            address as string,
-            appSession.discord_id,
-            appSession.discord_username,
-          );
-        }
-        if (!user?.gmail) {
-          await authenticateGmail(address as string, appSession.email);
+
+        // toast.success(message);
+      } catch (error: any) {
+        if (isMounted) {
+          toast.error(error.message);
         }
       }
 
-      const userDetails = await getUserDetails(address as string);
-      setUser(userDetails);
-      console.log(userDetails);
+      if (isMounted) {
+        const userDetails = await getUserDetails(address as string);
+        dispatch(setUser(userDetails));
+      }
     };
 
     auth();
-  }, [
-    status,
-    address,
-    user?.gmail,
-    user?.x_id,
-    user?.x_username,
-    user?.discord_id,
-    user?.discord_username,
-  ]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [status, address, appSession]);
 
   return (
     <div className="w-full">
@@ -432,19 +458,19 @@ const Tasks = () => {
                 </p>
               </div>
               <div className="max-h-[60vh] overflow-y-scroll">
-                {history.map((item, index) => (
+                {user?.pointsHistory?.map((item, index) => (
                   <div
                     key={index.toString()}
                     className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"
                   >
                     <p className="flex items-start text-sm text-appBlack dark:text-white">
-                      {item.date}
+                      {item.date.toLocaleDateString("de-DE")}
                     </p>
                     <p className="flex items-start text-sm text-appBlack dark:text-white">
                       {item.type}
                     </p>
                     <p className="flex justify-end text-sm text-[#097C4C]">
-                      {item.points}
+                      +{item.points}
                     </p>
                   </div>
                 ))}
@@ -474,13 +500,16 @@ const Tasks = () => {
             </ul>
 
             <div className="mb-4 mt-4 flex h-[60px] items-center justify-between border border-black/10 px-4.5  dark:border-dark-3 lg:mb-3 lg:mt-6">
-              <p className="text-sm text-appBlack dark:text-white">
-                https://Skyops.net/point?invite=QFJNFU
-              </p>
+              <p className="text-sm text-appBlack dark:text-white">{refUrl}</p>
               <svg
                 width="20"
                 height="20"
                 fill="none"
+                className="text-appBlack/70 hover:cursor-pointer active:scale-95 dark:text-white/70"
+                onClick={() => {
+                  navigator.clipboard.writeText(refUrl);
+                  toast.success("Copied");
+                }}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <g clipPath="url(#prefix__clip0_651_79)">
@@ -501,11 +530,18 @@ const Tasks = () => {
               </svg>
             </div>
             <div className="flex h-[60px] items-center justify-between border border-black/10 px-4.5  dark:border-dark-3 ">
-              <p className="text-sm text-appBlack dark:text-white">QFJNFU</p>
+              <p className="text-sm text-appBlack dark:text-white">
+                {user?.code}
+              </p>
               <svg
                 width="20"
                 height="20"
                 fill="none"
+                className="text-appBlack/70 hover:cursor-pointer active:scale-95 dark:text-white/70"
+                onClick={() => {
+                  navigator.clipboard.writeText(user?.code);
+                  toast.success("Copied");
+                }}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <g clipPath="url(#prefix__clip0_651_79)">
@@ -636,7 +672,7 @@ const Tasks = () => {
                 <div className="flex h-[40px] w-full items-center justify-between border-[1px] border-[#E6E6E6] px-[18px] text-black/[.48] dark:border-white/10 dark:text-white/[.80]">
                   <input
                     placeholder={item.placeholder}
-                    className="h-full w-full bg-transparent *:focus:outline-none dark:text-[#595959]"
+                    className="h-full w-full bg-transparent focus:outline-none  dark:text-[#595959]"
                   />
                   <svg
                     width="18"

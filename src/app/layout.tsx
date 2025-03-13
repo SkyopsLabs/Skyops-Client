@@ -14,6 +14,7 @@ import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 import { getServerAuthSession } from "@/actions/auth";
 import { AppSession } from "@/types";
+import { Providers } from "@/redux/Provider";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default async function RootLayout({
   const headersObj = headers();
   const cookies = headersObj.get("cookie");
   const session = (await getServerAuthSession()) as unknown as string;
+  console.log(session);
   return (
     <html lang="en">
       <body
@@ -47,11 +49,13 @@ export default async function RootLayout({
         className={`bg-appGray dark:bg-dark`}
         suppressHydrationWarning={false}
       >
-        <DefaultLayout session={session} cookies={cookies}>
-          {children}
+        <Providers>
+          <DefaultLayout session={session} cookies={cookies}>
+            {children}
 
-          <Toaster toastOptions={{ position: "top-right" }} />
-        </DefaultLayout>
+            <Toaster toastOptions={{ position: "top-right" }} />
+          </DefaultLayout>
+        </Providers>
       </body>
     </html>
   );

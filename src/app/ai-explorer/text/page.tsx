@@ -144,19 +144,28 @@ const AIExplorerTextPage = () => {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="mt-[64px] flex flex-1 flex-col lg:mt-0">
       <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-white/10 lg:px-10">
         <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
           Ai-Explorer/Text
         </h4>
-        <div className="flex h-full w-[20%] items-center justify-center border-l border-border lg:hidden">
+        <div className="flex h-full w-[20%] items-center justify-center border-l border-border dark:border-dark-3 lg:hidden">
           <button onClick={() => setShowSettings(!showSettings)}>
-            <Image
-              src={"/images/icon/settings.svg"}
-              width={24}
-              height={24}
-              alt="settings"
-            />
+            <svg
+              width="24"
+              height="24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 8h12m0 0a3 3 0 106 0 3 3 0 00-6 0zm-6 8h12M9 16a3 3 0 11-6 0 3 3 0 016 0z"
+                stroke="currentColor"
+                strokeOpacity="currentOpacity"
+                strokeWidth="1.2"
+                strokeLinecap="square"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </div>
       </div>
@@ -194,7 +203,7 @@ const AIExplorerTextPage = () => {
                   />
                 </div>
                 <div className=" font-medium text-appBlack dark:text-white  ">
-                  what can i help you with?
+                  How can i help you today?
                 </div>
               </div>
               {chatContent}
@@ -249,21 +258,29 @@ const AIExplorerTextPage = () => {
             flex-1
             bg-white
             p-5
+            dark:bg-dark-2
           "
             >
               <div className="  flex h-[95%] w-full flex-col gap-2 overflow-y-scroll ">
                 <div className="flex items-center gap-4 ">
                   <div className="grid h-12 w-12 place-content-center rounded-full bg-appGray">
                     <Image
-                      className=""
                       src={"/images/logo/logo_tint.svg"}
+                      alt="logo"
+                      width={24}
+                      height={25}
+                      className="dark:hidden"
+                    />
+                    <Image
+                      className="hidden dark:flex"
+                      src={"/images/logos/logo-black.png"}
                       alt="logo"
                       width={24}
                       height={25}
                     />
                   </div>
-                  <div className=" font-medium text-appBlack  ">
-                    what can i help you with?
+                  <div className=" font-medium text-appBlack dark:text-white  ">
+                    How can i help you today?
                   </div>
                 </div>
                 {chatContent}

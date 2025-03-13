@@ -2,6 +2,7 @@ import { MouseEvent, MouseEventHandler, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
+import { useAccount } from "wagmi";
 
 const DropdownUser = ({
   address,
@@ -11,8 +12,11 @@ const DropdownUser = ({
   onDisconnect: () => void;
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { isConnected } = useAccount();
 
   const handleDisconnect = () => {
+    console.log("Disconnect", isConnected, address);
+
     onDisconnect();
   };
 

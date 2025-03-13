@@ -17,13 +17,13 @@ const Logo = () => {
           alt="logo"
         />
         <Image
-          src={"/images/logos/logo-blue.png"}
+          src={"/images/logos/logo-black.png"}
           className="flex dark:hidden"
           fill
           alt="logo"
         />
       </div>
-      <h6 className="text-[16.81px] font-semibold leading-[18.34px] tracking-[-2%] text-prim2 dark:text-white lg:text-[22px] lg:leading-[24px]">
+      <h6 className="text-[16.81px] font-semibold leading-[18.34px] tracking-[-2%] text-appBlack dark:text-white lg:text-[22px] lg:leading-[24px]">
         Skyops
       </h6>
     </div>

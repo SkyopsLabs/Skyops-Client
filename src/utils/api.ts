@@ -13,7 +13,7 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     console.error(err);
-    if (err.response.status === 401) {
+    if (err?.response?.status === 401) {
       setAuthToken(null);
     }
     return Promise.reject(err);

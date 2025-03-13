@@ -2,9 +2,9 @@ import { api } from "@/utils/api";
 import { setAuthToken } from "@/utils/setAuthToken";
 
 // Authentication
-export const auth = async (address: string) => {
+export const auth = async (address: string, code: string) => {
   try {
-    const { data } = await api.post("/users", { address });
+    const { data } = await api.post("/users", { address, code });
     setAuthToken(data.token);
 
     return true;

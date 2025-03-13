@@ -120,8 +120,8 @@ const BillingPage = () => {
 
   return (
     <div className="mt-[64px] flex flex-col lg:mt-0">
-      <div className="mx-auto w-full   bg-white p-6 dark:bg-dark-2 lg:mt-4 lg:w-[726px]">
-        <div className="flex h-[64px] items-center justify-between">
+      <div className="mx-auto w-full   bg-white p-5 dark:bg-dark-2 lg:mt-4 lg:w-[726px] lg:p-6">
+        <div className="mb-4 flex h-[56px] items-center justify-between lg:mb-0 lg:h-[64px]">
           <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
             Top-up
           </h4>

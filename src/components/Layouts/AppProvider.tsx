@@ -1,15 +1,24 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import { IAppContext, IAppProviderProps, IUser } from "@/types";
 import { auth, getCurrentUser } from "@/apis/api-v1";
 import { setAuthToken } from "@/utils/setAuthToken";
+import { useAppSelector } from "@/redux/hooks";
 
 export const AppContext = createContext<IAppContext | null>(null);
 
 export const AppProvider = ({ children }: IAppProviderProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isConnected, address } = useAccount();
+
+  // Extract invite param from URL
+  const invite = searchParams?.get("invite") as string;
+
+  // Retrieve code from Redux state
+  const { code } = useAppSelector((state) => state.code);
 
   // State Variables
   const [user, setUser] = useState<IUser | null>(null);
@@ -18,27 +27,27 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
     if (!isConnected || !address) {
       setAuthToken(null);
       setUser(null);
-      router.push("/");
+      invite ? router.push(`/?invite=${invite}`) : router.push("/");
     } else {
+      console.log(invite, "invite");
       if (localStorage.getItem("authToken")) {
         setAuthToken(localStorage.getItem("authToken"));
-        // get User Info
+        // Fetch user info
         (async () => {
-          // router.push("/instances");
           const _ = await getCurrentUser();
           setUser(_);
         })();
       } else {
-        // Auth Again
+        // Authenticate user with optional invite code
         (async () => {
+          await auth(address as string, invite || code);
           router.push("/instances");
-          await auth(address);
           const _ = await getCurrentUser();
           setUser(_);
         })();
       }
     }
-  }, [isConnected, address]);
+  }, [isConnected, address, invite]);
 
   const refetchUserData = async () => {
     if (!address || !localStorage.getItem("authToken")) return;

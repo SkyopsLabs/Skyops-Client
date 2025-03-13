@@ -1,16 +1,30 @@
 "use client";
+import { getAllUsers, getUserByCode } from "@/actions/verify";
 import SelectGroup from "@/components/FormElements/SelectGroup/SelectGroup";
 import SearchForm from "@/components/Header/SearchForm";
+import { ILeaderboard, IUser } from "@/types";
 import { getRandomColor, leaderboardPalette } from "@/utils/helpers";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
 const LeaderBoard = () => {
   // --------------------------------------------VARIABLES
   const [search, setSearch] = useState<string>("");
+  const [users, setUsers] = useState<ILeaderboard[]>([]);
+  const { address } = useAccount();
+  const user = users.find((item) => item.wallet == (address as string));
 
   //-----------------------------------------------------------FUNCTIONS
 
   //------------------------------------------------------------------USE EFFECTS
+
+  useEffect(() => {
+    const getAll = async () => {
+      const res = await getAllUsers();
+      setUsers(res);
+    };
+    getAll();
+  }, []);
 
   return (
     <div className="mt-16 flex flex-1 flex-col lg:mt-0">
@@ -54,58 +68,55 @@ const LeaderBoard = () => {
           </p>
         </div>
         <div className="mb-1.5 grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-appBlack px-5 dark:bg-white/15 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
-          <p className="flex items-center text-sm text-white">100+(you)</p>
+          <p className="flex items-center text-sm text-white">
+            {user?.rank}(you)
+          </p>
           <div className="flex items-center gap-1.5 text-sm text-white">
             <div
               style={{ backgroundColor: getRandomColor() }}
               className="h-6 w-6 rounded-full"
             />
-            {"0x57b9...0De1df5"}
+            {user?.wallet?.slice(0, 7)}...
+            {user?.wallet?.slice(-6)}
           </div>
           <div className="hidden items-center gap-1.5 text-sm text-white lg:flex">
             <div
               style={{ backgroundColor: getRandomColor() }}
               className="h-6 w-6 rounded-full"
             />
-            {"-"}
+            {user?.referee?.slice(0, 7)}...
+            {user?.referee?.slice(-6)}
           </div>
           <p className="flex items-center justify-end text-sm text-white lg:justify-start">
-            {"200"}
+            {user?.points}
           </p>
         </div>
         <div className="max-h-[60vh]   flex-1 overflow-y-scroll lg:max-h-[68vh]">
-          {new Array(30)
-            .fill({
-              name: "0x57b9...0De1df5",
-              invitee: "0xC4d5E6...7F8gH9i",
-              points: "50",
-            })
-            .filter((item) =>
-              search
-                ? item.name.includes(search) || item.invitee.includes(search)
-                : true,
-            )
+          {users
+            .filter((item) => (search ? item.wallet.includes(search) : true))
             .map((item, index) => (
               <div
                 key={index.toString()}
                 className="mb-[6px] grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-white px-5 dark:bg-dark-2 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10"
               >
                 <p className="flex items-center text-sm text-appBlack dark:text-white">
-                  {index + 1}
+                  {item.rank}
                 </p>
                 <div className="flex items-center gap-1.5 text-sm text-appBlack dark:text-white">
                   <div
                     style={{ backgroundColor: getRandomColor() }}
                     className="h-6 w-6 rounded-full"
                   />
-                  {item.name}
+                  {item?.wallet?.slice(0, 7)}...
+                  {item?.wallet?.slice(-6)}
                 </div>
                 <div className="hidden items-center gap-1.5 text-sm text-appBlack dark:text-white lg:flex">
                   <div
                     style={{ backgroundColor: getRandomColor() }}
                     className="h-6 w-6 rounded-full"
                   />
-                  {item.invitee}
+                  {item?.referee?.slice(0, 7)}...
+                  {item?.referee?.slice(-6)}
                 </div>
                 <p className="flex items-center justify-end text-sm text-appBlack dark:text-white lg:justify-start">
                   {item.points}

@@ -10,12 +10,41 @@ export interface IAppProviderProps {
   children: ReactNode;
 }
 
+export interface ILeaderboard {
+  wallet: string;
+  points: number;
+  rank: number;
+  referee: string;
+}
+
+export interface IPointsHistory {
+  date: Date;
+  type: string; // e.g., "earned", "spent", "bonus"
+  points: number;
+}
+
 export interface IUser {
   username?: string;
-  tokens?: string;
+  code: string;
+  gmail?: string;
+  discord_id?: string;
+  discord_username?: string;
+  x_id?: string;
+  referee: string;
+  x_username?: string;
+  tg_id?: string;
+  tg_username?: string;
+  lastDiscordMessage?: Date;
+  lastTelegramMessage?: Date;
   wallet: string;
-  balance: number;
-  created_at: string;
+  balance?: number;
+  points?: number;
+  claimedDiscord?: boolean;
+  claimedTelegram?: boolean;
+  tokens?: number;
+  pointsHistory?: IPointsHistory[];
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface IBilling {

@@ -9,6 +9,7 @@ import RadioButtonClusterPeriod from "../Buttons/RadioButtonClusterPeriod";
 import RadioButtonClusterDeliveryTime from "../Buttons/RadioButtonClusterDeliveryTime";
 import toast from "react-hot-toast";
 import ProgressBar from "../ProgressBar";
+import SelectComponent from "../FormElements/SelectGroup/SelectComponent";
 
 const clusters: any[] = [
   // {
@@ -29,8 +30,24 @@ const clusters: any[] = [
   // },
 ];
 
+const gpus = [
+  { name: "Nvidia H100s", image: "/images/clusters/nvidia.svg" },
+  { name: "Nvidia A100s", image: "/images/clusters/nvidia.svg" },
+];
+
+const nums = [
+  { value: "Popularity", name: "16-32" },
+  { value: "LatestUpdates", name: "32-64" },
+  { value: "LatestUpdates", name: "64-128" },
+  { value: "LatestUpdates", name: "128-256" },
+  { value: "LatestUpdates", name: "256-512" },
+  { value: "LatestUpdates", name: "512+" },
+];
+
 const TableCluster = () => {
   const [showModal, setShowModal] = useState(-1);
+  const [gpu, setGpu] = useState();
+  const [num, setNum] = useState();
 
   const handleCloseModal = () => {
     setShowModal(-1);
@@ -56,7 +73,7 @@ const TableCluster = () => {
           Request
         </button>
       </div>
-      <div className="w-full overflow-x-scroll  lg:w-auto">
+      <div className="lg:overlow-x-auto w-full overflow-x-scroll  lg:w-auto">
         <div className="grid w-full min-w-[700px] grid-cols-[1fr,1fr,0.5fr,0.5fr,1fr,0.7fr] border-stroke px-5 py-4.5 dark:border-dark-3 md:px-10  ">
           <div className="flex items-center">
             <Checkbox />
@@ -180,11 +197,30 @@ const TableCluster = () => {
               <div className="flex flex-col">
                 <ProgressBar showModal={showModal} />
 
-                <GPUSelect id="multiselect" />
+                {/* <GPUSelect id="multiselect" /> */}
+                <SelectComponent
+                  ignore={true}
+                  zIndex={5000}
+                  models={false}
+                  label=""
+                  placeholder="Select an option"
+                  items={gpus}
+                  onChange={setGpu}
+                />
                 {/* <div className="text-appBlack my-2 text-sm  dark:text-white">
                   How many GPUs are you looking for*
-                </div> */}
-                <SelectGroupGPU />
+                  </div> */}
+                <SelectComponent
+                  ignore={true}
+                  style="mt-3"
+                  zIndex={5000}
+                  models={false}
+                  label=""
+                  placeholder="How many GPUs are you looking for*"
+                  items={nums}
+                  onChange={setNum}
+                />
+                {/* <SelectGroupGPU /> */}
               </div>
             </div>
             <div className="flex flex-col items-center justify-between p-4 text-xs font-bold">
@@ -353,7 +389,7 @@ const TableCluster = () => {
                       <Image
                         width={20}
                         height={20}
-                        src={"/images/clusters/nvidia.png"}
+                        src={"/images/clusters/nvidia.svg"}
                         alt="Logo"
                         className="m-1"
                       />
