@@ -24,9 +24,9 @@ jobs:
 
             cd client || { echo "Error: 'fe' directory not found"; exit 1; }
             
-            eval "$(ssh-agent -s)" || { echo "Error: could not start agent"; exit 1; }
+            # eval "$(ssh-agent -s)" || { echo "Error: could not start agent"; exit 1; }
 
-            ssh-add ~/.ssh/skyops || { echo "Error: could not start agent"; exit 1; }
+            # ssh-add ~/.ssh/skyops || { echo "Error: could not start agent"; exit 1; }
 
             # Pull latest changes
             git pull origin main || { echo "Error: Git pull failed"; exit 1; }

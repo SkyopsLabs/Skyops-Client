@@ -19,6 +19,8 @@ const archivo = Archivo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Skyops App | Scalable. Efficient. Unstoppable.",
+  metadataBase: new URL("https://app.skyopslabs.ai"),
+
   description:
     "Skyops is a decentralized AI computing platform that leverages unused GPU power worldwide to significantly reduce AI development costs while providing GPU owners with a way to earn from their idle hardware.",
 
@@ -38,7 +40,6 @@ export default async function RootLayout({
   const headersObj = headers();
   const cookies = headersObj.get("cookie");
   const session = (await getServerAuthSession()) as unknown as string;
-  console.log(session, "session");
   return (
     <html lang="en">
       <body

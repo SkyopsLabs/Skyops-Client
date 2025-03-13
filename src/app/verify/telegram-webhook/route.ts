@@ -7,7 +7,6 @@ export async function POST(req: Request) {
 
     if (!data.message)
       return NextResponse.json({ message: "No message received" });
-    console.log(data);
 
     const userId = data.message.from.id;
     const username = data.message.from.username || "Unknown";
@@ -19,6 +18,7 @@ export async function POST(req: Request) {
         { message: "Not from our group" },
         { status: 403 },
       );
+      console.log(data);
 
     // Save user message activity
     const client = await clientPromise;

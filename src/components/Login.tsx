@@ -26,14 +26,14 @@ const Login: NextPage = () => {
   const router = useRouter();
   const { isConnected } = useAccount();
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("authToken")) {
-  //     router.push("/instances");
-  //   }
-  //   if (isConnected) {
-  //     router.push("/instances");
-  //   }
-  // }, [isConnected]);
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      router.push("/instances");
+    }
+    if (isConnected) {
+      router.push("/instances");
+    }
+  }, [isConnected]);
 
   const onConnect = () => {
     open();
