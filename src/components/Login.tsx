@@ -211,7 +211,7 @@ const Login: NextPage = () => {
         {/* Bottom Images */}
         {/* Left switch with parallax effect */}
         <motion.div
-          className="absolute bottom-[8%] left-[1%] h-[93.53px] w-[120.43px] "
+          className="absolute bottom-[8%] left-[7%] h-[93.53px] w-[120.43px] "
           style={{
             y: leftClusterY,
           }}
@@ -239,13 +239,13 @@ const Login: NextPage = () => {
           }}
         >
           <Image
-            src={"/images/text.svg"}
+            src={"/images/texts.svg"}
             fill
             className="object-contain dark:hidden"
             alt="right"
           />
           <Image
-            src={"/images/text-dark.svg"}
+            src={"/images/text-darks.svg"}
             fill
             className="hidden object-contain dark:flex"
             alt="right"
