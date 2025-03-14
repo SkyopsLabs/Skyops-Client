@@ -65,21 +65,11 @@ const DropdownUser = ({
 
       {dropdownOpen && (
         <div
-          className={`absolute right-0 flex w-[280px] flex-col rounded-lg border-[0.5px] border-stroke bg-white shadow-default dark:border-dark-3 dark:bg-gray-dark lg:top-[47%] lg:mt-6`}
+          className={`absolute right-0 flex w-[280px] flex-col rounded-lg border-[0.5px]  bg-white  lg:top-[47%] lg:mt-6`}
         >
-          {/* <div className="flex items-center gap-2.5 px-5 pb-5.5 pt-3.5">
-            <span className="block">
-              <span className="block font-medium text-dark dark:text-white">
-                { address }
-              </span>
-              <span className="block font-medium text-dark-5 dark:text-dark-6">
-                jonson@nextadmin.com
-              </span>
-            </span>
-          </div> */}
-          <div className="border-t p-1">
+          <div className="p-1 ">
             <button
-              className="flex w-full items-center gap-2.5 rounded-[7px] p-2.5 text-[15px] font-medium text-dark-4 duration-300 ease-in-out hover:bg-gray-2 hover:text-dark dark:text-dark-6 dark:hover:bg-dark-3 dark:hover:text-white lg:text-base"
+              className="flex w-full items-center gap-2.5 rounded-[7px] p-2.5 text-[15px] font-medium text-dark-4 duration-300 ease-in-out hover:bg-gray-2 hover:text-dark dark:hover:bg-gray-2 dark:hover:text-dark   lg:text-base"
               onClick={handleDisconnect}
             >
               <svg

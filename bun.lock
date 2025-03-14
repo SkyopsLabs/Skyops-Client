@@ -17,6 +17,7 @@
         "country-data": "^0.0.31",
         "country-flag-icons": "^1.5.18",
         "discord.js": "^14.18.0",
+        "dotenv-quokka-plugin": "^1.0.0",
         "ethers": "^6.13.4",
         "flatpickr": "^4.6.13",
         "framer-motion": "^12.4.1",
@@ -777,6 +778,10 @@
     "doctrine": ["doctrine@3.0.0", "", { "dependencies": { "esutils": "^2.0.2" } }, "sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w=="],
 
     "dom-helpers": ["dom-helpers@5.2.1", "", { "dependencies": { "@babel/runtime": "^7.8.7", "csstype": "^3.0.2" } }, "sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA=="],
+
+    "dotenv": ["dotenv@8.6.0", "", {}, "sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g=="],
+
+    "dotenv-quokka-plugin": ["dotenv-quokka-plugin@1.0.0", "", { "dependencies": { "dotenv": "^8.2.0" } }, "sha512-aWSg5xZ2bRmqE1+cG5Gk8vC4dKuPMs1FHn8vlZl7bLOaUHurIlNySkAgN2oTorSz5S33bhZmCyXIhih/YIrv9w=="],
 
     "dunder-proto": ["dunder-proto@1.0.1", "", { "dependencies": { "call-bind-apply-helpers": "^1.0.1", "es-errors": "^1.3.0", "gopd": "^1.2.0" } }, "sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A=="],
 

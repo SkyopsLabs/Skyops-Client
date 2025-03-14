@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { NextPage } from "next";
-import Head from "next/head";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useAccount } from "wagmi";
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import MetamaskSvg from "@/components/MetamaskSvg";
 import { useAppKit } from "@reown/appkit/react";
+import { QueryClient } from "@tanstack/react-query";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import type { NextPage } from "next";
 import Image from "next/image";
-import Loader from "./common/Loader";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 import Logo from "./Logo";
 const queryClient = new QueryClient();
 
@@ -27,39 +24,45 @@ const Login: NextPage = () => {
   const router = useRouter();
   const { isConnected } = useAccount();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [direction, setDirection] = useState(1); // 1 for right, -1 for left
+  const [mouseMoving, setMouseMoving] = useState(false); // 1 for right, -1 for left
 
   // Motion values for parallax effect
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const mouseX = useMotionValue(mousePosition.x);
+  const mouseY = useMotionValue(mousePosition.y);
+  const main = useMotionValue(1);
+
+  // Spring values for smooth motion
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+  const mainScale = useSpring(main, { stiffness: 50, damping: 20 });
 
   // Transform X and Y values for left cluster
   const leftClusterX = useTransform(
-    mouseX,
-    [0, window?.innerWidth || 1000],
-    [30, -30],
+    springX,
+    [0, typeof window !== "undefined" ? window?.innerWidth : 1000],
+    [50, -50],
   );
   const leftClusterY = useTransform(
-    mouseY,
-    [0, window?.innerHeight || 800],
-    [15, -15],
+    springY,
+    [0, typeof window !== "undefined" ? window?.innerHeight : 800],
+    [50, -50],
   );
+  const mainImage = useTransform(mainScale, [0, 1], [0.8, 1]);
 
   // Transform X and Y values for right cluster (inverse movement)
   const rightClusterX = useTransform(
-    mouseX,
-    [0, window?.innerWidth || 1000],
+    springX,
+    [0, typeof window !== "undefined" ? window?.innerWidth : 1000],
     [-50, 50],
   );
   const rightClusterY = useTransform(
-    mouseY,
-    [0, window?.innerHeight || 800],
-    [-15, 15],
+    springY,
+    [0, typeof window !== "undefined" ? window?.innerHeight : 800],
+    [-50, 50],
   );
 
   useEffect(() => {
-    // if (localStorage.getItem("authToken")) {
-    //   router.push("/instances");
-    // }
     if (isConnected) {
       router.push("/instances");
     }
@@ -67,25 +70,52 @@ const Login: NextPage = () => {
 
   // Update mouse position for parallax effect
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
+      setMouseMoving(true);
       mouseY.set(e.clientY);
       setMousePosition({ x: e.clientX, y: e.clientY });
+      clearTimeout(timeoutId);
     };
+    // Clear previous timeout
+
+    // Set a timeout to check if the mouse is static after 500ms
+    timeoutId = setTimeout(() => {
+      setMouseMoving(false);
+    }, 500);
 
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      clearTimeout(timeoutId);
     };
   }, [mouseX, mouseY]);
+
+  // Continuous back-and-forth movement effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentX = springX.get();
+      const currentY = springY.get();
+      if (currentX > window.innerWidth - 100) {
+        setDirection(-1);
+      } else if (currentX < 100) {
+        setDirection(1);
+      }
+      // if (!mouseMoving) {
+      springX.set(currentX + direction * 200);
+      // }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [springX, direction]);
 
   const onConnect = () => {
     open();
   };
 
   return (
-    <div className="relative flex h-full flex-col items-center justify-start gap-10 bg-appGray dark:bg-dark lg:gap-[5vh]">
+    <div className="relative flex h-full flex-col items-center justify-start gap-10 overflow-clip bg-appGray dark:bg-dark lg:gap-[5vh]">
       <div
         id="header"
         className="flex w-full items-center justify-between px-5 pt-6 lg:px-8 lg:pt-8"
@@ -176,15 +206,52 @@ const Login: NextPage = () => {
         <Image
           src={"/images/main.png"}
           fill
-          className="object-contain dark:hidden"
+          className="z-50 rounded-[24px] object-contain"
           alt="banner"
         />
-        <Image
-          src={"/images/main-dark.png"}
-          fill
-          className="hidden object-contain dark:flex"
-          alt="banner"
-        />
+        {/* Bottom Images */}
+        {/* Left switch with parallax effect */}
+        <motion.div
+          className="absolute bottom-[8%] left-[1%] h-[93.53px] w-[120.43px] "
+          style={{
+            y: leftClusterY,
+          }}
+        >
+          <Image
+            src={"/images/switch.svg"}
+            fill
+            className="object-contain dark:hidden"
+            alt="left"
+          />
+          <Image
+            src={"/images/switch-dark.svg"}
+            fill
+            className="hidden object-contain dark:flex"
+            alt="left"
+          />
+        </motion.div>
+
+        {/* Right text with inverse parallax effect */}
+        <motion.div
+          className="absolute bottom-[0%] right-[10%]  h-[43.26px] w-[240.86px]"
+          style={{
+            x: useMotionValue(rightClusterX.get() * -1),
+            y: rightClusterY,
+          }}
+        >
+          <Image
+            src={"/images/text.svg"}
+            fill
+            className="object-contain dark:hidden"
+            alt="right"
+          />
+          <Image
+            src={"/images/text-dark.svg"}
+            fill
+            className="hidden object-contain dark:flex"
+            alt="right"
+          />
+        </motion.div>
       </div>
     </div>
   );

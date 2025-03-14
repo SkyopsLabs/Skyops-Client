@@ -41,7 +41,7 @@ export default async function RootLayout({
   const headersObj = headers();
   const cookies = headersObj.get("cookie");
   const session = (await getServerAuthSession()) as unknown as string;
-  console.log(session);
+  console.log(session, "session");
   return (
     <html lang="en">
       <body

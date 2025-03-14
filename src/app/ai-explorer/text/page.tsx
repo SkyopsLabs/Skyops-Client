@@ -203,7 +203,7 @@ const AIExplorerTextPage = () => {
                   />
                 </div>
                 <div className=" font-medium text-appBlack dark:text-white  ">
-                  How can i help you today?
+                  How can I help you today?
                 </div>
               </div>
               {chatContent}
@@ -280,7 +280,7 @@ const AIExplorerTextPage = () => {
                     />
                   </div>
                   <div className=" font-medium text-appBlack dark:text-white  ">
-                    How can i help you today?
+                    How can I help you today?
                   </div>
                 </div>
                 {chatContent}

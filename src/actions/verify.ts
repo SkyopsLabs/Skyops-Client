@@ -1,5 +1,5 @@
 "use server";
-import { ILeaderboard } from "@/types";
+import { ILeaderboard, IUser } from "@/types";
 import clientPromise from "@/utils/mongo";
 
 export const hasMessagedToday = async (userId: string): Promise<boolean> => {
@@ -11,6 +11,8 @@ export const hasMessagedToday = async (userId: string): Promise<boolean> => {
     return false;
   }
 };
+
+const hey = "lskl";
 
 export const addPoints = async (
   address: string,
@@ -25,7 +27,7 @@ export const addPoints = async (
   }
 
   const pointsEntry = {
-    date: new Date(),
+    date: new Date().toLocaleDateString("de-DE"),
     type: type,
     points: points,
   };
@@ -45,7 +47,10 @@ export const getUserDetails = async (wallet: string): Promise<any> => {
   const db = client.db("AIOps");
   const user = await db
     .collection("users")
-    .findOne({ wallet }, { projection: { _id: 0 } });
+    .findOne(
+      { wallet },
+      { projection: { _id: 0, created_at: 0, updated_at: 0 } },
+    );
   if (user) {
     const { _id, ...rest } = user;
     return rest;
@@ -57,10 +62,13 @@ export const getUserDetails = async (wallet: string): Promise<any> => {
 export const getAllUsers = async (): Promise<ILeaderboard[]> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
-  const users = await db
+  const users = (await db
     .collection("users")
-    .find({}, { projection: { wallet: 1, points: 1, code: 1 } })
-    .toArray();
+    .find(
+      {},
+      { projection: { wallet: 1, points: 1, referee: 1, code: 1, _id: 0 } },
+    )
+    .toArray()) as unknown as ILeaderboard[];
 
   // Sort users by points in descending order to determine rank
   users.sort((a, b) => b.points - a.points);
@@ -70,7 +78,9 @@ export const getAllUsers = async (): Promise<ILeaderboard[]> => {
     users
       .filter((item) => item.wallet && item.points >= 0)
       .map(async (user, index) => {
-        const refereeWallet = user.code ? await getUserByCode(user.code) : "-";
+        const refereeWallet = user.referee
+          ? await getUserByCode(user.referee)
+          : "";
         return {
           wallet: user.wallet,
           points: user.points,
@@ -82,6 +92,10 @@ export const getAllUsers = async (): Promise<ILeaderboard[]> => {
 
   return usersWithRankAndReferee;
 };
+
+const x = 5;
+const y = 5;
+const sum = x + y;
 
 export const authenticateTwitter = async (
   address: string,
@@ -105,7 +119,7 @@ export const authenticateTwitter = async (
   });
 
   if (existingTwitterUser) {
-    throw Error("This Twitter account is already linked to another wallet");
+    return "This Twitter account is already linked to another wallet";
   }
 
   if (!user.x_id) {
@@ -144,7 +158,7 @@ export const authenticateDiscord = async (
   });
 
   if (existingDiscordUser) {
-    throw Error("This Discord account is already linked to another wallet");
+    return "This Discord account is already linked to another wallet";
   }
 
   if (!user.discord_id) {
@@ -182,7 +196,7 @@ export const authenticateGmail = async (
   });
 
   if (existingGmailUser) {
-    throw Error("This Gmail account is already linked to another wallet");
+    return "This Gmail account is already linked to another wallet";
   }
 
   if (!user.gmail) {
@@ -218,7 +232,7 @@ export const authenticateTelegram = async (
   });
 
   if (existingTelegramUser) {
-    throw Error("This Telegram account is already linked to another wallet");
+    return "This Telegram account is already linked to another wallet";
   }
 
   if (!user?.tg_id) {

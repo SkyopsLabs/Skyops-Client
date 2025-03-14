@@ -73,7 +73,7 @@ const TableCluster = () => {
           Request
         </button>
       </div>
-      <div className="lg:overlow-x-auto w-full overflow-x-scroll  lg:w-auto">
+      <div className="w-full overflow-x-scroll lg:w-auto  lg:overflow-x-clip">
         <div className="grid w-full min-w-[700px] grid-cols-[1fr,1fr,0.5fr,0.5fr,1fr,0.7fr] border-stroke px-5 py-4.5 dark:border-dark-3 md:px-10  ">
           <div className="flex items-center">
             <Checkbox />

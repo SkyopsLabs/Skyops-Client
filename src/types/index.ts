@@ -18,7 +18,7 @@ export interface ILeaderboard {
 }
 
 export interface IPointsHistory {
-  date: Date;
+  date: String;
   type: string; // e.g., "earned", "spent", "bonus"
   points: number;
 }

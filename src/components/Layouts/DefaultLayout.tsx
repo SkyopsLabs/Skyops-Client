@@ -60,7 +60,7 @@ export default function DefaultLayout({
     themeMode: !Boolean(colorMode) as unknown as ThemeMode,
     projectId,
     features: {
-      connectMethodsOrder: ["wallet"],
+      connectMethodsOrder: ["social", "wallet"],
       email: true, // default to true
       socials: [
         "google",

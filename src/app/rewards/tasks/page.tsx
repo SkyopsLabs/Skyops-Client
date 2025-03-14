@@ -13,6 +13,7 @@ import { history } from "@/utils/helpers";
 import telegramAuth from "@use-telegram-auth/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -25,10 +26,16 @@ const Tasks = () => {
   const { user } = useAppSelector((state) => state.user);
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const appSession: AppSession = data?.user as AppSession;
 
   //-----------------------------------------------------------FUNCTIONS
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(refUrl);
+    toast.success("Invite link copied");
+  };
   const signInwithTwitter = async () => {
     console.log(status);
     // return;
@@ -191,7 +198,7 @@ const Tasks = () => {
       points: "+50",
       label: "First 100 USDT Voulme",
       verified: false,
-      setter: signInwithTwitter,
+      setter: () => toast.success("Coming Soon"),
       desc: "Earn 50 points when your trading volume first reaches 100 USDT.",
     },
     {
@@ -218,7 +225,7 @@ const Tasks = () => {
       points: "+10",
       label: "Follow us on X",
       verified: false,
-      setter: signInwithTwitter,
+      setter: () => window.open("https://x.com/SkyopsLabs", "_blank"),
       desc: "Follow us on X to earn 10 points",
     },
     {
@@ -226,7 +233,7 @@ const Tasks = () => {
       points: "+10",
       label: "Join us on Telegram",
       verified: false,
-      setter: signInwithTwitter,
+      setter: () => window.open("https://t.me/+k6TpiZ12uHMzNmQ0", "_blank"),
       desc: "Send at least one message in Telegram per day",
     },
     {
@@ -238,7 +245,7 @@ const Tasks = () => {
           (user?.lastDiscordMessage ?? 0) &&
         (user?.lastDiscordMessage ?? 0) <
           new Date(new Date().setHours(23, 59, 59, 999)),
-      setter: signInwithTwitter,
+      setter: () => window.open("https://discord.gg/PTFgWgBB", "_blank"),
       desc: "Send at least one message in Discord per day",
     },
     {
@@ -261,8 +268,7 @@ const Tasks = () => {
       points: "+10",
       label: "Refer a friend",
       verified: false,
-      setter: signInwithTwitter,
-      desc: "Refer a friend to get points",
+      setter: copyInviteLink,
     },
     {
       icon: (
@@ -288,7 +294,7 @@ const Tasks = () => {
       points: "+10",
       label: "Post your opinion",
       verified: false,
-      setter: signInwithTwitter,
+      setter: () => "",
       desc: "Post your opinion on X about Skyops",
       input: true,
       placeholder: "Enter a link",
@@ -317,7 +323,7 @@ const Tasks = () => {
       points: "+10",
       label: "Make a thread on X",
       verified: false,
-      setter: signInwithTwitter,
+      setter: () => "",
       desc: "-",
       input: true,
       placeholder: "Enter a link to your thread about us",
@@ -464,7 +470,7 @@ const Tasks = () => {
                     className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"
                   >
                     <p className="flex items-start text-sm text-appBlack dark:text-white">
-                      {item.date.toLocaleDateString("de-DE")}
+                      {item.date}
                     </p>
                     <p className="flex items-start text-sm text-appBlack dark:text-white">
                       {item.type}
@@ -506,10 +512,7 @@ const Tasks = () => {
                 height="20"
                 fill="none"
                 className="text-appBlack/70 hover:cursor-pointer active:scale-95 dark:text-white/70"
-                onClick={() => {
-                  navigator.clipboard.writeText(refUrl);
-                  toast.success("Copied");
-                }}
+                onClick={copyInviteLink}
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <g clipPath="url(#prefix__clip0_651_79)">
@@ -628,71 +631,73 @@ const Tasks = () => {
           Special rewards tasks
         </h5>
         <div className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-4 lg:gap-[11px] lg:px-4">
-          {tasks.map((item, index) => (
-            <div
-              onClick={item.setter}
-              key={index.toString()}
-              className={`flex h-[152px] ${!item.verified && "  hover:cursor-pointer hover:rounded-md hover:bg-prim3/20 dark:hover:bg-primary"} w-full flex-col justify-between bg-white  dark:bg-dark-2 ${item.input && "h-[208px] lg:h-[252px]   "} ${item.label.includes("thread") && " lg:col-span-2"} p-5  lg:h-[224px] lg:p-6`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray text-appBlack dark:bg-dark dark:text-white">
-                  {item.image ? (
+          {tasks.map((item, index) => {
+            return (
+              <div
+                onClick={item.setter}
+                key={index.toString()}
+                className={`flex h-[152px] ${item.input ? "" : !item.verified ? "  hover:cursor-pointer hover:rounded-md hover:bg-prim3/20 dark:hover:bg-primary" : ""} w-full flex-col justify-between bg-white  dark:bg-dark-2 ${item.input && "h-[208px] lg:h-[252px]   "} ${item.label.includes("thread") && " lg:col-span-2"} p-5  lg:h-[224px] lg:p-6`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray text-appBlack dark:bg-dark dark:text-white">
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        width={20}
+                        height={20}
+                        alt={index.toString()}
+                      />
+                    ) : (
+                      item.icon
+                    )}
+                  </div>
+                  {item.verified ? (
                     <Image
-                      src={item.image}
-                      width={20}
-                      height={20}
-                      alt={index.toString()}
+                      src={"/images/icon/tick-circle.svg"}
+                      width={24}
+                      height={24}
+                      alt="good"
                     />
                   ) : (
-                    item.icon
+                    <p className="text-[22px] font-semibold text-black dark:text-white">
+                      {item.points}
+                    </p>
                   )}
                 </div>
-                {item.verified ? (
-                  <Image
-                    src={"/images/icon/tick-circle.svg"}
-                    width={24}
-                    height={24}
-                    alt="good"
-                  />
-                ) : (
-                  <p className="text-[22px] font-semibold text-black dark:text-white">
-                    {item.points}
+                <div className="flex flex-col">
+                  <p className="text-lg font-medium text-black dark:text-white">
+                    {item.label}
                   </p>
+                  <p className="text-sm text-black/[.48] dark:text-white/[.48]">
+                    {item.desc}
+                  </p>
+                </div>
+                {item.input && (
+                  <div className="flex h-[40px] w-full items-center justify-between border-[1px] border-[#E6E6E6] px-[18px] text-black/[.48] dark:border-white/10 dark:text-white/[.80]">
+                    <input
+                      placeholder={item.placeholder}
+                      className="h-full w-full bg-transparent focus:outline-none  dark:text-[#595959]"
+                    />
+                    <svg
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.877 9H3.752m-.063.219l-1.752 5.23c-.137.412-.206.617-.157.744.043.11.135.193.249.225.13.036.328-.053.724-.23l12.533-5.64c.386-.174.579-.261.638-.382a.375.375 0 000-.332c-.06-.12-.252-.207-.638-.381L2.748 2.81c-.394-.177-.59-.266-.722-.23a.375.375 0 00-.248.225c-.05.126.018.331.154.741L3.69 8.839c.023.07.035.106.04.142a.375.375 0 010 .096c-.005.036-.017.071-.04.142z"
+                        stroke="currentColor"
+                        strokeOpacity=".28"
+                        strokeWidth="1.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
                 )}
               </div>
-              <div className="flex flex-col">
-                <p className="text-lg font-medium text-black dark:text-white">
-                  {item.label}
-                </p>
-                <p className="text-sm text-black/[.48] dark:text-white/[.48]">
-                  {item.desc}
-                </p>
-              </div>
-              {item.input && (
-                <div className="flex h-[40px] w-full items-center justify-between border-[1px] border-[#E6E6E6] px-[18px] text-black/[.48] dark:border-white/10 dark:text-white/[.80]">
-                  <input
-                    placeholder={item.placeholder}
-                    className="h-full w-full bg-transparent focus:outline-none  dark:text-[#595959]"
-                  />
-                  <svg
-                    width="18"
-                    height="18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.877 9H3.752m-.063.219l-1.752 5.23c-.137.412-.206.617-.157.744.043.11.135.193.249.225.13.036.328-.053.724-.23l12.533-5.64c.386-.174.579-.261.638-.382a.375.375 0 000-.332c-.06-.12-.252-.207-.638-.381L2.748 2.81c-.394-.177-.59-.266-.722-.23a.375.375 0 00-.248.225c-.05.126.018.331.154.741L3.69 8.839c.023.07.035.106.04.142a.375.375 0 010 .096c-.005.036-.017.071-.04.142z"
-                      stroke="currentColor"
-                      strokeOpacity=".28"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>

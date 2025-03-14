@@ -67,58 +67,75 @@ const LeaderBoard = () => {
             Total Points
           </p>
         </div>
-        <div className="mb-1.5 grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-appBlack px-5 dark:bg-white/15 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
-          <p className="flex items-center text-sm text-white">
-            {user?.rank}(you)
-          </p>
-          <div className="flex items-center gap-1.5 text-sm text-white">
-            <div
-              style={{ backgroundColor: getRandomColor() }}
-              className="h-6 w-6 rounded-full"
-            />
-            {user?.wallet?.slice(0, 7)}...
-            {user?.wallet?.slice(-6)}
+        {(user?.rank as number) > 10 && (
+          <div className="mb-1.5 grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-appBlack px-5 dark:bg-white/15 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
+            <p className="flex items-center text-sm text-white">
+              {user?.rank}(you)
+            </p>
+            <div className="flex items-center gap-1.5 text-sm text-white">
+              <div
+                style={{ backgroundColor: getRandomColor() }}
+                className="h-6 w-6 rounded-full"
+              />
+              {user?.wallet?.slice(0, 7)}...
+              {user?.wallet?.slice(-6)}
+            </div>
+            <div className="hidden items-center gap-1.5 text-sm text-white lg:flex">
+              <div
+                style={{ backgroundColor: getRandomColor() }}
+                className="h-6 w-6 rounded-full"
+              />
+              {!user?.referee
+                ? "-"
+                : user?.referee
+                    ?.slice(0, 7)
+                    .concat("...")
+                    .concat(user?.referee?.slice(-6))}
+            </div>
+            <p className="flex items-center justify-end text-sm text-white lg:justify-start">
+              {user?.points}
+            </p>
           </div>
-          <div className="hidden items-center gap-1.5 text-sm text-white lg:flex">
-            <div
-              style={{ backgroundColor: getRandomColor() }}
-              className="h-6 w-6 rounded-full"
-            />
-            {user?.referee?.slice(0, 7)}...
-            {user?.referee?.slice(-6)}
-          </div>
-          <p className="flex items-center justify-end text-sm text-white lg:justify-start">
-            {user?.points}
-          </p>
-        </div>
+        )}
         <div className="max-h-[60vh]   flex-1 overflow-y-scroll lg:max-h-[68vh]">
           {users
             .filter((item) => (search ? item.wallet.includes(search) : true))
             .map((item, index) => (
               <div
                 key={index.toString()}
-                className="mb-[6px] grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-white px-5 dark:bg-dark-2 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10"
+                className={`mb-[6px] ${user?.wallet == item.wallet ? "bg-appBlack text-white dark:bg-white/15" : "text-appBlack dark:bg-dark-2 dark:text-white "} grid h-[56px] grid-cols-[1fr,2fr,1fr]  px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10`}
               >
-                <p className="flex items-center text-sm text-appBlack dark:text-white">
+                <p className="flex items-center text-sm ">
                   {item.rank}
+                  {user?.rank == item.rank && " (you)"}
                 </p>
-                <div className="flex items-center gap-1.5 text-sm text-appBlack dark:text-white">
+                <div className="flex items-center gap-1.5 text-sm ">
                   <div
-                    style={{ backgroundColor: getRandomColor() }}
+                    style={{
+                      backgroundColor:
+                        leaderboardPalette[
+                          Math.floor(Math.random() * leaderboardPalette.length)
+                        ],
+                    }}
                     className="h-6 w-6 rounded-full"
                   />
                   {item?.wallet?.slice(0, 7)}...
                   {item?.wallet?.slice(-6)}
                 </div>
-                <div className="hidden items-center gap-1.5 text-sm text-appBlack dark:text-white lg:flex">
+                <div className="hidden items-center gap-1.5 text-sm  lg:flex">
                   <div
-                    style={{ backgroundColor: getRandomColor() }}
+                    style={{
+                      backgroundColor:
+                        leaderboardPalette[
+                          Math.floor(Math.random() * leaderboardPalette.length)
+                        ],
+                    }}
                     className="h-6 w-6 rounded-full"
                   />
                   {item?.referee?.slice(0, 7)}...
                   {item?.referee?.slice(-6)}
                 </div>
-                <p className="flex items-center justify-end text-sm text-appBlack dark:text-white lg:justify-start">
+                <p className="flex items-center justify-end text-sm  lg:justify-start">
                   {item.points}
                 </p>
               </div>

@@ -13,10 +13,11 @@ import path from "path";
 import Loader from "../common/Loader";
 import DarkModeSwitcher from "../Header/DarkModeSwitcher";
 import Logo from "../Logo";
+import { useAccount } from "wagmi";
 
 interface SidebarProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (arg: boolean) => void;
+  sidebarOpen?: boolean;
+  setSidebarOpen?: (arg: boolean) => void;
 }
 
 const menuGroups = [
@@ -248,12 +249,13 @@ const container = {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
+  const { isConnected } = useAccount();
 
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
 
   return (
     <aside
-      className={`absolute   top-[128px] z-9999  h-[85vh] flex-col overflow-y-scroll border-r border-stroke  bg-appGray  duration-300 ease-linear dark:border-stroke-dark  dark:bg-dark lg:relative lg:top-0 lg:h-screen lg:overflow-y-auto  ${
+      className={`absolute   top-[128px] z-9999  h-[85vh] flex-col overflow-y-scroll border-r border-stroke  bg-appGray  duration-300 ease-linear dark:border-stroke-dark  dark:bg-dark lg:relative lg:top-0 lg:h-screen lg:overflow-y-clip  ${
         sidebarOpen ? "w-full lg:w-[300px]" : "w-0 "
       } ${pathname == "/" ? "hidden" : "flex"}`}
     >
