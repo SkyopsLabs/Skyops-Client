@@ -47,7 +47,7 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
         })();
       }
     }
-  }, [isConnected, address, invite]);
+  }, [isConnected, address, invite, code]);
 
   const refetchUserData = async () => {
     if (!address || !localStorage.getItem("authToken")) return;

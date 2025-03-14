@@ -96,7 +96,6 @@ const Login: NextPage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const currentX = springX.get();
-      const currentY = springY.get();
       if (currentX > window.innerWidth - 100) {
         setDirection(-1);
       } else if (currentX < 100) {
@@ -204,7 +203,7 @@ const Login: NextPage = () => {
 
         {/* Main image (static) */}
         <Image
-          src={"/images/main.png"}
+          src={"/images/main-center.png"}
           fill
           className="z-50 rounded-[24px] object-contain"
           alt="banner"
