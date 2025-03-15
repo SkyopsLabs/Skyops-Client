@@ -114,7 +114,7 @@ const Login: NextPage = () => {
   };
 
   return (
-    <div className="relative flex h-full flex-col items-center justify-start gap-10 overflow-clip bg-appGray dark:bg-dark lg:gap-[5vh]">
+    <div className="relative flex h-full flex-col items-center justify-between gap-10 overflow-clip bg-appGray dark:bg-dark lg:gap-[7vh] ">
       <div
         id="header"
         className="flex w-full items-center justify-between px-5 pt-6 lg:px-8 lg:pt-8"
@@ -205,7 +205,7 @@ const Login: NextPage = () => {
         <Image
           src={"/images/main-center.png"}
           fill
-          className="z-50 rounded-[24px] object-contain"
+          className="z-50 object-contain"
           alt="banner"
         />
         {/* Bottom Images */}
