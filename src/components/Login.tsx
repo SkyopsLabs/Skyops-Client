@@ -181,7 +181,7 @@ const Login: NextPage = () => {
 
         {/* Right cluster with inverse parallax effect */}
         <motion.div
-          className="absolute bottom-[12%]  right-[10%] h-[55%] w-[280.61px] 3xl:right-[16%]"
+          className="absolute bottom-[12%]  right-[5%] h-[55%] w-[280.61px] 3xl:right-[10%]"
           style={{
             x: rightClusterX,
             y: rightClusterY,
@@ -202,12 +202,14 @@ const Login: NextPage = () => {
         </motion.div>
 
         {/* Main image (static) */}
-        <Image
-          src={"/images/main-center.png"}
-          fill
-          className="z-50 object-contain"
-          alt="banner"
-        />
+        <div className="relative mx-auto h-full w-[458.33px]">
+          <Image
+            src={"/images/mainnest.png"}
+            fill
+            className="z-50 object-contain"
+            alt="banner"
+          />
+        </div>
         {/* Bottom Images */}
         {/* Left switch with parallax effect */}
         <motion.div
@@ -232,7 +234,7 @@ const Login: NextPage = () => {
 
         {/* Right text with inverse parallax effect */}
         <motion.div
-          className="absolute bottom-[0%] right-[10%] h-[43.26px]  w-[240.86px] 3xl:right-[20%]"
+          className="absolute bottom-[0%] right-[10%] h-[43.26px]  w-[240.86px] 3xl:right-[16%]"
           style={{
             x: useMotionValue(rightClusterX.get() * -1),
             y: rightClusterY,
