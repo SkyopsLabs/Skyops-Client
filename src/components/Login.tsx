@@ -156,10 +156,10 @@ const Login: NextPage = () => {
           Revolutionize AI Scalability and Accessibility
         </p>
       </section>
-      <div className="relative h-[767px] w-[859.37px]">
+      <div className="relative h-[767px] w-[859.37px] 3xl:h-[650px] 3xl:w-[68%]">
         {/* Left cluster with parallax effect */}
         <motion.div
-          className="absolute left-[1%] top-[15%] h-[55%] w-[280.61px]"
+          className="absolute left-[1%] top-[15%] h-[55%] w-[280.61px] 3xl:left-[5%]"
           style={{
             x: leftClusterX,
             y: leftClusterY,
@@ -181,7 +181,7 @@ const Login: NextPage = () => {
 
         {/* Right cluster with inverse parallax effect */}
         <motion.div
-          className="absolute bottom-[12%] right-[1%] h-[55%] w-[280.61px]"
+          className="absolute bottom-[12%]  right-[10%] h-[55%] w-[280.61px] 3xl:right-[16%]"
           style={{
             x: rightClusterX,
             y: rightClusterY,
@@ -232,7 +232,7 @@ const Login: NextPage = () => {
 
         {/* Right text with inverse parallax effect */}
         <motion.div
-          className="absolute bottom-[0%] right-[10%]  h-[43.26px] w-[240.86px]"
+          className="absolute bottom-[0%] right-[10%] h-[43.26px]  w-[240.86px] 3xl:right-[20%]"
           style={{
             x: useMotionValue(rightClusterX.get() * -1),
             y: rightClusterY,
