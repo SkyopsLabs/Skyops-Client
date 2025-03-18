@@ -1,7 +1,6 @@
 "use client";
 
 import { useAppKit } from "@reown/appkit/react";
-import { QueryClient } from "@tanstack/react-query";
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import type { NextPage } from "next";
 import Image from "next/image";
@@ -9,7 +8,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import Logo from "./Logo";
-const queryClient = new QueryClient();
+import { useDispatch } from "react-redux";
+import ModalComponent from "./modals/ModalComponent";
+import Referral from "./modals/Referral";
 
 const images = [
   "/images/icon/trust.svg",
@@ -26,6 +27,9 @@ const Login: NextPage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState(1); // 1 for right, -1 for left
   const [mouseMoving, setMouseMoving] = useState(false); // 1 for right, -1 for left
+  const [refCode, setRefCode] = useState(false);
+  const isMobile =
+    typeof window !== "undefined" ? window.innerWidth < 480 : false;
 
   // Motion values for parallax effect
   const mouseX = useMotionValue(mousePosition.x);
@@ -36,7 +40,6 @@ const Login: NextPage = () => {
   const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
   const mainScale = useSpring(main, { stiffness: 50, damping: 20 });
-
   // Transform X and Y values for left cluster
   const leftClusterX = useTransform(
     springX,
@@ -48,7 +51,7 @@ const Login: NextPage = () => {
     [0, typeof window !== "undefined" ? window?.innerHeight : 800],
     [50, -50],
   );
-  const mainImage = useTransform(mainScale, [0, 1], [0.8, 1]);
+  // const mainImage = useTransform(mainScale, [0, 1], [0.8, 1]);
 
   // Transform X and Y values for right cluster (inverse movement)
   const rightClusterX = useTransform(
@@ -61,6 +64,7 @@ const Login: NextPage = () => {
     [0, typeof window !== "undefined" ? window?.innerHeight : 800],
     [-50, 50],
   );
+  const motionX = useMotionValue(rightClusterX.get() * -1);
 
   useEffect(() => {
     if (isConnected) {
@@ -115,6 +119,13 @@ const Login: NextPage = () => {
 
   return (
     <div className="relative flex h-full flex-col items-center justify-between gap-10 overflow-clip bg-appGray dark:bg-dark lg:gap-[7vh] ">
+      {refCode && (
+        <ModalComponent
+          Content={<Referral close={setRefCode} />}
+          isModalOpen={refCode}
+          setIsModalOpen={setRefCode}
+        />
+      )}
       <div
         id="header"
         className="flex w-full items-center justify-between px-5 pt-6 lg:px-8 lg:pt-8"
@@ -136,14 +147,31 @@ const Login: NextPage = () => {
             </div>
             <button
               onClick={onConnect}
-              className="rounded-[12px] bg-prim2 p-4 font-medium text-white duration-100 active:scale-95 dark:bg-white dark:text-black lg:bg-appBlack lg:hover:bg-appBlack/70 lg:dark:bg-white/10 lg:dark:text-white"
+              className="hidden rounded-[12px] bg-prim2 p-4 font-medium text-white duration-100 active:scale-95 dark:bg-white dark:text-black lg:flex lg:bg-appBlack lg:hover:bg-appBlack/70 lg:dark:bg-white/10 lg:dark:text-white"
             >
               Connect Wallet
             </button>
+            <button
+              onClick={onConnect}
+              className="flex rounded-[12px] bg-prim2 p-4 font-medium text-white duration-100 active:scale-95 dark:bg-white dark:text-black lg:hidden lg:bg-appBlack lg:hover:bg-appBlack/70 lg:dark:bg-white/10 lg:dark:text-white"
+            >
+              Connect
+            </button>
           </div>
-          <div className="hidden rounded-[16px] bg-white p-2 dark:bg-dark-2 lg:flex">
-            <button className="durationn-100 rounded-[12px] bg-prim2 p-4 font-medium text-white hover:bg-prim2/80 dark:bg-white dark:text-black">
+          <div className=" hidden rounded-[16px] bg-white p-2 dark:bg-dark-2 lg:flex">
+            <button
+              onClick={() => setRefCode(!refCode)}
+              className="durationn-100 rounded-[12px] bg-prim2 p-4 font-medium text-white hover:bg-prim2/80 active:scale-95 dark:bg-white dark:text-black"
+            >
               Use Referral Code
+            </button>
+          </div>
+          <div className=" flex rounded-[16px] bg-white p-2 dark:bg-dark-2 lg:hidden">
+            <button
+              onClick={() => setRefCode(!refCode)}
+              className="durationn-100 rounded-[12px] bg-appBlack p-4 font-medium text-white hover:bg-prim2/80 active:scale-95 dark:bg-prim2 dark:text-white"
+            >
+              Referral Code
             </button>
           </div>
         </div>
@@ -156,13 +184,13 @@ const Login: NextPage = () => {
           Revolutionize AI Scalability and Accessibility
         </p>
       </section>
-      <div className="relative h-[767px] w-[859.37px] 3xl:h-[650px] 3xl:w-[68%]">
+      <div className="relative h-[54%] w-[504px] lg:h-[767px] lg:w-[859.37px] 3xl:h-[650px] 3xl:w-[68%]">
         {/* Left cluster with parallax effect */}
         <motion.div
           className="absolute left-[1%] top-[15%] h-[55%] w-[280.61px] 3xl:left-[5%]"
           style={{
-            x: leftClusterX,
-            y: leftClusterY,
+            x: isMobile ? 0 : leftClusterX,
+            y: isMobile ? 0 : leftClusterY,
           }}
         >
           <Image
@@ -183,8 +211,8 @@ const Login: NextPage = () => {
         <motion.div
           className="absolute bottom-[12%]  right-[5%] h-[55%] w-[280.61px] 3xl:right-[10%]"
           style={{
-            x: rightClusterX,
-            y: rightClusterY,
+            x: isMobile ? 0 : rightClusterX,
+            y: isMobile ? 0 : rightClusterY,
           }}
         >
           <Image
@@ -202,7 +230,7 @@ const Login: NextPage = () => {
         </motion.div>
 
         {/* Main image (static) */}
-        <div className="relative mx-auto h-full w-[458.33px]">
+        <div className="relative mx-auto h-full w-[70%] lg:w-[458.33px]">
           <Image
             src={"/images/mainnest.png"}
             fill
@@ -215,7 +243,7 @@ const Login: NextPage = () => {
         <motion.div
           className="absolute bottom-[8%] left-[7%] h-[93.53px] w-[120.43px] "
           style={{
-            y: leftClusterY,
+            y: isMobile ? 0 : leftClusterY,
           }}
         >
           <Image
@@ -236,8 +264,8 @@ const Login: NextPage = () => {
         <motion.div
           className="absolute bottom-[0%] right-[10%] h-[43.26px]  w-[240.86px] 3xl:right-[16%]"
           style={{
-            x: useMotionValue(rightClusterX.get() * -1),
-            y: rightClusterY,
+            x: isMobile ? 0 : motionX,
+            y: isMobile ? 0 : rightClusterY,
           }}
         >
           <Image

@@ -258,6 +258,6 @@ export const getUserByCode = async (code: string): Promise<string> => {
   if (user) {
     return user.wallet;
   } else {
-    throw Error("No user found with the provided code");
+    return "Invalid Referral Code";
   }
 };
