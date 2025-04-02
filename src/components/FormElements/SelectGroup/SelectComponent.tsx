@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import ReactCountryFlag from "react-country-flag";
 import { hasFlag } from "country-flag-icons";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const SelectComponent = ({
   label,
@@ -148,6 +149,10 @@ const SelectComponent = ({
                       key={i.toString()}
                       style={{ fontSize: 14 }}
                       onClick={() => {
+                        if (item.name.toLowerCase().includes("deepseek")) {
+                          toast.error("DeepSeek is not available yet");
+                          return;
+                        }
                         if (models) {
                           onChange(item);
                           setVal(item);

@@ -82,8 +82,10 @@ export interface IOrganization {
 }
 
 export interface IChat {
-  type: "user" | "assistant";
-  content: string;
+  sender: "user" | "assistant";
+  message: string;
+  system?: string;
+  model?: string;
   tokens: number;
   created_at: string;
 }

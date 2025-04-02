@@ -4,11 +4,19 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import SelectGroupAIModel from "@/components/FormElements/SelectGroup/SelectGroupAIModel";
 import { IChat, IModel } from "@/types";
-import { generateAiText, getAiModels } from "@/apis/api-v1";
+import {
+  generateAiText,
+  getAiModels,
+  getConversationsById,
+} from "@/apis/api-v1";
 import toast from "react-hot-toast";
+import SyntaxComponent from "@/components/SyntaxHighliter";
 import ReactMarkdown from "react-markdown";
 import { AnimatePresence, motion } from "framer-motion";
 import SelectComponent from "@/components/FormElements/SelectGroup/SelectComponent";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css"; // Choose any highlight.js theme
 
 const initialState = {
   temperature: 0,
@@ -28,14 +36,26 @@ const parameters = [
   // { name: "repetitionPenalty", label: "Repetition Penalty" },
 ];
 
+function addVerticalSpacingAndModifyStruct(text: string) {
+  // Replace 'struct' with 'public struct'
+  let modifiedText = text.replace(/struct\s+(\w+)/g, "public struct $1");
+
+  // Add a newline after each line ending with a semicolon, closing brace, or opening brace
+  modifiedText = modifiedText.replace(/([;}]|{)\n/g, "$1\n\n");
+
+  // Add spacing after struct declarations
+  modifiedText = modifiedText.replace(/(public struct \w+) {/g, "$1 {\n");
+
+  return modifiedText;
+}
 const AIExplorerTextPage = () => {
   const isDesktop = typeof window !== "undefined" && window.innerWidth > 1024;
   const [formData, setFormData] = useState(initialState);
   const [models, setModels] = useState<IModel[] | null>(null);
-  const [isSelectedModel, setSelectedModel] = useState<string | null>(null);
+  const [isSelectedModel, setSelectedModel] = useState<IModel | null>(null);
   const [prompt, setPrompt] = useState<string | null>(null);
   const [systemPrompt, setSystemPrompt] = useState<string>("");
-  const [chats, setChats] = useState<IChat[] | null>(null);
+  const [chats, setChats] = useState<IChat[]>([]);
   const [showSettings, setShowSettings] = useState<boolean>(
     isDesktop ? true : false,
   );
@@ -52,8 +72,10 @@ const AIExplorerTextPage = () => {
   useEffect(() => {
     (async () => {
       const _ = await getAiModels();
+      const data = await getConversationsById();
       console.log("models", _);
       setModels(_);
+      setChats(data);
     })();
   }, []);
 
@@ -61,7 +83,7 @@ const AIExplorerTextPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleGenerate = async () => {
-    if (!isSelectedModel || isSelectedModel === "Default") {
+    if (!isSelectedModel) {
       toast.error("Choose AI Model Service");
       return;
     }
@@ -72,12 +94,12 @@ const AIExplorerTextPage = () => {
     const loading = toast.loading("Loading");
     // Add a chat
     const chatObj: IChat = {
-      type: "user",
-      content: prompt,
+      sender: "user",
+      message: prompt,
       tokens: 0,
       created_at: new Date().toISOString(),
     };
-    if (!chats) {
+    if (chats.length == 0) {
       // New Conversation
       const newChats: IChat[] = [];
       newChats.push(chatObj);
@@ -86,9 +108,8 @@ const AIExplorerTextPage = () => {
       // Push to Old chats
       setChats((prevChats) => [...(prevChats || []), chatObj]);
     }
-    setPrompt(null);
     const resp: any = await generateAiText(
-      isSelectedModel,
+      isSelectedModel._id,
       prompt,
       systemPrompt,
     );
@@ -97,30 +118,29 @@ const AIExplorerTextPage = () => {
       return;
     }
     toast.dismiss(loading);
-    resp.type = "assistant";
-    setChats((prevChats) => [...(prevChats || []), resp]);
+    setChats(resp);
+    setPrompt(null);
   };
-
-  const selectedModel =
-    models &&
-    isSelectedModel &&
-    models.filter((model) => model._id === isSelectedModel);
 
   let chatContent;
   if (chats && chats.length > 0) {
     chatContent = chats.map((chat, idx) => {
-      if (chat.type === "assistant") {
+      if (chat.sender === "assistant") {
         return (
-          <div className="mb-4 flex items-start p-1" key={idx}>
+          <div className=" mb-4  flex items-start p-1" key={idx}>
             <Image
-              className="mx-1 my-2"
-              src={"/images/logos/logo-blue.png"}
+              className=" mx-1"
+              src={
+                chat.model?.includes("meta")
+                  ? "/images/icon/meta.svg"
+                  : "/images/icon/deepseek.png"
+              }
               alt="Logo"
               width={25}
               height={20}
             />
-            <div className="max-w-[500px] bg-gray p-2 text-sm font-medium">
-              <ReactMarkdown>{chat.content}</ReactMarkdown>
+            <div className=" max-w-max px-2  text-sm font-medium dark:text-white/[.48]">
+              <SyntaxComponent code={chat.message.replace(/\\n/g, "\n")} />
             </div>
           </div>
         );
@@ -134,8 +154,8 @@ const AIExplorerTextPage = () => {
               width={25}
               height={20}
             />
-            <div className="max-w-[500px] bg-gray p-2 text-sm font-medium">
-              {chat.content}
+            <div className="max-w-max rounded-lg bg-gray  p-2 text-sm font-medium">
+              {chat.message}
             </div>
           </div>
         );
@@ -145,8 +165,8 @@ const AIExplorerTextPage = () => {
 
   return (
     <div className="mt-[64px] flex flex-1 flex-col lg:mt-0">
-      <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-white/10 lg:px-10">
-        <h4 className="text-2xl font-medium text-appBlack  dark:text-white lg:text-[28px]">
+      <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-white/10 lg:hidden lg:px-10">
+        <h4 className="text-2xl font-medium text-appBlack dark:text-white   lg:text-[28px]">
           Ai-Explorer/Text
         </h4>
         <div className="flex h-full w-[20%] items-center justify-center border-l border-border dark:border-dark-3 lg:hidden">
@@ -169,44 +189,48 @@ const AIExplorerTextPage = () => {
           </button>
         </div>
       </div>
-      <div className="flex  w-full flex-1 flex-col gap-3  sm:flex-row  lg:p-4">
-        <AnimatePresence mode="wait">
+      <div className="  flex w-full flex-1 flex-col gap-3  sm:flex-row  lg:p-4">
+        <AnimatePresence mode="sync">
           {/* Left section */}
           <div
             className="
             
-                        hidden
-            w-3/4 flex-col
-            bg-white
-            p-5
+                        
+            hidden 
+            w-3/4
+            flex-col
+            bg-white p-5
             dark:bg-dark-2
             lg:flex
             lg:p-6
           "
           >
-            <div className="  flex h-[95%] w-full flex-col gap-2 overflow-y-scroll ">
-              <div className="flex items-center gap-4 ">
-                <div className="grid h-12 w-12 place-content-center rounded-full bg-appGray ">
-                  <Image
-                    src={"/images/logo/logo_tint.svg"}
-                    alt="logo"
-                    width={24}
-                    height={25}
-                    className="dark:hidden"
-                  />
-                  <Image
-                    className="hidden dark:flex"
-                    src={"/images/logos/logo-black.png"}
-                    alt="logo"
-                    width={24}
-                    height={25}
-                  />
+            <div className="  no-scrollbar  flex h-[95%] max-h-[78vh] w-full flex-col gap-2 overflow-y-scroll ">
+              {chatContent ? (
+                chatContent
+              ) : (
+                <div className="flex items-center gap-4 ">
+                  <div className="grid h-12 w-12 place-content-center rounded-full bg-appGray ">
+                    <Image
+                      src={"/images/logo/logo_tint.svg"}
+                      alt="logo"
+                      width={24}
+                      height={25}
+                      className="dark:hidden"
+                    />
+                    <Image
+                      className="hidden dark:flex"
+                      src={"/images/logos/logo-black.png"}
+                      alt="logo"
+                      width={24}
+                      height={25}
+                    />
+                  </div>
+                  <div className=" font-medium text-appBlack dark:text-white  ">
+                    How can I help you today?
+                  </div>
                 </div>
-                <div className=" font-medium text-appBlack dark:text-white  ">
-                  How can I help you today?
-                </div>
-              </div>
-              {chatContent}
+              )}
             </div>
             {/* input box */}
             <div className=" relative">

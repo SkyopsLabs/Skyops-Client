@@ -73,7 +73,10 @@ const Header = ({
         </button>
         {/* <h5 className="text-heading-7 m-2  flex  font-bold capitalize text-dark dark:text-white">
             {pathname.slice(1)}
-          </h5> */}
+            </h5> */}
+        <h4 className="ml-4 text-2xl font-medium capitalize text-appBlack  dark:text-white lg:text-[28px]">
+          {pathname.slice(1)}
+        </h4>
       </div>
 
       {/* Skyops Balance */}

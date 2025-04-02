@@ -74,6 +74,17 @@ export const getAiModelById = async (id: string) => {
   }
 };
 
+// Get Conversations by userId
+export const getConversationsById = async () => {
+  try {
+    const { data } = await api.get(`/chats`);
+
+    return data;
+  } catch (error) {
+    console.error("Error in getting conversations by id: ", error);
+    return null;
+  }
+};
 // Get Services
 export const getServices = async () => {
   try {

@@ -18,20 +18,29 @@ export async function POST(req: Request) {
         { message: "Not from our group" },
         { status: 403 },
       );
-      console.log(data);
+    console.log(data);
 
     // Save user message activity
     const client = await clientPromise;
     const db = client.db("AIOps");
-    await db
-      .collection("users")
-      .updateOne(
-        { telegram_id: userId },
-        { $set: { lastTelegramMessage: new Date() } },
-        { upsert: true },
-      );
 
-    return NextResponse.json({ message: "Message tracked" });
+    const user = await db
+      .collection("users")
+      .findOne({ telegram_id: userId, wallet: { $exists: true } });
+    if (user) {
+      await db
+        .collection("users")
+        .updateOne(
+          { telegram_id: userId },
+          { $set: { lastTelegramMessage: new Date() } },
+        );
+      return NextResponse.json({ message: "Message tracked" });
+    } else {
+      return NextResponse.json(
+        { message: "No user found with this telegram_id" },
+        { status: 404 },
+      );
+    }
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json(
