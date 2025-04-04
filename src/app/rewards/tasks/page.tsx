@@ -4,12 +4,14 @@ import {
   authenticateGmail,
   authenticateTelegram,
   authenticateTwitter,
+  deductPoints,
+  getAllUsers,
   getUserDetails,
 } from "@/actions/verify";
 import { useAppSelector } from "@/redux/hooks";
-import { setUser } from "@/redux/slices/userSlice";
+import { setUser, setUserWithRank } from "@/redux/slices/userSlice";
 import { AppSession } from "@/types";
-import { history } from "@/utils/helpers";
+import { ABI, history } from "@/utils/helpers";
 import telegramAuth from "@use-telegram-auth/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
@@ -17,20 +19,94 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { useAccount } from "wagmi";
+import {
+  useAccount,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
+import { ethers, Wallet } from "ethers";
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1500;
+
+const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
 const Tasks = () => {
   // --------------------------------------------VARIABLES
   const { address } = useAccount();
   const { data, status } = useSession();
-  const { user } = useAppSelector((state) => state.user);
+  const [txId, setTxId] = useState<string | null>(null);
+  const { user, userWithRank } = useAppSelector((state) => state.user);
+  const { writeContractAsync, data: txData } = useWriteContract();
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
-  const router = useRouter();
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    isError,
+  } = useWaitForTransactionReceipt({
+    hash: txData,
+  });
 
   const appSession: AppSession = data?.user as AppSession;
 
+  const messageParams = {
+    types: {
+      ExtensionClientData: [
+        { name: "client", type: "address" },
+        { name: "points", type: "uint256" },
+        { name: "server", type: "address" },
+      ],
+    },
+    domain: {
+      name: "skyopslabs.ai",
+      version: "1",
+      chainId: 11155111,
+      verifyingContract: process.env.NEXT_PUBLIC_REWARDS_CA,
+    },
+    messages: {
+      client: address,
+      points: user.points,
+      server: process.env.NEXT_PUBLIC_REWARDS_CA,
+      // server: address,
+    },
+  };
+
   //-----------------------------------------------------------FUNCTIONS
+
+  // Write to the smart contract and check if the transaction is successful with useEffect
+  const handleWriteSmartContract = async () => {
+    if ((user?.points as number) == 0) {
+      toast.error("No points to claim");
+      return;
+    }
+    const id = toast.loading("Signing...");
+    setTxId(id);
+
+    try {
+      const raw = await wallet.signTypedData(
+        messageParams.domain,
+        messageParams.types,
+        messageParams.messages,
+      );
+      await writeContractAsync({
+        address: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`,
+        abi: ABI,
+        functionName: "claimRewards",
+        args: [
+          {
+            client: address, // Replace with actual client address
+            points: user.points, // Replace with actual points
+            server: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`, // Replace with actual server address
+            signature: raw, // Replace with actual signature (hex string)
+          },
+        ],
+      });
+    } catch (error) {
+      console.error(error, "Error");
+      toast.error("An error occured", { id: id });
+    }
+  };
 
   const copyInviteLink = () => {
     navigator.clipboard.writeText(refUrl);
@@ -386,6 +462,62 @@ const Tasks = () => {
     };
   }, [status, address, appSession]);
 
+  useEffect(() => {
+    const getAll = async () => {
+      const res = await getAllUsers();
+      const singleUser = res.find((item) => item.wallet == user.wallet);
+      if (singleUser) {
+        dispatch(setUserWithRank(singleUser));
+      }
+    };
+    getAll();
+  }, [user]);
+
+  // useEffect(() => {
+  //   console.log("isConfirming", isConfirming);
+  //   console.log("isConfirmed", isConfirmed);
+  //   console.log("isStatus", isStatus);
+  //   console.log("error-message", error?.message);
+  // }, [isConfirmed, isConfirming, isStatus, error]);
+  useEffect(() => {
+    let attempts = 0;
+    const claimPoints = async () => {
+      while (attempts < MAX_RETRIES) {
+        const data = await deductPoints(
+          user.wallet as string,
+          user.points as number,
+          "Claim",
+        );
+        if (data.error) {
+          toast.error(data.message ?? "Error deducting points");
+          attempts++;
+          console.error(`Attempt ${attempts} failed:`, data.message);
+          if (attempts < MAX_RETRIES) {
+            await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * attempts)); // Exponential-ish backoff
+          } else {
+            toast.error("Failed to deduct points after retries.");
+          }
+        } else {
+          toast.success(data.message);
+          const userDetails = await getUserDetails(address as string);
+          dispatch(setUser(userDetails));
+          return;
+        }
+      }
+    };
+
+    if (isConfirmed) {
+      claimPoints();
+      toast.success("Transaction confirmed", { id: txId as string });
+    }
+  }, [isConfirmed, txId]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Transaction not confirmed", { id: txId as string });
+    }
+  }, [isError, txId]);
+
   return (
     <div className="w-full">
       <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-dark-3 lg:px-10">
@@ -416,7 +548,7 @@ const Tasks = () => {
                     Total Points
                   </p>
                   <p className="flex h-1/2 items-end pb-4 text-[32px] font-medium leading-none text-white">
-                    {`$${user?.points ?? 0}`}
+                    {`${user?.points ?? 0}`}
                   </p>
                 </div>
                 <div className="w-1/2 px-4 ">
@@ -424,22 +556,50 @@ const Tasks = () => {
                     Rank
                   </p>
                   <p className="flex h-1/2 items-end pb-4 text-[32px] font-medium leading-none text-white">
-                    $0
+                    {userWithRank.rank ? (
+                      <>
+                        {userWithRank.rank}
+                        {/* <span className="mb-[3.8px] text-[18px]">
+                          {(() => {
+                            const j = userWithRank.rank % 10,
+                              k = userWithRank.rank % 100;
+                            if (j === 1 && k !== 11) return "st";
+                            if (j === 2 && k !== 12) return "nd";
+                            if (j === 3 && k !== 13) return "rd";
+                            return "th";
+                          })()}
+                        </span> */}
+                      </>
+                    ) : (
+                      0
+                    )}
                   </p>
                 </div>
               </div>
               <div className="flex flex-1 flex-col justify-between  p-4 ">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-white/[.49]">
-                    Mining Points
+                    Total SKYOPS
                   </p>
                   <p className="text-sm  text-white underline">What is this?</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="flex items-end  text-[32px] font-medium leading-none text-white">
-                    $0
-                  </p>
-                  <button className="bg-prim2 px-8 py-2 font-medium text-white dark:bg-white dark:text-black">
+                  <div className="flex flex-row-reverse items-center  gap-1">
+                    <p className="flex items-end  text-[32px] font-medium leading-none text-white">
+                      {`${user.points ? user.points / 10 : 0}`}
+                    </p>
+                    <Image
+                      width={18}
+                      height={18}
+                      alt="icon"
+                      className="flex "
+                      src={"/images/icon/icon-white.svg"}
+                    />
+                  </div>
+                  <button
+                    onClick={handleWriteSmartContract}
+                    className="bg-prim2 px-8 py-2 font-medium text-white dark:bg-white dark:text-black"
+                  >
                     Claim
                   </button>
                 </div>
@@ -475,8 +635,11 @@ const Tasks = () => {
                     <p className="flex items-start text-sm text-appBlack dark:text-white">
                       {item.type}
                     </p>
-                    <p className="flex justify-end text-sm text-[#097C4C]">
-                      +{item.points}
+                    <p
+                      className={`flex justify-end text-sm ${item.points > 0 ? "text-green" : "text-red"}`}
+                    >
+                      {item.points > 0 ? "+" : ""}
+                      {item.points}
                     </p>
                   </div>
                 ))}
