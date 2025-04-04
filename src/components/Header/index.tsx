@@ -6,9 +6,11 @@ import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount, useBalance, useDisconnect } from "wagmi";
 import SkyopsBalance from "../SkyopsBalance";
 import Logo from "../Logo";
+import toast from "react-hot-toast";
+import { useAppSelector } from "@/redux/hooks";
 
 const Header = ({
   sidebarOpen,
@@ -22,7 +24,7 @@ const Header = ({
   const pathname = usePathname(); // returns the current path
   const [curPath, setCurPath] = useState("");
 
-  const { isConnected, chainId, address } = useAccount();
+  const { address } = useAccount();
 
   const { disconnect } = useDisconnect();
 
@@ -71,12 +73,11 @@ const Header = ({
             {sidebarOpen ? "H" : "S"}
           </p>
         </button>
-        {/* <h5 className="text-heading-7 m-2  flex  font-bold capitalize text-dark dark:text-white">
-            {pathname.slice(1)}
-            </h5> */}
+
+        {/*
         <h4 className="ml-4 text-2xl font-medium capitalize text-appBlack  dark:text-white lg:text-[28px]">
           {pathname.slice(1)}
-        </h4>
+        </h4>*/}
       </div>
 
       {/* Skyops Balance */}

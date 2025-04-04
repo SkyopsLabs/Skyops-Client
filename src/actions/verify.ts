@@ -12,7 +12,51 @@ export const hasMessagedToday = async (userId: string): Promise<boolean> => {
   }
 };
 
-const hey = "lskl";
+export const deductPoints = async (
+  address: string,
+  points: number,
+  type: string = "reward-claim",
+): Promise<{ error: boolean; message: string }> => {
+  const client = await clientPromise;
+  const db = client.db("AIOps");
+
+  try {
+    const user = await getUserDetails(address);
+    if (!user) {
+      return { error: true, message: "Wallet not registered" };
+    }
+
+    if (user.points < points) {
+      return { error: true, message: "Insufficient points" };
+    }
+
+    const pointsEntry = {
+      date: new Date().toLocaleDateString("de-DE"),
+      type,
+      points: -points, // Log it as negative
+    };
+
+    const result = await db.collection("users").updateOne(
+      { wallet: address, points: { $gte: points } }, // Double check atomicity
+      {
+        $inc: { points: -points },
+        // @ts-ignore
+        $push: { pointsHistory: pointsEntry },
+      },
+    );
+
+    if (result.matchedCount === 0) {
+      return {
+        error: true,
+        message: "Deduction failed — not enough points or user not found",
+      };
+    }
+
+    return { error: false, message: "Points deducted successfully" };
+  } catch (err: any) {
+    return { error: true, message: `An error occurred: ${err.message}` };
+  }
+};
 
 export const addPoints = async (
   address: string,
@@ -49,7 +93,14 @@ export const getUserDetails = async (wallet: string): Promise<any> => {
     .collection("users")
     .findOne(
       { wallet },
-      { projection: { _id: 0, created_at: 0, updated_at: 0 } },
+      {
+        projection: {
+          _id: 0,
+          created_at: 0,
+          updated_at: 0,
+          pointsHistory: { _id: 0 },
+        },
+      },
     );
   if (user) {
     const { _id, ...rest } = user;

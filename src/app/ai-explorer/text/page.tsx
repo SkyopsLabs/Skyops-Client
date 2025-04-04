@@ -165,7 +165,7 @@ const AIExplorerTextPage = () => {
 
   return (
     <div className="mt-[64px] flex flex-1 flex-col lg:mt-0">
-      <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-white/10 lg:hidden lg:px-10">
+      <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-white/10  lg:px-10">
         <h4 className="text-2xl font-medium text-appBlack dark:text-white   lg:text-[28px]">
           Ai-Explorer/Text
         </h4>
