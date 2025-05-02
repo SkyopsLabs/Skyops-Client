@@ -6,11 +6,11 @@ import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount, useBalance, useDisconnect } from "wagmi";
 import SkyopsBalance from "../SkyopsBalance";
 import Logo from "../Logo";
 import toast from "react-hot-toast";
 import { useAppSelector } from "@/redux/hooks";
+import { useAppKitAccount, useDisconnect } from "@reown/appkit/react";
 
 const Header = ({
   sidebarOpen,
@@ -24,12 +24,12 @@ const Header = ({
   const pathname = usePathname(); // returns the current path
   const [curPath, setCurPath] = useState("");
 
-  const { address } = useAccount();
+  const { address } = useAppKitAccount();
 
   const { disconnect } = useDisconnect();
 
-  const handleDisconnect = () => {
-    disconnect();
+  const handleDisconnect = async () => {
+    await disconnect();
   };
 
   const formatPath = (path: string) => {

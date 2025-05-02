@@ -8,45 +8,63 @@ import {
   getAllUsers,
   getUserDetails,
 } from "@/actions/verify";
+import { useSolanaTransaction } from "@/hooks/useSolanaTransaction";
 import { useAppSelector } from "@/redux/hooks";
 import { setUser, setUserWithRank } from "@/redux/slices/userSlice";
-import { AppSession } from "@/types";
-import { ABI, history } from "@/utils/helpers";
+import { AppSession, IPointsHistory } from "@/types";
+import { SolRewards, idl } from "@/types/idl";
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import { useAppKitConnection } from "@reown/appkit-adapter-solana/react";
+import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
+import {
+  getOrCreateAssociatedTokenAccount,
+  TOKEN_2022_PROGRAM_ID,
+} from "@solana/spl-token";
+import { AnchorWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
+import { Ed25519Program, Keypair, PublicKey } from "@solana/web3.js";
 import telegramAuth from "@use-telegram-auth/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import path from "path";
+import fs from "fs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import {
-  useAccount,
-  useReadContract,
-  useWaitForTransactionReceipt,
-  useWriteContract,
-} from "wagmi";
-import { ethers, Wallet } from "ethers";
+import nacl from "tweetnacl";
+import { getOwner } from "@/utils/admin";
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1500;
 
-const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
+// const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
 const Tasks = () => {
   // --------------------------------------------VARIABLES
-  const { address } = useAccount();
+  const { connection } = useAppKitConnection();
+  const { walletProvider } = useAppKitProvider("solana");
+  // const wallet = useAnchorWallet();
+  // const provider = new anchor.AnchorProvider(
+  //   connection as anchor.web3.Connection,
+  //   wallet as AnchorWallet,
+  //   {
+  //     commitment: "confirmed",
+  //   },
+  // );
+
+  anchor.setProvider(walletProvider as unknown as anchor.AnchorProvider);
+  const program = new Program(idl as SolRewards);
+  const [state] = PublicKey.findProgramAddressSync(
+    [Buffer.from("state")],
+    program.programId,
+  );
+  const vault = new PublicKey(process.env.NEXT_PUBLIC_VAULT as string);
+  const { address } = useAppKitAccount();
   const { data, status } = useSession();
   const [txId, setTxId] = useState<string | null>(null);
   const { user, userWithRank } = useAppSelector((state) => state.user);
-  const { writeContractAsync, data: txData } = useWriteContract();
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
-  const {
-    isLoading: isConfirming,
-    isSuccess: isConfirmed,
-    isError,
-  } = useWaitForTransactionReceipt({
-    hash: txData,
-  });
+  const { sendCustomTransaction, isLoading, error } = useSolanaTransaction();
 
   const appSession: AppSession = data?.user as AppSession;
 
@@ -76,7 +94,7 @@ const Tasks = () => {
 
   // Write to the smart contract and check if the transaction is successful with useEffect
   const handleWriteSmartContract = async () => {
-    if ((user?.points as number) == 0) {
+    if ((user?.points as number) == 0 || !user.points) {
       toast.error("No points to claim");
       return;
     }
@@ -84,24 +102,100 @@ const Tasks = () => {
     setTxId(id);
 
     try {
-      const raw = await wallet.signTypedData(
-        messageParams.domain,
-        messageParams.types,
-        messageParams.messages,
+      const secretKeyString = await getOwner();
+      const key = JSON.parse(secretKeyString);
+      const secretKey = Uint8Array.from(key);
+      const owner = Keypair.fromSecretKey(secretKey);
+      const userPubKey = new PublicKey(user.wallet);
+      const tokenMint = new PublicKey(
+        "9TVXPG2EY1ctYRXJJmEqcXRZ1mB1kstr7VQwPFXceXSR",
       );
-      await writeContractAsync({
-        address: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`,
-        abi: ABI,
-        functionName: "claimRewards",
-        args: [
-          {
-            client: address, // Replace with actual client address
-            points: user.points, // Replace with actual points
-            server: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`, // Replace with actual server address
-            signature: raw, // Replace with actual signature (hex string)
-          },
-        ],
-      });
+      // console.log(owner.publicKey.toString(), "owner");
+      const userAta = (
+        await getOrCreateAssociatedTokenAccount(
+          connection as anchor.web3.Connection,
+          owner,
+          tokenMint,
+          userPubKey,
+          true,
+          undefined,
+          undefined,
+          TOKEN_2022_PROGRAM_ID,
+        )
+      ).address;
+      const createSignedVerification = (userKey: string, points: number) => {
+        const user = new PublicKey(userKey);
+        const msgBuffer = Buffer.concat([
+          user.toBuffer(),
+          Buffer.from(new anchor.BN(points).toArrayLike(Buffer, "le", 8)),
+        ]);
+
+        // Sign the message with the owner's private key
+        const sig = nacl.sign.detached(msgBuffer, owner.secretKey);
+
+        // Create the Ed25519 instruction
+        return Ed25519Program.createInstructionWithPublicKey({
+          publicKey: owner.publicKey.toBytes(),
+          message: msgBuffer,
+          signature: sig,
+        });
+      };
+      const ed25519Ix = createSignedVerification(
+        userPubKey.toString(),
+        user.points,
+      );
+      const claimIx = await program.methods
+        .claimRewards(new anchor.BN(user.points))
+        .accounts({
+          user: userPubKey,
+          state: state,
+          vault,
+          mint: tokenMint,
+          userToken: userAta,
+          tokenProgram: TOKEN_2022_PROGRAM_ID,
+        })
+        .instruction();
+
+      const res = await sendCustomTransaction([ed25519Ix, claimIx]);
+      if (res === null) {
+        console.log("An error");
+        // toast.error("Transaction failed", { id: id });
+        throw Error(error as string);
+      } else {
+        console.log(res, "response");
+        let attempts = 0;
+        const claimPoints = async () => {
+          while (attempts < MAX_RETRIES) {
+            const data = await deductPoints(
+              user.wallet as string,
+              user.points as number,
+              "Claim",
+            );
+            if (data.error) {
+              toast.error(data.message ?? "Error deducting points", { id: id });
+              attempts++;
+              console.error(`Attempt ${attempts} failed:`, data.message);
+              if (attempts < MAX_RETRIES) {
+                await new Promise((r) =>
+                  setTimeout(r, RETRY_DELAY_MS * attempts),
+                ); // Exponential-ish backoff
+              } else {
+                toast.error("Failed to deduct points after retries.", {
+                  id: id,
+                });
+              }
+            } else {
+              toast.success(data.message, { id: id });
+              const userDetails = await getUserDetails(address as string);
+              dispatch(setUser(userDetails));
+              return;
+            }
+          }
+        };
+        claimPoints();
+      }
+
+      // toast.success("Transaction confirmed", { id: id });
     } catch (error) {
       console.error(error, "Error");
       toast.error("An error occured", { id: id });
@@ -473,50 +567,24 @@ const Tasks = () => {
     getAll();
   }, [user]);
 
-  // useEffect(() => {
-  //   console.log("isConfirming", isConfirming);
-  //   console.log("isConfirmed", isConfirmed);
-  //   console.log("isStatus", isStatus);
-  //   console.log("error-message", error?.message);
-  // }, [isConfirmed, isConfirming, isStatus, error]);
   useEffect(() => {
-    let attempts = 0;
-    const claimPoints = async () => {
-      while (attempts < MAX_RETRIES) {
-        const data = await deductPoints(
-          user.wallet as string,
-          user.points as number,
-          "Claim",
-        );
-        if (data.error) {
-          toast.error(data.message ?? "Error deducting points");
-          attempts++;
-          console.error(`Attempt ${attempts} failed:`, data.message);
-          if (attempts < MAX_RETRIES) {
-            await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * attempts)); // Exponential-ish backoff
-          } else {
-            toast.error("Failed to deduct points after retries.");
-          }
-        } else {
-          toast.success(data.message);
-          const userDetails = await getUserDetails(address as string);
-          dispatch(setUser(userDetails));
-          return;
-        }
-      }
-    };
-
-    if (isConfirmed) {
-      claimPoints();
-      toast.success("Transaction confirmed", { id: txId as string });
-    }
-  }, [isConfirmed, txId]);
+    console.log("isLoading", isLoading);
+    console.log("error", error);
+    // console.log("isStatus", isStatus);
+    // console.log("error-message", error?.message);
+  }, [isLoading, error]);
+  useEffect(() => {
+    // if (true) {
+    //   claimPoints();
+    //   toast.success("Transaction confirmed", { id: txId as string });
+    // }
+  }, [txId, address, user.points, user.wallet]);
 
   useEffect(() => {
-    if (isError) {
+    if (false) {
       toast.error("Transaction not confirmed", { id: txId as string });
     }
-  }, [isError, txId]);
+  }, [txId]);
 
   return (
     <div className="w-full">
@@ -624,25 +692,26 @@ const Tasks = () => {
                 </p>
               </div>
               <div className="max-h-[60vh] overflow-y-scroll">
-                {user?.pointsHistory?.map((item, index) => (
-                  <div
-                    key={index.toString()}
-                    className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"
-                  >
-                    <p className="flex items-start text-sm text-appBlack dark:text-white">
-                      {item.date}
-                    </p>
-                    <p className="flex items-start text-sm text-appBlack dark:text-white">
-                      {item.type}
-                    </p>
-                    <p
-                      className={`flex justify-end text-sm ${item.points > 0 ? "text-green" : "text-red"}`}
+                {Array.isArray(user.pointsHistory) &&
+                  [...user.pointsHistory].reverse().map((item, index) => (
+                    <div
+                      key={index.toString()}
+                      className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"
                     >
-                      {item.points > 0 ? "+" : ""}
-                      {item.points}
-                    </p>
-                  </div>
-                ))}
+                      <p className="flex items-start text-sm text-appBlack dark:text-white">
+                        {item.date}
+                      </p>
+                      <p className="flex items-start text-sm text-appBlack dark:text-white">
+                        {item.type}
+                      </p>
+                      <p
+                        className={`flex justify-end text-sm ${item.points > 0 ? "text-green" : "text-red"}`}
+                      >
+                        {item.points > 0 ? "+" : ""}
+                        {item.points}
+                      </p>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

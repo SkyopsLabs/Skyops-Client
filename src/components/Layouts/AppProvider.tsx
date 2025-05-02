@@ -1,18 +1,17 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSelector } from "react-redux";
-import { useAccount } from "wagmi";
 import { IAppContext, IAppProviderProps, IUser } from "@/types";
 import { auth, getCurrentUser } from "@/apis/api-v1";
 import { setAuthToken } from "@/utils/setAuthToken";
 import { useAppSelector } from "@/redux/hooks";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 export const AppContext = createContext<IAppContext | null>(null);
 
 export const AppProvider = ({ children }: IAppProviderProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useAppKitAccount();
 
   // Extract invite param from URL
   const invite = searchParams?.get("invite") as string;

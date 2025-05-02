@@ -2,12 +2,12 @@
 
 import RequestAccess from "@/components/common/RequestAccess";
 import WaitlistModal from "@/components/modals/WaitlistModal";
+import { useAppKitAccount } from "@reown/appkit/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useAccount } from "wagmi";
 
 const AIExplorerTextPage = () => {
-  const { address } = useAccount();
+  const { address } = useAppKitAccount();
   const [showModal, setShowModal] = useState(false);
 
   const handleCloseModal = () => {

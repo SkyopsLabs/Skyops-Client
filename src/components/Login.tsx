@@ -1,14 +1,12 @@
 "use client";
 
-import { useAppKit } from "@reown/appkit/react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useAppKit, useAppKitAccount } from "@reown/appkit/react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 import Logo from "./Logo";
-import { useDispatch } from "react-redux";
 import ModalComponent from "./modals/ModalComponent";
 import Referral from "./modals/Referral";
 
@@ -23,7 +21,7 @@ const images = [
 const Login: NextPage = () => {
   const { open } = useAppKit();
   const router = useRouter();
-  const { isConnected } = useAccount();
+  const { isConnected } = useAppKitAccount();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState(1); // 1 for right, -1 for left
   const [mouseMoving, setMouseMoving] = useState(false); // 1 for right, -1 for left

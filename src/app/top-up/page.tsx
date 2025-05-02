@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { getBillings, saveBillingTx } from "@/apis/api-v1";
 import RadioButton from "@/components/Buttons/RadioButton";
+import { useApp } from "@/components/Layouts/AppProvider";
+import { IBilling } from "@/types";
+import { PaymentABI, TokenABI } from "@/web3/abis/abi";
+import { PAYMENT_CONTRACT, TOKEN_CONTRACT } from "@/web3/constants";
+import { useAppKitAccount } from "@reown/appkit/react";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { parseEther } from "viem";
 import {
   BaseError,
-  useAccount,
   usePublicClient,
   useWalletClient,
   useWriteContract,
 } from "wagmi";
-import toast from "react-hot-toast";
-import { useApp } from "@/components/Layouts/AppProvider";
-import { getBillings, saveBillingTx } from "@/apis/api-v1";
-import { IBilling } from "@/types";
-import { PAYMENT_CONTRACT, TOKEN_CONTRACT } from "@/web3/constants";
-import { PaymentABI, TokenABI } from "@/web3/abis/abi";
-import { parseEther } from "viem";
-import Image from "next/image";
 
 const billing = [
   {
@@ -45,7 +45,7 @@ const BillingPage = () => {
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const { writeContractAsync } = useWriteContract();
-  const { address } = useAccount();
+  const { address } = useAppKitAccount();
   const { user, refetchUserData } = useApp();
 
   const [billings, setBillings] = useState<IBilling[] | null>(null);

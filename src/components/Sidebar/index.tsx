@@ -1,19 +1,12 @@
 "use client";
 
-import React from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
-import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { Ubuntu, Sansita } from "next/font/google";
-import { AnimatePresence, motion } from "framer-motion";
-import path from "path";
-import Loader from "../common/Loader";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import DarkModeSwitcher from "../Header/DarkModeSwitcher";
 import Logo from "../Logo";
-import { useAccount } from "wagmi";
 
 interface SidebarProps {
   sidebarOpen?: boolean;
@@ -249,7 +242,6 @@ const container = {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
-  const { isConnected } = useAccount();
 
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
 

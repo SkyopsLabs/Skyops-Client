@@ -1,6 +1,6 @@
 "use client";
+import { useAppKitAccount } from "@reown/appkit/react";
 import { useState } from "react";
-import { useAccount } from "wagmi";
 
 const WaitlistModal = ({
   close,
@@ -10,7 +10,7 @@ const WaitlistModal = ({
   submit: (e: string) => void;
 }) => {
   // --------------------------------------------VARIABLES
-  const { address } = useAccount();
+  const { address } = useAppKitAccount();
   const [reason, setReason] = useState<string | null>(null);
 
   //-----------------------------------------------------------FUNCTIONS

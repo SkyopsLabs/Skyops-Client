@@ -1,17 +1,17 @@
 "use client";
-import { getAllUsers, getUserByCode } from "@/actions/verify";
+import { getAllUsers } from "@/actions/verify";
 import SelectGroup from "@/components/FormElements/SelectGroup/SelectGroup";
 import SearchForm from "@/components/Header/SearchForm";
-import { ILeaderboard, IUser } from "@/types";
+import { ILeaderboard } from "@/types";
 import { getRandomColor, leaderboardPalette } from "@/utils/helpers";
+import { useAppKitAccount } from "@reown/appkit/react";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
 
 const LeaderBoard = () => {
   // --------------------------------------------VARIABLES
   const [search, setSearch] = useState<string>("");
   const [users, setUsers] = useState<ILeaderboard[]>([]);
-  const { address } = useAccount();
+  const { address } = useAppKitAccount();
   const user = users.find((item) => item.wallet == (address as string));
 
   //-----------------------------------------------------------FUNCTIONS
