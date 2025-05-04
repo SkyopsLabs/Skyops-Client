@@ -196,9 +196,14 @@ const Tasks = () => {
       }
 
       // toast.success("Transaction confirmed", { id: id });
-    } catch (error) {
+    } catch (err) {
       console.error(error, "Error");
-      toast.error("An error occured", { id: id });
+      toast.error(
+        error?.includes("CooldownNotMet")
+          ? "You can only claim once per week"
+          : "An error occured",
+        { id: id },
+      );
     }
   };
 

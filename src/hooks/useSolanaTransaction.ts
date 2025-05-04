@@ -152,7 +152,8 @@ export const useSolanaTransaction = () => {
         const errorMessage =
           err instanceof Error ? err.message : "Unknown error occurred";
         setError(errorMessage);
-        // console.error("Transaction failed:", err);
+
+        console.error("Transaction failed:", errorMessage);
         return null;
       } finally {
         setIsLoading(false);
