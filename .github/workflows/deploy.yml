@@ -46,7 +46,7 @@ jobs:
             fi
 
             # Install dependencies
-            bun install  || { echo "Error: npm install failed"; exit 1; }
+            bun install --legacy-peer-deps  || { echo "Error: npm install failed"; exit 1; }
 
             # Build the frontend
             bun run build || { echo "Error: npm build failed"; exit 1; }

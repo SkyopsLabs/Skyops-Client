@@ -24,7 +24,6 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@use-telegram-auth/client": "^1.0.5",
     "@use-telegram-auth/hook": "^1.0.5",
-    "apexcharts": "^3.54.1",
     "axios": "^1.9.0",
     "bigint-buffer": "^1.1.5",
     "country-data": "^0.0.31",
