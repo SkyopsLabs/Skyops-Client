@@ -11,8 +11,9 @@ import {
 import { useSolanaTransaction } from "@/hooks/useSolanaTransaction";
 import { useAppSelector } from "@/redux/hooks";
 import { setUser, setUserWithRank } from "@/redux/slices/userSlice";
-import { AppSession, IPointsHistory } from "@/types";
-import { SolRewards, idl } from "@/types/idl";
+import { AppSession } from "@/types";
+import { idl, SolRewards } from "@/types/idl";
+import { getOwner } from "@/utils/admin";
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { useAppKitConnection } from "@reown/appkit-adapter-solana/react";
@@ -21,35 +22,22 @@ import {
   getOrCreateAssociatedTokenAccount,
   TOKEN_2022_PROGRAM_ID,
 } from "@solana/spl-token";
-import { AnchorWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
 import { Ed25519Program, Keypair, PublicKey } from "@solana/web3.js";
 import telegramAuth from "@use-telegram-auth/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import path from "path";
-import fs from "fs";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import nacl from "tweetnacl";
-import { getOwner } from "@/utils/admin";
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1500;
 
-// const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
 const Tasks = () => {
   // --------------------------------------------VARIABLES
   const { connection } = useAppKitConnection();
   const { walletProvider } = useAppKitProvider("solana");
-  // const wallet = useAnchorWallet();
-  // const provider = new anchor.AnchorProvider(
-  //   connection as anchor.web3.Connection,
-  //   wallet as AnchorWallet,
-  //   {
-  //     commitment: "confirmed",
-  //   },
-  // );
 
   anchor.setProvider(walletProvider as unknown as anchor.AnchorProvider);
   const program = new Program(idl as SolRewards);
@@ -67,28 +55,6 @@ const Tasks = () => {
   const { sendCustomTransaction, isLoading, error } = useSolanaTransaction();
 
   const appSession: AppSession = data?.user as AppSession;
-
-  const messageParams = {
-    types: {
-      ExtensionClientData: [
-        { name: "client", type: "address" },
-        { name: "points", type: "uint256" },
-        { name: "server", type: "address" },
-      ],
-    },
-    domain: {
-      name: "skyopslabs.ai",
-      version: "1",
-      chainId: 11155111,
-      verifyingContract: process.env.NEXT_PUBLIC_REWARDS_CA,
-    },
-    messages: {
-      client: address,
-      points: user.points,
-      server: process.env.NEXT_PUBLIC_REWARDS_CA,
-      // server: address,
-    },
-  };
 
   //-----------------------------------------------------------FUNCTIONS
 
@@ -110,7 +76,6 @@ const Tasks = () => {
       const tokenMint = new PublicKey(
         "9TVXPG2EY1ctYRXJJmEqcXRZ1mB1kstr7VQwPFXceXSR",
       );
-      // console.log(owner.publicKey.toString(), "owner");
       const userAta = (
         await getOrCreateAssociatedTokenAccount(
           connection as anchor.web3.Connection,
@@ -158,9 +123,8 @@ const Tasks = () => {
 
       const res = await sendCustomTransaction([ed25519Ix, claimIx]);
       if (res === null) {
-        console.log("An error");
+        console.log("Transaction Failed");
         // toast.error("Transaction failed", { id: id });
-        throw Error(error as string);
       } else {
         console.log(res, "response");
         let attempts = 0;
@@ -198,12 +162,6 @@ const Tasks = () => {
       // toast.success("Transaction confirmed", { id: id });
     } catch (err) {
       console.error(error, "Error");
-      toast.error(
-        error?.includes("CooldownNotMet")
-          ? "You can only claim once per week"
-          : "An error occured",
-        { id: id },
-      );
     }
   };
 
@@ -575,6 +533,15 @@ const Tasks = () => {
   useEffect(() => {
     console.log("isLoading", isLoading);
     console.log("error", error);
+
+    if (error) {
+      toast.error(
+        error?.includes("CooldownNotMet")
+          ? "You can only claim once per week"
+          : "An error occured",
+        { id: txId as string },
+      );
+    }
     // console.log("isStatus", isStatus);
     // console.log("error-message", error?.message);
   }, [isLoading, error]);
