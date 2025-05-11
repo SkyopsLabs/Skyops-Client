@@ -1,6 +1,8 @@
 import ClickOutside from "@/components/ClickOutside";
+import { setAuthToken } from "@/utils/setAuthToken";
 import { useAppKitAccount } from "@reown/appkit/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const DropdownUser = ({
@@ -12,11 +14,13 @@ const DropdownUser = ({
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { isConnected } = useAppKitAccount();
+  const router = useRouter();
 
   const handleDisconnect = () => {
-    console.log("Disconnect", isConnected, address);
-
     onDisconnect();
+    setAuthToken(null);
+    router.push("/");
+    console.log("Disconnect", isConnected, address);
   };
 
   return (

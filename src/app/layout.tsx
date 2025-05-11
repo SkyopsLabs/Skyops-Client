@@ -1,20 +1,13 @@
-// "use client";
-
-import "jsvectormap/dist/jsvectormap.css";
-import "flatpickr/dist/flatpickr.min.css";
 import "@/css/style.css";
 
-import React from "react";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { Toaster } from "react-hot-toast";
-import { Metadata } from "next";
-import { headers } from "next/headers";
-import { Archivo } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
 import { getServerAuthSession } from "@/actions/auth";
-import { AppSession } from "@/types";
+import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Providers } from "@/redux/Provider";
+import { Metadata } from "next";
+import { Archivo } from "next/font/google";
+import { headers } from "next/headers";
+import React from "react";
+import { Toaster } from "react-hot-toast";
 
 const archivo = Archivo({ subsets: ["latin"] });
 
@@ -41,7 +34,7 @@ export default async function RootLayout({
   const headersObj = headers();
   const cookies = headersObj.get("cookie");
   const session = (await getServerAuthSession()) as unknown as string;
-  console.log(session, "session");
+  // console.log(session, "session");
   return (
     <html lang="en">
       <body

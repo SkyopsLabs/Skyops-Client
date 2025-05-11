@@ -46,10 +46,10 @@ jobs:
             fi
 
             # Install dependencies
-            bun install --legacy-peer-deps  || { echo "Error: npm install failed"; exit 1; }
+            bun install   || { echo "Error: bun install failed"; exit 1; }
 
             # Build the frontend
-            bun run build || { echo "Error: npm build failed"; exit 1; }
+            bun run build || { echo "Error: bun build failed"; exit 1; }
 
             # Restart frontend with PM2
             pm2 restart client || { echo "Error: PM2 restart failed"; exit 1; }

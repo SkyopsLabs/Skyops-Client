@@ -1,22 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import SelectGroupAIModel from "@/components/FormElements/SelectGroup/SelectGroupAIModel";
-import { IChat, IModel } from "@/types";
 import {
   generateAiText,
   getAiModels,
   getConversationsById,
 } from "@/apis/api-v1";
-import toast from "react-hot-toast";
-import SyntaxComponent from "@/components/SyntaxHighliter";
-import ReactMarkdown from "react-markdown";
-import { AnimatePresence, motion } from "framer-motion";
 import SelectComponent from "@/components/FormElements/SelectGroup/SelectComponent";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+import SyntaxComponent from "@/components/SyntaxHighliter";
+import { IChat, IModel } from "@/types";
+import { AnimatePresence, motion } from "framer-motion";
 import "highlight.js/styles/github-dark.css"; // Choose any highlight.js theme
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const initialState = {
   temperature: 0,
@@ -36,18 +32,6 @@ const parameters = [
   // { name: "repetitionPenalty", label: "Repetition Penalty" },
 ];
 
-function addVerticalSpacingAndModifyStruct(text: string) {
-  // Replace 'struct' with 'public struct'
-  let modifiedText = text.replace(/struct\s+(\w+)/g, "public struct $1");
-
-  // Add a newline after each line ending with a semicolon, closing brace, or opening brace
-  modifiedText = modifiedText.replace(/([;}]|{)\n/g, "$1\n\n");
-
-  // Add spacing after struct declarations
-  modifiedText = modifiedText.replace(/(public struct \w+) {/g, "$1 {\n");
-
-  return modifiedText;
-}
 const AIExplorerTextPage = () => {
   const isDesktop = typeof window !== "undefined" && window.innerWidth > 1024;
   const [formData, setFormData] = useState(initialState);

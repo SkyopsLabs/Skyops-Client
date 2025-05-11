@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         .collection("users")
         .updateOne(
           { telegram_id: userId },
-          { $set: { lastTelegramMessage: new Date() } },
+          { $set: { lastTelegramMessage: Date.now() } },
         );
       return NextResponse.json({ message: "Message tracked" });
     } else {

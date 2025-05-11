@@ -232,6 +232,7 @@ const Login: NextPage = () => {
           <Image
             src={"/images/mainnest.png"}
             fill
+            priority
             className="z-50 object-contain"
             alt="banner"
           />

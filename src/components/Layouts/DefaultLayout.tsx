@@ -13,7 +13,7 @@ import {
 
 import { type Config, cookieToInitialState, WagmiProvider } from "wagmi";
 import { solanaDevnet, solana, solanaTestnet } from "@reown/appkit/networks";
-import { projectId, wagmiAdapter } from "@/config";
+import { projectId } from "@/config";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider } from "./AppProvider";
@@ -45,11 +45,6 @@ export default function DefaultLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(
     typeof window !== "undefined" && window.innerWidth > 1024 ? true : false,
-  );
-
-  const initialState = cookieToInitialState(
-    wagmiAdapter.wagmiConfig as Config,
-    cookies,
   );
 
   const { colorMode } = useColorMode();

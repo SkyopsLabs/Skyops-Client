@@ -23,30 +23,26 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
   const [user, setUser] = useState<IUser | null>(null);
 
   useEffect(() => {
-    if (!isConnected || !address) {
-      setAuthToken(null);
-      setUser(null);
-      invite ? router.push(`/?invite=${invite}`) : router.push("/");
+    console.log(invite, "invite");
+    if (localStorage.getItem("authToken")) {
+      console.log("authToken found");
+      setAuthToken(localStorage.getItem("authToken"));
+      // Fetch user info
+      (async () => {
+        const _ = await getCurrentUser();
+        setUser(_);
+      })();
     } else {
-      console.log(invite, "invite");
-      if (localStorage.getItem("authToken")) {
-        setAuthToken(localStorage.getItem("authToken"));
-        // Fetch user info
-        (async () => {
-          const _ = await getCurrentUser();
-          setUser(_);
-        })();
-      } else {
-        // Authenticate user with optional invite code
-        (async () => {
-          await auth(address as string, invite || code);
-          router.push("/instances");
-          const _ = await getCurrentUser();
-          setUser(_);
-        })();
-      }
+      console.log("authToken not found");
+      // Authenticate user with optional invite code
+      (async () => {
+        await auth(address as string, invite || code);
+        // router.push("/instances");
+        const _ = await getCurrentUser();
+        setUser(_);
+      })();
     }
-  }, [isConnected, address, invite, code]);
+  }, [address, invite, code]);
 
   const refetchUserData = async () => {
     if (!address || !localStorage.getItem("authToken")) return;

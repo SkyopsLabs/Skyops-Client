@@ -89,19 +89,17 @@ export const addPoints = async (
 export const getUserDetails = async (wallet: string): Promise<any> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
-  const user = await db
-    .collection("users")
-    .findOne(
-      { wallet },
-      {
-        projection: {
-          _id: 0,
-          created_at: 0,
-          updated_at: 0,
-          pointsHistory: { _id: 0 },
-        },
+  const user = await db.collection("users").findOne(
+    { wallet },
+    {
+      projection: {
+        _id: 0,
+        created_at: 0,
+        updated_at: 0,
+        pointsHistory: { _id: 0 },
       },
-    );
+    },
+  );
   if (user) {
     const { _id, ...rest } = user;
     return rest;
@@ -144,23 +142,19 @@ export const getAllUsers = async (): Promise<ILeaderboard[]> => {
   return usersWithRankAndReferee;
 };
 
-const x = 5;
-const y = 5;
-const sum = x + y;
-
 export const authenticateTwitter = async (
   address: string,
   id: number,
   username: string,
-): Promise<string> => {
+): Promise<{ ok: boolean; message: string }> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
   const user = await getUserDetails(address);
   if (!user) {
-    throw Error("Wallet not registered");
+    return { ok: false, message: "Wallet not registered" };
   }
   if (user?.x_id) {
-    return "Twitter already connected";
+    return { ok: true, message: "Connected" };
   }
 
   // Check if Twitter ID or username already exists for another user
@@ -170,36 +164,40 @@ export const authenticateTwitter = async (
   });
 
   if (existingTwitterUser) {
-    return "This Twitter account is already linked to another wallet";
+    return {
+      ok: false,
+      message: "This Twitter account is already linked to another wallet",
+    };
   }
 
-  if (!user.x_id) {
-    await db
-      .collection("users")
-      .updateOne(
-        { wallet: address },
-        { $set: { x_id: id, x_username: username } },
-      );
-    await addPoints(address, 10, "Connect Twitter");
-    return "Twitter connected successfully";
+  const result = await db
+    .collection("users")
+    .updateOne(
+      { wallet: address },
+      { $set: { x_id: id, x_username: username } },
+    );
+
+  if (result.modifiedCount === 0) {
+    return { ok: false, message: "Failed to connect Twitter" };
   }
 
-  return "Twitter connection status unknown";
+  await addPoints(address, 10, "Connect Twitter");
+  return { ok: true, message: "Twitter connected successfully" };
 };
 
 export const authenticateDiscord = async (
   address: string,
   id: number,
   username: string,
-): Promise<string> => {
+): Promise<{ ok: boolean; message: string }> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
   const user = await getUserDetails(address);
   if (!user) {
-    throw Error("Wallet not registered");
+    return { ok: false, message: "Wallet not registered" };
   }
   if (user?.discord_id) {
-    return "Discord already connected";
+    return { ok: true, message: "Connected" };
   }
 
   // Check if Discord ID or username already exists for another user
@@ -209,35 +207,39 @@ export const authenticateDiscord = async (
   });
 
   if (existingDiscordUser) {
-    return "This Discord account is already linked to another wallet";
+    return {
+      ok: false,
+      message: "This Discord account is already linked to another wallet",
+    };
   }
 
-  if (!user.discord_id) {
-    await db
-      .collection("users")
-      .updateOne(
-        { wallet: address },
-        { $set: { discord_id: id, discord_username: username } },
-      );
-    await addPoints(address, 10, "Connect Discord");
-    return "Discord connected successfully";
+  const result = await db
+    .collection("users")
+    .updateOne(
+      { wallet: address },
+      { $set: { discord_id: id, discord_username: username } },
+    );
+
+  if (result.modifiedCount === 0) {
+    return { ok: false, message: "Failed to connect Discord" };
   }
 
-  return "Discord connection status unknown";
+  await addPoints(address, 10, "Connect Discord");
+  return { ok: true, message: "Discord connected successfully" };
 };
 
 export const authenticateGmail = async (
   address: string,
   email: string,
-): Promise<string> => {
+): Promise<{ ok: boolean; message: string }> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
   const user = await getUserDetails(address);
   if (!user) {
-    throw Error("Wallet not registered");
+    return { ok: false, message: "Wallet not registered" };
   }
   if (user?.gmail) {
-    return "Gmail already connected";
+    return { ok: true, message: "Connected" };
   }
 
   // Check if Gmail already exists for another user
@@ -247,33 +249,37 @@ export const authenticateGmail = async (
   });
 
   if (existingGmailUser) {
-    return "This Gmail account is already linked to another wallet";
+    return {
+      ok: false,
+      message: "This Gmail account is already linked to another wallet",
+    };
   }
 
-  if (!user.gmail) {
-    await db
-      .collection("users")
-      .updateOne({ wallet: address }, { $set: { gmail: email } });
-    await addPoints(address, 10, "Connect Gmail");
-    return "Gmail connected successfully";
+  const result = await db
+    .collection("users")
+    .updateOne({ wallet: address }, { $set: { gmail: email } });
+
+  if (result.modifiedCount === 0) {
+    return { ok: false, message: "Failed to connect Gmail" };
   }
 
-  return "Gmail connection status unknown";
+  await addPoints(address, 10, "Connect Gmail");
+  return { ok: true, message: "Gmail connected successfully" };
 };
 
 export const authenticateTelegram = async (
   address: string,
   id: number,
   username: string,
-): Promise<string> => {
+): Promise<{ ok: boolean; message: string }> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
   const user = await getUserDetails(address);
   if (!user) {
-    throw Error("Wallet not registered");
+    return { ok: false, message: "Wallet not registered" };
   }
   if (user?.tg_id) {
-    return "Telegram already connected";
+    return { ok: true, message: "Connected" };
   }
 
   // Check if Telegram ID or username already exists for another user
@@ -283,21 +289,25 @@ export const authenticateTelegram = async (
   });
 
   if (existingTelegramUser) {
-    return "This Telegram account is already linked to another wallet";
+    return {
+      ok: false,
+      message: "This Telegram account is already linked to another wallet",
+    };
   }
 
-  if (!user?.tg_id) {
-    await db
-      .collection("users")
-      .updateOne(
-        { wallet: address },
-        { $set: { tg_id: id, tg_username: username } },
-      );
-    await addPoints(address, 10, "Connect Telegram");
-    return "Telegram connected successfully";
+  const result = await db
+    .collection("users")
+    .updateOne(
+      { wallet: address },
+      { $set: { tg_id: id, tg_username: username } },
+    );
+
+  if (result.modifiedCount === 0) {
+    return { ok: false, message: "Failed to connect Telegram" };
   }
 
-  return "Telegram connection status unknown";
+  await addPoints(address, 10, "Connect Telegram");
+  return { ok: true, message: "Telegram connected successfully" };
 };
 
 export const getUserByCode = async (code: string): Promise<string> => {

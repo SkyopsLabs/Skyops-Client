@@ -26,6 +26,7 @@ import { Ed25519Program, Keypair, PublicKey } from "@solana/web3.js";
 import telegramAuth from "@use-telegram-auth/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -53,6 +54,7 @@ const Tasks = () => {
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
   const { sendCustomTransaction, isLoading, error } = useSolanaTransaction();
+  const params = useSearchParams();
 
   const appSession: AppSession = data?.user as AppSession;
 
@@ -178,8 +180,7 @@ const Tasks = () => {
     }
     try {
       const res = await signIn("twitter", {
-        callbackUrl: "/rewards/tasks",
-        redirect: false,
+        callbackUrl: "/rewards/tasks?from=external",
       });
       console.log(res, "response");
     } catch (error) {
@@ -196,7 +197,7 @@ const Tasks = () => {
     }
     try {
       const res = await signIn("discord", {
-        callbackUrl: "/rewards/tasks",
+        callbackUrl: "/rewards/tasks?from=external",
         redirect: false,
       });
       console.log(res, "response");
@@ -212,7 +213,7 @@ const Tasks = () => {
     }
     try {
       const res = await signIn("google", {
-        callbackUrl: "/rewards/tasks",
+        callbackUrl: "/rewards/tasks?from=external",
       });
       console.log(res, "response");
     } catch (error) {
@@ -220,7 +221,7 @@ const Tasks = () => {
     }
   };
   const signInwithTeleGram = async () => {
-    let message = "";
+    let data;
     console.log(status);
     if (user?.tg_id) {
       console.log(data);
@@ -230,15 +231,21 @@ const Tasks = () => {
       const res = await telegramAuth("7902207050", {
         windowFeatures: { popup: true },
       });
-      message = await authenticateTelegram(
+      data = await authenticateTelegram(
         address as string,
         res.id,
         res.username,
       );
-      toast.success(message);
-      const userDetails = await getUserDetails(address as string);
-      dispatch(setUser(userDetails));
-      console.log(res, userDetails, "response");
+      if (data?.ok && data.message !== "Connected") {
+        toast.success(data?.message);
+        const userDetails = await getUserDetails(address as string);
+        dispatch(setUser(userDetails));
+        console.log(res, userDetails, "response");
+      }
+
+      if (!data?.ok) {
+        toast.error(data?.message as string);
+      }
     } catch (error: any) {
       console.log(error, "error");
       toast.error(error?.message ?? "Error connecting telegram");
@@ -365,7 +372,11 @@ const Tasks = () => {
       image: "/images/icon/telegram.svg",
       points: "+10",
       label: "Join us on Telegram",
-      verified: false,
+      verified:
+        new Date(new Date().setHours(0, 0, 0, 0)) <
+          (user?.lastTelegramMessage ?? 0) &&
+        (user?.lastTelegramMessage ?? 0) <
+          new Date(new Date().setHours(23, 59, 59, 999)),
       setter: () => window.open("https://t.me/+k6TpiZ12uHMzNmQ0", "_blank"),
       desc: "Send at least one message in Telegram per day",
     },
@@ -467,52 +478,66 @@ const Tasks = () => {
 
   useEffect(() => {
     let isMounted = true;
+    console.log(appSession, "session");
 
-    if (status == "authenticated") {
-    }
-    const auth = async () => {
-      if (!isMounted) return;
-      console.log(appSession);
-      let message = "";
+    if (status == "authenticated" && address) {
+      const from = params.get("from");
+      const auth = async () => {
+        if (!isMounted) return;
+        let data;
 
-      try {
-        if (appSession) {
-          if (appSession?.x_id) {
-            message = await authenticateTwitter(
-              address as string,
-              appSession.x_id,
-              appSession.x_username,
-            );
+        try {
+          if (appSession) {
+            if (appSession?.x_id) {
+              data = await authenticateTwitter(
+                address as string,
+                appSession.x_id,
+                appSession.x_username,
+              );
+            }
+            if (appSession?.discord_id) {
+              data = await authenticateDiscord(
+                address as string,
+                appSession.discord_id,
+                appSession.discord_username,
+              );
+            }
+            if (appSession?.email) {
+              data = await authenticateGmail(
+                address as string,
+                appSession.email,
+              );
+            }
           }
-          if (appSession?.discord_id) {
-            message = await authenticateDiscord(
-              address as string,
-              appSession.discord_id,
-              appSession.discord_username,
-            );
+
+          if (data?.ok && data.message !== "Connected") {
+            toast.success(data?.message);
           }
-          if (appSession?.email) {
-            message = await authenticateGmail(
-              address as string,
-              appSession.email,
-            );
+
+          if (data?.ok === false) {
+            toast.error((data?.message as string) ?? "Hmm");
+          }
+
+          // toast.success(message);
+        } catch (error: any) {
+          if (isMounted) {
+            console.log(error, "errs");
+            toast.error(error.message);
           }
         }
-
-        // toast.success(message);
-      } catch (error: any) {
-        if (isMounted) {
-          toast.error(error.message);
-        }
+      };
+      if (from === "external") {
+        auth();
       }
+    }
 
+    const fetchUser = async () => {
       if (isMounted) {
         const userDetails = await getUserDetails(address as string);
         dispatch(setUser(userDetails));
       }
     };
-
-    auth();
+    fetchUser();
 
     return () => {
       isMounted = false;
@@ -531,8 +556,8 @@ const Tasks = () => {
   }, [user]);
 
   useEffect(() => {
-    console.log("isLoading", isLoading);
-    console.log("error", error);
+    // console.log("isLoading", isLoading);
+    // console.log("error", error);
 
     if (error) {
       toast.error(
@@ -544,19 +569,7 @@ const Tasks = () => {
     }
     // console.log("isStatus", isStatus);
     // console.log("error-message", error?.message);
-  }, [isLoading, error]);
-  useEffect(() => {
-    // if (true) {
-    //   claimPoints();
-    //   toast.success("Transaction confirmed", { id: txId as string });
-    // }
-  }, [txId, address, user.points, user.wallet]);
-
-  useEffect(() => {
-    if (false) {
-      toast.error("Transaction not confirmed", { id: txId as string });
-    }
-  }, [txId]);
+  }, [isLoading, error, txId]);
 
   return (
     <div className="w-full">
