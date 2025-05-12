@@ -1,29 +1,30 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import React, { useState } from "react";
 
-import { createAppKit, ThemeMode } from "@reown/appkit/react";
-import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
+import { createAppKit, ThemeMode } from "@reown/appkit/react";
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 
-import { type Config, cookieToInitialState, WagmiProvider } from "wagmi";
-import { solanaDevnet, solana, solanaTestnet } from "@reown/appkit/networks";
-import { projectId } from "@/config";
+import { solanaDevnet } from "@reown/appkit/networks";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AppProvider } from "./AppProvider";
 import useColorMode from "@/hooks/useColorMode";
-import { usePathname } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
 import { AppSession } from "@/types";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { AppProvider } from "./AppProvider";
 
 const queryClient = new QueryClient();
+export const projectId = process.env.NEXT_PUBLIC_INFURA_ID as string;
+
+if (!projectId) {
+  throw new Error("Project ID is not defined");
+}
 
 const metadata = {
   name: "SkyOps - Building a Global DeOS to Redefine AI Workload Orchestration.",

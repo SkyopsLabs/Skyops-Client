@@ -42,9 +42,6 @@ const billing = [
 ];
 
 const BillingPage = () => {
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
-  const { writeContractAsync } = useWriteContract();
   const { address } = useAppKitAccount();
   const { user, refetchUserData } = useApp();
 
@@ -60,62 +57,7 @@ const BillingPage = () => {
   }, [user]);
 
   const handleAddCredits = async () => {
-    try {
-      if (!amount || !publicClient || !address || !walletClient) {
-        toast.error("Please check your wallet connection");
-        return;
-      }
-
-      let hash;
-
-      let allowance: any = await publicClient?.readContract({
-        address: TOKEN_CONTRACT,
-        abi: TokenABI,
-        functionName: "allowance",
-        args: [address, PAYMENT_CONTRACT],
-      });
-
-      if (allowance < parseEther(amount.toString())) {
-        hash = await writeContractAsync({
-          address: TOKEN_CONTRACT,
-          abi: TokenABI,
-          functionName: "approve",
-          args: [PAYMENT_CONTRACT, parseEther(amount.toString())],
-        });
-
-        await publicClient?.waitForTransactionReceipt({ hash });
-      }
-
-      allowance = await publicClient?.readContract({
-        address: TOKEN_CONTRACT,
-        abi: TokenABI,
-        functionName: "allowance",
-        args: [address, PAYMENT_CONTRACT],
-      });
-
-      if (allowance >= parseEther(amount.toString())) {
-        hash = await writeContractAsync({
-          address: PAYMENT_CONTRACT,
-          abi: PaymentABI,
-          functionName: "deposit",
-          args: [parseEther(amount.toString())],
-        });
-
-        await publicClient?.waitForTransactionReceipt({ hash });
-
-        // Save billing
-        const billings_ = await saveBillingTx(amount);
-        setBillings(billings_);
-        await refetchUserData();
-        toast.success("Deposit Success!");
-      }
-    } catch (error: any) {
-      toast.error(
-        error instanceof BaseError
-          ? error.shortMessage
-          : "User rejected tx submit",
-      );
-    }
+    toast.success("Coming Soon");
   };
 
   return (

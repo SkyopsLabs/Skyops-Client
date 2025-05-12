@@ -475,7 +475,6 @@ const Tasks = () => {
   ];
 
   //------------------------------------------------------------------USE EFFECTS
-
   useEffect(() => {
     let isMounted = true;
     console.log(appSession, "session");
@@ -542,6 +541,7 @@ const Tasks = () => {
     return () => {
       isMounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, address, appSession]);
 
   useEffect(() => {
@@ -553,6 +553,7 @@ const Tasks = () => {
       }
     };
     getAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {

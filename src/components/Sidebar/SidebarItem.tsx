@@ -24,6 +24,7 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
   };
   useEffect(() => {
     setPageName(path.slice(1));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
   return (
