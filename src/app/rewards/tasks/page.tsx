@@ -26,6 +26,7 @@ import { Ed25519Program, Keypair, PublicKey } from "@solana/web3.js";
 import telegramAuth from "@use-telegram-auth/client";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -441,7 +442,7 @@ const Tasks = () => {
       setter: () => "",
       desc: "Post your opinion on X about Skyops",
       input: true,
-      placeholder: "Enter a link",
+      placeholder: "Drop your X post link here...",
     },
     {
       icon: (
@@ -468,9 +469,9 @@ const Tasks = () => {
       label: "Make a thread on X",
       verified: false,
       setter: () => "",
-      desc: "-",
+      desc: "Make a thread on X to get more points!",
       input: true,
-      placeholder: "Enter a link to your thread about us",
+      placeholder: "Drop your X thread link here...",
     },
   ];
 
@@ -722,7 +723,10 @@ const Tasks = () => {
                 receive 5% of the points that C earns.
               </li>
             </ul>
-
+            -{" "}
+            <span className="text-xs text-green-700">
+              NB: Earning points via referall trades coming soon
+            </span>
             <div className="mb-4 mt-4 flex h-[60px] items-center justify-between border border-black/10 px-4.5  dark:border-dark-3 lg:mb-3 lg:mt-6">
               <p className="text-sm text-appBlack dark:text-white">{refUrl}</p>
               <svg
@@ -782,20 +786,28 @@ const Tasks = () => {
                 </defs>
               </svg>
             </div>
-
             <h6 className="my-4 w-full text-center  text-black/[.28] dark:text-white/[.28] lg:my-6">
               OR
             </h6>
-            <div className="flex w-full items-center justify-center gap-1">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray dark:bg-dark">
+            <div className="flex w-full items-center justify-center gap-2">
+              <Link
+                target="_blank"
+                href={`https://t.me/share/url?url=${refUrl}&text=${encodeURIComponent("Just joined @SkyopsLabs campaign. Join with my ref ID:")}
+`}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray dark:bg-dark"
+              >
                 <Image
                   src={"/images/icon/telegram.svg"}
                   width={20}
                   height={20}
                   alt="tg"
                 />
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray text-appBlack dark:bg-dark dark:text-white">
+              </Link>
+              <Link
+                href={`https://x.com/intent/tweet?text=${encodeURIComponent(`Just joined @SkyopsLabs campaign. Join with my ref ID: ${refUrl}
+`)}`}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray text-appBlack dark:bg-dark dark:text-white"
+              >
                 <svg
                   width="18"
                   height="18"
@@ -814,7 +826,7 @@ const Tasks = () => {
                     </clipPath>
                   </defs>
                 </svg>
-              </div>
+              </Link>
             </div>
           </div>
           <div className="mt-4 flex w-full flex-1 flex-col items-center justify-center bg-white px-[50px] py-8 dark:bg-dark-2 lg:mt-3 lg:px-[74px] lg:py-[99px] ">
