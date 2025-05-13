@@ -278,7 +278,7 @@ const Tasks = () => {
       label: "Connect X",
       verified: user?.x_id,
       setter: signInwithTwitter,
-      desc: "Connect X to your Skyops to get points!",
+      desc: "Connect X to Skyops to get points!",
     },
     {
       image: "/images/icon/telegram.svg",
@@ -286,7 +286,7 @@ const Tasks = () => {
       label: "Connect Telegram",
       verified: user?.tg_id,
       setter: signInwithTeleGram,
-      desc: "Connect Telegram to your Skyops to get points!",
+      desc: "Connect Telegram to  Skyops to get points!",
     },
     {
       image: "/images/icon/discord.svg",
@@ -294,7 +294,7 @@ const Tasks = () => {
       label: "Connect Discord",
       verified: user?.discord_id,
       setter: signInwithDiscord,
-      desc: "Connect Discord to your Skyops to get points!",
+      desc: "Connect Discord to  Skyops to get points!",
     },
     {
       icon: (
@@ -317,7 +317,7 @@ const Tasks = () => {
       label: "Connect Email",
       verified: user?.gmail,
       setter: signInwithGoogle,
-      desc: "Connect your Email to  Skyops to get points!",
+      desc: "Connect  Email to  Skyops to get points!",
     },
     {
       icon: (
@@ -367,7 +367,7 @@ const Tasks = () => {
       label: "Follow us on X",
       verified: false,
       setter: () => window.open("https://x.com/SkyopsLabs", "_blank"),
-      desc: "Follow us on X to earn 10 points",
+      desc: "Follow SkyopsLabs on X to get points",
     },
     {
       image: "/images/icon/telegram.svg",
@@ -379,7 +379,7 @@ const Tasks = () => {
         (user?.lastTelegramMessage ?? 0) <
           new Date(new Date().setHours(23, 59, 59, 999)),
       setter: () => window.open("https://t.me/+k6TpiZ12uHMzNmQ0", "_blank"),
-      desc: "Send at least one message in Telegram per day",
+      desc: "Send at least one message in Telegram/day.",
     },
     {
       image: "/images/icon/discord.svg",
@@ -391,7 +391,7 @@ const Tasks = () => {
         (user?.lastDiscordMessage ?? 0) <
           new Date(new Date().setHours(23, 59, 59, 999)),
       setter: () => window.open("https://discord.gg/PTFgWgBB", "_blank"),
-      desc: "Send at least one message in Discord per day",
+      desc: "Send at least one message in Discord/day.",
     },
     {
       icon: (
@@ -411,7 +411,7 @@ const Tasks = () => {
         </svg>
       ),
       points: "+10",
-      label: "Refer a friend",
+      label: "Refer more friends to get more points!",
       verified: false,
       setter: copyInviteLink,
     },
@@ -440,7 +440,7 @@ const Tasks = () => {
       label: "Post your opinion",
       verified: false,
       setter: () => "",
-      desc: "Post your opinion on X about Skyops",
+      desc: "Post your opinion on X about Skyops.",
       input: true,
       placeholder: "Drop your X post link here...",
     },
@@ -725,7 +725,7 @@ const Tasks = () => {
             </ul>
             -{" "}
             <span className="text-xs text-green-700">
-              NB: Earning points via referall trades coming soon
+              *Note: Earning points via referral trades coming soon!
             </span>
             <div className="mb-4 mt-4 flex h-[60px] items-center justify-between border border-black/10 px-4.5  dark:border-dark-3 lg:mb-3 lg:mt-6">
               <p className="text-sm text-appBlack dark:text-white">{refUrl}</p>
