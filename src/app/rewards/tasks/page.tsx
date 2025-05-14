@@ -1,5 +1,6 @@
 "use client";
 import {
+  addPostToUser,
   authenticateDiscord,
   authenticateGmail,
   authenticateTelegram,
@@ -14,6 +15,7 @@ import { setUser, setUserWithRank } from "@/redux/slices/userSlice";
 import { AppSession } from "@/types";
 import { idl, SolRewards } from "@/types/idl";
 import { getOwner } from "@/utils/admin";
+import { ABI } from "@/utils/helpers";
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { useAppKitConnection } from "@reown/appkit-adapter-solana/react";
@@ -32,9 +34,13 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import nacl from "tweetnacl";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { ethers, Wallet } from "ethers";
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1500;
+
+const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
 
 const Tasks = () => {
   // --------------------------------------------VARIABLES
@@ -51,16 +57,71 @@ const Tasks = () => {
   const { address } = useAppKitAccount();
   const { data, status } = useSession();
   const [txId, setTxId] = useState<string | null>(null);
+  const [tweetLinks, setTweetLinks] = useState<{ [key: number]: string }>({});
+
   const { user, userWithRank } = useAppSelector((state) => state.user);
+  const { writeContractAsync, data: txData } = useWriteContract();
+  const {
+    isLoading: isConfirming,
+    isSuccess: isConfirmed,
+    isError,
+    error,
+  } = useWaitForTransactionReceipt({
+    hash: txData,
+  });
+
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
-  const { sendCustomTransaction, isLoading, error } = useSolanaTransaction();
   const params = useSearchParams();
 
   const appSession: AppSession = data?.user as AppSession;
 
-  //-----------------------------------------------------------FUNCTIONS
+  const messageParams = {
+    types: {
+      ExtensionClientData: [
+        { name: "client", type: "address" },
+        { name: "points", type: "uint256" },
+        { name: "server", type: "address" },
+      ],
+    },
+    domain: {
+      name: "skyopslabs.ai",
+      version: "1",
+      chainId: 11155111,
+      verifyingContract: process.env.NEXT_PUBLIC_REWARDS_CA,
+    },
+    messages: {
+      client: address,
+      points: user.points,
+      server: process.env.NEXT_PUBLIC_REWARDS_CA,
+      // server: address,
+    },
+  };
 
+  //-----------------------------------------------------------FUNCTIONS
+  //Add thread or post to user
+  const addPost = async (link: string, typ: string, idx: number) => {
+    if (!link) {
+      toast.error("Input Link");
+    }
+
+    // Simple Twitter link validation
+    const twitterRegex =
+      /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/[A-Za-z0-9_]+\/status\/\d+/;
+    if (!twitterRegex.test(link)) {
+      toast.error("Invalid X post");
+      return;
+    }
+    const post = { link: link, type: typ };
+    const data = await addPostToUser(user.wallet, post);
+    if (data.error) {
+      toast.error(data.message);
+    }
+    if (data.error == false) {
+      toast.success(data.message);
+      setTweetLinks((prev) => ({ ...prev, [idx]: "" })); // Reset only this input
+    }
+  };
   // Write to the smart contract and check if the transaction is successful with useEffect
   const handleWriteSmartContract = async () => {
     if ((user?.points as number) == 0 || !user.points) {
@@ -71,100 +132,30 @@ const Tasks = () => {
     setTxId(id);
 
     try {
-      const secretKeyString = await getOwner();
-      const key = JSON.parse(secretKeyString);
-      const secretKey = Uint8Array.from(key);
-      const owner = Keypair.fromSecretKey(secretKey);
-      const userPubKey = new PublicKey(user.wallet);
-      const tokenMint = new PublicKey(
-        "9TVXPG2EY1ctYRXJJmEqcXRZ1mB1kstr7VQwPFXceXSR",
+      const raw = await wallet.signTypedData(
+        messageParams.domain,
+        messageParams.types,
+        messageParams.messages,
       );
-      const userAta = (
-        await getOrCreateAssociatedTokenAccount(
-          connection as anchor.web3.Connection,
-          owner,
-          tokenMint,
-          userPubKey,
-          true,
-          undefined,
-          undefined,
-          TOKEN_2022_PROGRAM_ID,
-        )
-      ).address;
-      const createSignedVerification = (userKey: string, points: number) => {
-        const user = new PublicKey(userKey);
-        const msgBuffer = Buffer.concat([
-          user.toBuffer(),
-          Buffer.from(new anchor.BN(points).toArrayLike(Buffer, "le", 8)),
-        ]);
-
-        // Sign the message with the owner's private key
-        const sig = nacl.sign.detached(msgBuffer, owner.secretKey);
-
-        // Create the Ed25519 instruction
-        return Ed25519Program.createInstructionWithPublicKey({
-          publicKey: owner.publicKey.toBytes(),
-          message: msgBuffer,
-          signature: sig,
-        });
-      };
-      const ed25519Ix = createSignedVerification(
-        userPubKey.toString(),
-        user.points,
-      );
-      const claimIx = await program.methods
-        .claimRewards(new anchor.BN(user.points))
-        .accounts({
-          user: userPubKey,
-          state: state,
-          vault,
-          mint: tokenMint,
-          userToken: userAta,
-          tokenProgram: TOKEN_2022_PROGRAM_ID,
-        })
-        .instruction();
-
-      const res = await sendCustomTransaction([ed25519Ix, claimIx]);
-      if (res === null) {
-        console.log("Transaction Failed");
-        // toast.error("Transaction failed", { id: id });
-      } else {
-        console.log(res, "response");
-        let attempts = 0;
-        const claimPoints = async () => {
-          while (attempts < MAX_RETRIES) {
-            const data = await deductPoints(
-              user.wallet as string,
-              user.points as number,
-              "Claim",
-            );
-            if (data.error) {
-              toast.error(data.message ?? "Error deducting points", { id: id });
-              attempts++;
-              console.error(`Attempt ${attempts} failed:`, data.message);
-              if (attempts < MAX_RETRIES) {
-                await new Promise((r) =>
-                  setTimeout(r, RETRY_DELAY_MS * attempts),
-                ); // Exponential-ish backoff
-              } else {
-                toast.error("Failed to deduct points after retries.", {
-                  id: id,
-                });
-              }
-            } else {
-              toast.success(data.message, { id: id });
-              const userDetails = await getUserDetails(address as string);
-              dispatch(setUser(userDetails));
-              return;
-            }
-          }
-        };
-        claimPoints();
-      }
-
-      // toast.success("Transaction confirmed", { id: id });
-    } catch (err) {
-      console.error(error, "Error");
+      console.log("CA", process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`);
+      await writeContractAsync({
+        address: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`,
+        abi: ABI,
+        functionName: "claimRewards",
+        args: [
+          {
+            client: address, // Replace with actual client address
+            points: user.points, // Replace with actual points
+            server: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`, // Replace with actual server address
+            signature: raw, // Replace with actual signature (hex string)
+          },
+        ],
+      });
+    } catch (err: any) {
+      console.error(err.message, "Error");
+      const match = err.message?.match(/reverted: ([^\n]*)/i);
+      const revertReason = match ? match[1].trim() : "An error Occurred";
+      toast.error(revertReason, { id: id });
     }
   };
 
@@ -274,7 +265,7 @@ const Tasks = () => {
           </defs>
         </svg>
       ),
-      points: "+10",
+      points: "+15",
       label: "Connect X",
       verified: user?.x_id,
       setter: signInwithTwitter,
@@ -282,7 +273,7 @@ const Tasks = () => {
     },
     {
       image: "/images/icon/telegram.svg",
-      points: "+10",
+      points: "+15",
       label: "Connect Telegram",
       verified: user?.tg_id,
       setter: signInwithTeleGram,
@@ -290,7 +281,7 @@ const Tasks = () => {
     },
     {
       image: "/images/icon/discord.svg",
-      points: "+10",
+      points: "+15",
       label: "Connect Discord",
       verified: user?.discord_id,
       setter: signInwithDiscord,
@@ -313,7 +304,7 @@ const Tasks = () => {
           />
         </svg>
       ),
-      points: "+10",
+      points: "+15",
       label: "Connect Email",
       verified: user?.gmail,
       setter: signInwithGoogle,
@@ -363,7 +354,7 @@ const Tasks = () => {
           </defs>
         </svg>
       ),
-      points: "+10",
+      points: "+25",
       label: "Follow us on X",
       verified: false,
       setter: () => window.open("https://x.com/SkyopsLabs", "_blank"),
@@ -371,7 +362,7 @@ const Tasks = () => {
     },
     {
       image: "/images/icon/telegram.svg",
-      points: "+10",
+      points: "+25",
       label: "Join us on Telegram",
       verified:
         new Date(new Date().setHours(0, 0, 0, 0)) <
@@ -383,7 +374,7 @@ const Tasks = () => {
     },
     {
       image: "/images/icon/discord.svg",
-      points: "+10",
+      points: "+25",
       label: "Join us on Discord",
       verified:
         new Date(new Date().setHours(0, 0, 0, 0)) <
@@ -436,7 +427,7 @@ const Tasks = () => {
           </defs>
         </svg>
       ),
-      points: "+10",
+      points: "+50",
       label: "Post your opinion",
       verified: false,
       setter: () => "",
@@ -465,7 +456,7 @@ const Tasks = () => {
           </defs>
         </svg>
       ),
-      points: "+10",
+      points: "+100",
       label: "Make a thread on X",
       verified: false,
       setter: () => "",
@@ -558,20 +549,49 @@ const Tasks = () => {
   }, [user]);
 
   useEffect(() => {
-    // console.log("isLoading", isLoading);
-    // console.log("error", error);
+    console.log("isConfirming", isConfirming);
+    console.log("isConfirmed", isConfirmed);
+    console.log("error-message", error?.message);
+  }, [isConfirmed, isConfirming, error]);
+  useEffect(() => {
+    let attempts = 0;
+    const claimPoints = async () => {
+      while (attempts < MAX_RETRIES) {
+        const data = await deductPoints(
+          user.wallet as string,
+          user.points as number,
+          "Claim",
+        );
+        if (data.error) {
+          toast.error(data.message ?? "Error deducting points", {
+            id: txId as string,
+          });
+          attempts++;
+          console.error(`Attempt ${attempts} failed:`, data.message);
+          if (attempts < MAX_RETRIES) {
+            await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * attempts)); // Exponential-ish backoff
+          } else {
+            toast.error("Failed to deduct points after retries.");
+          }
+        } else {
+          toast.success(data.message, { id: txId as string });
+          const userDetails = await getUserDetails(address as string);
+          dispatch(setUser(userDetails));
+          return;
+        }
+      }
+    };
 
-    if (error) {
-      toast.error(
-        error?.includes("CooldownNotMet")
-          ? "You can only claim once per week"
-          : "An error occured",
-        { id: txId as string },
-      );
+    if (isConfirmed && (user.points as number) > 0) {
+      claimPoints();
     }
-    // console.log("isStatus", isStatus);
-    // console.log("error-message", error?.message);
-  }, [isLoading, error, txId]);
+  }, [isConfirmed, txId, user.wallet, user.points, address]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Transaction not confirmed", { id: txId as string });
+    }
+  }, [isError, txId]);
 
   return (
     <div className="w-full">
@@ -906,12 +926,36 @@ const Tasks = () => {
                   <div className="flex h-[40px] w-full items-center justify-between border-[1px] border-[#E6E6E6] px-[18px] text-black/[.48] dark:border-white/10 dark:text-white/[.80]">
                     <input
                       placeholder={item.placeholder}
-                      className="h-full w-full bg-transparent focus:outline-none  dark:text-[#595959]"
+                      value={tweetLinks[index] || ""}
+                      onChange={(e) =>
+                        setTweetLinks((prev) => ({
+                          ...prev,
+                          [index]: e.target.value,
+                        }))
+                      }
+                      className="h-full w-full bg-transparent text-black/[.80]  focus:outline-none dark:text-white/[.80]"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          if (item.label.includes("thread")) {
+                            addPost(tweetLinks[index] || "", "Thread", index);
+                          } else if (item.label.includes("Post")) {
+                            addPost(tweetLinks[index] || "", "Post", index);
+                          }
+                        }
+                      }}
                     />
                     <svg
+                      onClick={() => {
+                        if (item.label.includes("thread")) {
+                          addPost(tweetLinks[index] || "", "Thread", index);
+                        } else if (item.label.includes("Post")) {
+                          addPost(tweetLinks[index] || "", "Post", index);
+                        }
+                      }}
                       width="18"
                       height="18"
                       fill="none"
+                      className="cursor-pointer"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path

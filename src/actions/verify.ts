@@ -322,3 +322,55 @@ export const getUserByCode = async (code: string): Promise<string> => {
     return "Invalid Referral Code";
   }
 };
+
+// Add this function to your helpers file
+
+export const addPostToUser = async (
+  address: string,
+  post: { link: string; type: string },
+): Promise<{ error: boolean; message: string }> => {
+  const client = await clientPromise;
+  const db = client.db("AIOps");
+
+  try {
+    // Sanitize input to prevent NoSQL injection
+    if (
+      typeof post.link !== "string" ||
+      post.link.includes("$") ||
+      post.link.includes("{") ||
+      post.link.includes("}")
+    ) {
+      return { error: true, message: "Invalid link format" };
+    }
+
+    const user = await getUserDetails(address);
+    if (!user) {
+      return { error: true, message: "Wallet not registered" };
+    }
+
+    // Check for duplicate link
+    const existing = await db.collection("users").findOne({
+      wallet: address,
+      posts: { $elemMatch: { link: post.link } },
+    });
+    if (existing) {
+      return { error: true, message: "Duplicate Link" };
+    }
+
+    const result = await db.collection("users").updateOne(
+      { wallet: address },
+      {
+        // @ts-ignore
+        $push: { posts: post },
+      },
+    );
+
+    if (result.matchedCount === 0) {
+      return { error: true, message: "User not found" };
+    }
+
+    return { error: false, message: "Link Submitted successfully" };
+  } catch (err: any) {
+    return { error: true, message: `An error occurred: ${err.message}` };
+  }
+};

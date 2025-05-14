@@ -34,6 +34,7 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
       })();
     } else {
       console.log("authToken not found");
+      if (!address) return;
       // Authenticate user with optional invite code
       (async () => {
         await auth(address as string, invite || code);

@@ -4,6 +4,7 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const DropdownUser = ({
   address,
@@ -30,40 +31,41 @@ const DropdownUser = ({
     >
       <div className="flex h-max w-max items-center gap-2 px-[19px]  lg:gap-3  lg:px-0 lg:pl-7">
         <div className="h-6 w-6 rounded-full bg-[#F24924] " />
-        <Link
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-4"
-          href="#"
+        <div
+          onClick={() => {
+            navigator.clipboard.writeText(address);
+            toast.success("copied");
+          }}
+          className="flex cursor-pointer items-center gap-2 text-sm  text-appBlack  dark:text-white lg:text-base"
         >
-          <div className="flex items-center gap-2 text-sm  text-appBlack  dark:text-white lg:text-base">
-            <span suppressHydrationWarning className="hidden lg:flex">
-              {address.slice(0, 7)}...
-              {address.slice(-6)}
-            </span>
-            <span suppressHydrationWarning className="flex lg:hidden">
-              {address.slice(0, 4)}...
-              {address.slice(-4)}
-            </span>
-            <span
-              className={` flex duration-200  ease-in  ${dropdownOpen && "rotate-180"}`}
+          <span suppressHydrationWarning className="hidden lg:flex">
+            {address.slice(0, 7)}...
+            {address.slice(-6)}
+          </span>
+          <span suppressHydrationWarning className="flex lg:hidden">
+            {address.slice(0, 4)}...
+            {address.slice(-4)}
+          </span>
+          <span
+            className={` flex duration-200  ease-in  ${dropdownOpen && "rotate-180"}`}
+          >
+            <svg
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              width="24"
+              height="24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                width="24"
-                height="24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M8 10l4 4 4-4"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </div>
-        </Link>
+              <path
+                d="M8 10l4 4 4-4"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+        </div>
       </div>
 
       {dropdownOpen && (

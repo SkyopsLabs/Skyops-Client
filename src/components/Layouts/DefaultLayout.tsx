@@ -3,14 +3,11 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import React, { useState } from "react";
 
-import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
 import { createAppKit, ThemeMode } from "@reown/appkit/react";
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
 
-import { solanaDevnet } from "@reown/appkit/networks";
+import { projectId, wagmiAdapter } from "@/config";
+import { sepolia } from "@reown/appkit/networks";
+import { type Config, cookieToInitialState, WagmiProvider } from "wagmi";
 
 import useColorMode from "@/hooks/useColorMode";
 import { AppSession } from "@/types";
@@ -20,19 +17,14 @@ import { usePathname } from "next/navigation";
 import { AppProvider } from "./AppProvider";
 
 const queryClient = new QueryClient();
-export const projectId = process.env.NEXT_PUBLIC_INFURA_ID as string;
-
-if (!projectId) {
-  throw new Error("Project ID is not defined");
-}
 
 const metadata = {
   name: "SkyOps - Building a Global DeOS to Redefine AI Workload Orchestration.",
   description:
     "At SkyOps, we're transforming this landscape by creating the first decentralized GPU computing network. By connecting unused GPU power worldwide, we reduce AI computing costs by 70% while enabling GPU owners to earn from their idle resources.",
 
-  url: "https://app.skyopslabs.ai",
-  icons: ["https://app.skyopslabs.ai/opengraph-image.png"],
+  url: "https://web3modal.com",
+  icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
 export default function DefaultLayout({
@@ -48,25 +40,26 @@ export default function DefaultLayout({
     typeof window !== "undefined" && window.innerWidth > 1024 ? true : false,
   );
 
+  const initialState = cookieToInitialState(
+    wagmiAdapter.wagmiConfig as Config,
+    cookies,
+  );
+
   const { colorMode } = useColorMode();
   const path = usePathname();
-
-  const solanaWeb3JsAdapter = new SolanaAdapter({
-    wallets: [new PhantomWalletAdapter() as any, new SolflareWalletAdapter()],
-  });
 
   if (!projectId) {
     throw new Error("Project ID is not defined");
   }
   createAppKit({
-    adapters: [solanaWeb3JsAdapter],
-    networks: [solanaDevnet],
+    adapters: [wagmiAdapter],
+    networks: [sepolia],
     metadata: metadata,
     themeMode: !Boolean(colorMode) as unknown as ThemeMode,
     projectId,
     features: {
-      connectMethodsOrder: ["wallet"],
-      email: !true, // default to true
+      connectMethodsOrder: ["social", "wallet"],
+      email: true, // default to true
       socials: [
         "google",
         // "x",
@@ -85,45 +78,45 @@ export default function DefaultLayout({
   return (
     <>
       <SessionProvider session={session as unknown as AppSession}>
-        {/* <WagmiProvider
+        <WagmiProvider
           config={wagmiAdapter.wagmiConfig as Config}
           initialState={initialState}
-        > */}
-        <QueryClientProvider client={queryClient}>
-          <AppProvider>
-            {/* <!-- ===== Page Wrapper Star ===== --> */}
-            <div className="relative flex h-screen w-full overflow-hidden">
-              {/* <!-- ===== Sidebar Star ===== --> */}
-              <Sidebar
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-              />
-              {/* <!-- ===== Sidebar End ===== --> */}
-
-              {/* <!-- ===== Content Area Star ===== --> */}
-              <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-                {/* <!-- ===== Header Star ===== --> */}
-                <Header
+        >
+          <QueryClientProvider client={queryClient}>
+            <AppProvider>
+              {/* <!-- ===== Page Wrapper Star ===== --> */}
+              <div className="relative flex h-screen w-full overflow-hidden">
+                {/* <!-- ===== Sidebar Star ===== --> */}
+                <Sidebar
                   sidebarOpen={sidebarOpen}
                   setSidebarOpen={setSidebarOpen}
                 />
-                {/* <!-- ===== Header End ===== --> */}
+                {/* <!-- ===== Sidebar End ===== --> */}
 
-                {/* <!-- ===== Main Content Star ===== --> */}
-                <main
-                  style={{ marginTop: path == "/" ? "0" : "initial" }}
-                  className="mt-[64px] flex h-full flex-col lg:mt-0"
-                >
-                  {children}
-                </main>
-                {/* <!-- ===== Main Content End ===== --> */}
+                {/* <!-- ===== Content Area Star ===== --> */}
+                <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+                  {/* <!-- ===== Header Star ===== --> */}
+                  <Header
+                    sidebarOpen={sidebarOpen}
+                    setSidebarOpen={setSidebarOpen}
+                  />
+                  {/* <!-- ===== Header End ===== --> */}
+
+                  {/* <!-- ===== Main Content Star ===== --> */}
+                  <main
+                    style={{ marginTop: path == "/" ? "0" : "initial" }}
+                    className="mt-[64px] flex h-full flex-col lg:mt-0"
+                  >
+                    {children}
+                  </main>
+                  {/* <!-- ===== Main Content End ===== --> */}
+                </div>
+                {/* <!-- ===== Content Area End ===== --> */}
               </div>
-              {/* <!-- ===== Content Area End ===== --> */}
-            </div>
-            {/* <!-- ===== Page Wrapper End ===== --> */}
-          </AppProvider>
-        </QueryClientProvider>
-        {/* </WagmiProvider> */}
+              {/* <!-- ===== Page Wrapper End ===== --> */}
+            </AppProvider>
+          </QueryClientProvider>
+        </WagmiProvider>
       </SessionProvider>
     </>
   );
