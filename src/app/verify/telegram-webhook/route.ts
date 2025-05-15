@@ -18,7 +18,6 @@ export async function POST(req: Request) {
         { message: "Not from our group" },
         { status: 403 },
       );
-    console.log(data.message.text);
 
     // Save user message activity
     const client = await clientPromise;
@@ -26,14 +25,15 @@ export async function POST(req: Request) {
 
     const user = await db
       .collection("users")
-      .findOne({ telegram_id: userId, wallet: { $exists: true } });
+      .findOne({ tg_id: userId, wallet: { $exists: true } });
     if (user) {
       await db
         .collection("users")
         .updateOne(
-          { telegram_id: userId },
+          { tg_id: userId },
           { $set: { lastTelegramMessage: Date.now() } },
         );
+      console.log(data.message.text, username, "tracked ");
       return NextResponse.json({ message: "Message tracked" });
     } else {
       return NextResponse.json(

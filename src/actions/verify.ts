@@ -119,24 +119,25 @@ export const getAllUsers = async (): Promise<ILeaderboard[]> => {
     )
     .toArray()) as unknown as ILeaderboard[];
 
-  // Sort users by points in descending order to determine rank
-  users.sort((a, b) => b.points - a.points);
+  // Filter users with valid wallet and non-negative points
+  const filteredUsers = users.filter((item) => item.wallet && item.points >= 0);
 
-  // Add rank and referee fields
+  // Sort users by points in descending order
+  const sortedUsers = filteredUsers.sort((a, b) => b.points - a.points);
+
+  // Add rank and referee fields after sorting
   const usersWithRankAndReferee = await Promise.all(
-    users
-      .filter((item) => item.wallet && item.points >= 0)
-      .map(async (user, index) => {
-        const refereeWallet = user.referee
-          ? await getUserByCode(user.referee)
-          : "";
-        return {
-          wallet: user.wallet,
-          points: user.points,
-          rank: index + 1,
-          referee: refereeWallet,
-        };
-      }),
+    sortedUsers.map(async (user, index) => {
+      const refereeWallet = user.referee
+        ? await getUserByCode(user.referee)
+        : "";
+      return {
+        wallet: user.wallet,
+        points: user.points,
+        rank: index + 1,
+        referee: refereeWallet,
+      };
+    }),
   );
 
   return usersWithRankAndReferee;
