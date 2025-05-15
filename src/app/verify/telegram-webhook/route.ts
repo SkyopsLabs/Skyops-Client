@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     const username = data.message.from.username || "Unknown";
     const chatId = data.message.chat.id;
     const groupId = process.env.TG_GROUP_ID; // Replace with your actual group ID
+    console.log(chatId, "ChatID");
 
     if (chatId != groupId)
       return NextResponse.json(

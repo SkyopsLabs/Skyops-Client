@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 const archivo = Archivo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Skyops App | Scalable. Efficient. Unstoppable.",
+  title: "Skyops dApp | Scalable. Efficient. Unstoppable.",
   metadataBase: new URL("https://app.skyopslabs.ai"),
 
   description:

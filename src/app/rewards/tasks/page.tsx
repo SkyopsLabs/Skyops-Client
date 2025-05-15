@@ -866,7 +866,7 @@ const Tasks = () => {
             />
             <div className=" mt-8 flex flex-col items-center gap-[6px]   lg:mt-[56px]">
               <h6 className=" text-[22px] font-semibold text-black dark:text-white lg:text-[28px]">
-                Minning Rewards
+                Mining Rewards
               </h6>
               <p className="text-center text-base text-black/[.48] dark:text-white/[.48]">
                 Skyops will extract publicly available data from AI model
