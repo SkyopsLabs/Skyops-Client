@@ -59,7 +59,7 @@ export default function DefaultLayout({
     projectId,
     features: {
       connectMethodsOrder: ["wallet"],
-      email: !true, // default to true
+      email: false, // default to true
       socials: [
         "google",
         // "x",

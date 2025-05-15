@@ -362,7 +362,7 @@ export const addPostToUser = async (
       { wallet: address },
       {
         // @ts-ignore
-        $push: { posts: post },
+        $push: { posts: { ...post, date: new Date() } },
       },
     );
 

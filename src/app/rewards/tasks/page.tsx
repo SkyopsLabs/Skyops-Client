@@ -98,6 +98,16 @@ const Tasks = () => {
     },
   };
 
+  const sentTelegramMessage =
+    new Date(new Date().setHours(0, 0, 0, 0)) <
+      (user?.lastTelegramMessage ?? 0) &&
+    (user?.lastTelegramMessage ?? 0) <
+      new Date(new Date().setHours(23, 59, 59, 999));
+  const sentDiscordMessage =
+    new Date(new Date().setHours(0, 0, 0, 0)) <
+      (user?.lastDiscordMessage ?? 0) &&
+    (user?.lastDiscordMessage ?? 0) <
+      new Date(new Date().setHours(23, 59, 59, 999));
   //-----------------------------------------------------------FUNCTIONS
   //Add thread or post to user
   const addPost = async (link: string, typ: string, idx: number) => {
@@ -364,11 +374,7 @@ const Tasks = () => {
       image: "/images/icon/telegram.svg",
       points: "+25",
       label: "Join us on Telegram",
-      verified:
-        new Date(new Date().setHours(0, 0, 0, 0)) <
-          (user?.lastTelegramMessage ?? 0) &&
-        (user?.lastTelegramMessage ?? 0) <
-          new Date(new Date().setHours(23, 59, 59, 999)),
+      verified: sentTelegramMessage,
       setter: () => window.open("https://t.me/+k6TpiZ12uHMzNmQ0", "_blank"),
       desc: "Send at least one message in Telegram/day.",
     },
@@ -376,11 +382,7 @@ const Tasks = () => {
       image: "/images/icon/discord.svg",
       points: "+25",
       label: "Join us on Discord",
-      verified:
-        new Date(new Date().setHours(0, 0, 0, 0)) <
-          (user?.lastDiscordMessage ?? 0) &&
-        (user?.lastDiscordMessage ?? 0) <
-          new Date(new Date().setHours(23, 59, 59, 999)),
+      verified: sentDiscordMessage,
       setter: () => window.open("https://discord.gg/PTFgWgBB", "_blank"),
       desc: "Send at least one message in Discord/day.",
     },
@@ -506,7 +508,7 @@ const Tasks = () => {
           }
 
           if (data?.ok === false) {
-            toast.error((data?.message as string) ?? "Hmm");
+            toast.error((data?.message as string) ?? "Error");
           }
 
           // toast.success(message);
@@ -659,9 +661,9 @@ const Tasks = () => {
                   <p className="text-sm  text-white underline">What is this?</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex flex-row-reverse items-center  gap-1">
+                  <div className="flex flex-row items-center  gap-1">
                     <p className="flex items-end  text-[32px] font-medium leading-none text-white">
-                      {`${user.points ? user.points / 10 : 0}`}
+                      {`${0}`}
                     </p>
                     <Image
                       width={18}
