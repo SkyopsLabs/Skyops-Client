@@ -15,6 +15,12 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_ID as string,
       clientSecret: process.env.DISCORD_SECRET as string,
+      profile(profile) {
+        // Remove the email field if it exists
+        console.log(profile, "discord progile");
+        const { email, ...rest } = profile;
+        return rest;
+      },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,

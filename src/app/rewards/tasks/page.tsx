@@ -9,33 +9,21 @@ import {
   getAllUsers,
   getUserDetails,
 } from "@/actions/verify";
-import { useSolanaTransaction } from "@/hooks/useSolanaTransaction";
 import { useAppSelector } from "@/redux/hooks";
 import { setUser, setUserWithRank } from "@/redux/slices/userSlice";
 import { AppSession } from "@/types";
-import { idl, SolRewards } from "@/types/idl";
-import { getOwner } from "@/utils/admin";
 import { ABI } from "@/utils/helpers";
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { useAppKitConnection } from "@reown/appkit-adapter-solana/react";
-import { useAppKitAccount, useAppKitProvider } from "@reown/appkit/react";
-import {
-  getOrCreateAssociatedTokenAccount,
-  TOKEN_2022_PROGRAM_ID,
-} from "@solana/spl-token";
-import { Ed25519Program, Keypair, PublicKey } from "@solana/web3.js";
+import { useAppKitAccount } from "@reown/appkit/react";
 import telegramAuth from "@use-telegram-auth/client";
-import { signIn, useSession } from "next-auth/react";
+import { Wallet } from "ethers";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import nacl from "tweetnacl";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import { ethers, Wallet } from "ethers";
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1500;
@@ -44,16 +32,6 @@ const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
 
 const Tasks = () => {
   // --------------------------------------------VARIABLES
-  const { connection } = useAppKitConnection();
-  const { walletProvider } = useAppKitProvider("solana");
-
-  anchor.setProvider(walletProvider as unknown as anchor.AnchorProvider);
-  const program = new Program(idl as SolRewards);
-  const [state] = PublicKey.findProgramAddressSync(
-    [Buffer.from("state")],
-    program.programId,
-  );
-  const vault = new PublicKey(process.env.NEXT_PUBLIC_VAULT as string);
   const { address } = useAppKitAccount();
   const { data, status } = useSession();
   const [txId, setTxId] = useState<string | null>(null);
@@ -134,6 +112,8 @@ const Tasks = () => {
   };
   // Write to the smart contract and check if the transaction is successful with useEffect
   const handleWriteSmartContract = async () => {
+    toast.success("Coming Soon!!");
+    return;
     if ((user?.points as number) == 0 || !user.points) {
       toast.error("No points to claim");
       return;
@@ -383,7 +363,7 @@ const Tasks = () => {
       points: "+25",
       label: "Join us on Discord",
       verified: sentDiscordMessage,
-      setter: () => window.open("https://discord.gg/PTFgWgBB", "_blank"),
+      setter: () => window.open("https://discord.gg/mDgC6v2v", "_blank"),
       desc: "Send at least one message in Discord/day.",
     },
     {
@@ -505,10 +485,12 @@ const Tasks = () => {
 
           if (data?.ok && data.message !== "Connected") {
             toast.success(data?.message);
+            await signOut({ redirect: false }); // <-- Reset session after successful auth
           }
 
           if (data?.ok === false) {
             toast.error((data?.message as string) ?? "Error");
+            await signOut({ redirect: false }); // <-- Reset session after successful auth
           }
 
           // toast.success(message);
@@ -516,6 +498,7 @@ const Tasks = () => {
           if (isMounted) {
             console.log(error, "errs");
             toast.error(error.message);
+            await signOut({ redirect: false }); // <-- Reset session after successful auth
           }
         }
       };
