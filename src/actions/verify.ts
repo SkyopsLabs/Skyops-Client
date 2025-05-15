@@ -104,7 +104,8 @@ export const getUserDetails = async (wallet: string): Promise<any> => {
     const { _id, ...rest } = user;
     return rest;
   } else {
-    throw Error("No user found");
+    console.log("Wallet does not exist");
+    return {};
   }
 };
 
