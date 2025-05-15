@@ -12,14 +12,13 @@ export async function POST(req: Request) {
     const username = data.message.from.username || "Unknown";
     const chatId = data.message.chat.id;
     const groupId = process.env.TG_GROUP_ID; // Replace with your actual group ID
-    console.log(chatId, "ChatID");
 
     if (chatId != groupId)
       return NextResponse.json(
         { message: "Not from our group" },
         { status: 403 },
       );
-    console.log(data);
+    console.log(data.message.text);
 
     // Save user message activity
     const client = await clientPromise;
@@ -39,7 +38,7 @@ export async function POST(req: Request) {
     } else {
       return NextResponse.json(
         { message: "No user found with this telegram_id" },
-        { status: 404 },
+        { status: 200 },
       );
     }
   } catch (error) {
