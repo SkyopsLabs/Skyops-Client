@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { createAppKit, ThemeMode } from "@reown/appkit/react";
 
 import { projectId, wagmiAdapter } from "@/config";
-import { sepolia } from "@reown/appkit/networks";
+import { mainnet } from "@reown/appkit/networks";
 import { type Config, cookieToInitialState, WagmiProvider } from "wagmi";
 
 import useColorMode from "@/hooks/useColorMode";
@@ -53,7 +53,7 @@ export default function DefaultLayout({
   }
   createAppKit({
     adapters: [wagmiAdapter],
-    networks: [sepolia],
+    networks: [mainnet],
     metadata: metadata,
     themeMode: !Boolean(colorMode) as unknown as ThemeMode,
     projectId,

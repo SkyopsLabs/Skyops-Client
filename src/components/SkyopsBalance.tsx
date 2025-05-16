@@ -12,7 +12,7 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
 
   const { data, isError, isLoading, refetch, error } = useBalance({
     address: address as `0x${string}`,
-    token: "0x616954e0b8949d841630781a12810fF6d2fB0989",
+    token: process.env.NEXT_PUBLIC_TOKEN_ADDRESS as `0x${string}`,
   });
 
   //-----------------------------------------------------------FUNCTIONS
@@ -21,8 +21,8 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
   useEffect(() => {
     if (!isConnected || !address) return;
     if (isError) {
-      console.error(error);
-      toast.error("Error fetching balance. Please try again later.");
+      // console.error(error);
+      // toast.error("Error fetching balance. Please try again later.");
       return;
     }
     refetch();
