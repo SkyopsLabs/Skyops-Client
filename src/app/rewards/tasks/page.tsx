@@ -355,7 +355,7 @@ const Tasks = () => {
       points: "+25",
       label: "Join us on Telegram",
       verified: sentTelegramMessage,
-      setter: () => window.open("https://t.me/+k6TpiZ12uHMzNmQ0", "_blank"),
+      setter: () => window.open("https://t.me/+za6EQVCrp0IzNTJk", "_blank"),
       desc: "Send at least one message in Telegram/day.",
     },
     {
