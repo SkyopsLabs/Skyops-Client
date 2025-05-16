@@ -21,7 +21,7 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
   useEffect(() => {
     if (!isConnected || !address) return;
     if (isError) {
-      // console.error(error);
+      console.error(error);
       // toast.error("Error fetching balance. Please try again later.");
       return;
     }
