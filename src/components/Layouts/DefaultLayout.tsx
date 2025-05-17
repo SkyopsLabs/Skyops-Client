@@ -74,7 +74,7 @@ export default function DefaultLayout({
       analytics: true,
     },
     allWallets: "SHOW", // default to SHOW
-    // siwx: new CloudAuthSIWX(),
+    siwx: new CloudAuthSIWX(),
   });
 
   return (

@@ -346,7 +346,7 @@ const Tasks = () => {
       ),
       points: "+25",
       label: "Follow us on X",
-      verified: false,
+      verified: user.followed ?? false,
       setter: () => window.open("https://x.com/SkyopsLabs", "_blank"),
       desc: "Follow SkyopsLabs on X to get points",
     },

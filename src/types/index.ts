@@ -26,6 +26,7 @@ export interface IPointsHistory {
 export interface IUser {
   username?: string;
   code: string;
+  followed?: boolean;
   gmail?: string;
   discord_id?: string;
   discord_username?: string;
