@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IAppContext, IAppProviderProps, IUser } from "@/types";
 import { auth, getCurrentUser } from "@/apis/api-v1";
 import { setAuthToken } from "@/utils/setAuthToken";
@@ -12,6 +12,7 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isConnected, address } = useAppKitAccount();
+  const pathname = usePathname();
 
   // Extract invite param from URL
   const invite = searchParams?.get("invite") as string;
@@ -27,11 +28,15 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
     if (localStorage.getItem("authToken")) {
       console.log("authToken found");
       setAuthToken(localStorage.getItem("authToken"));
+
       // Fetch user info
       (async () => {
         const _ = await getCurrentUser();
         setUser(_);
       })();
+      if (pathname === "/") {
+        router.push("/instances");
+      }
     } else {
       console.log("authToken not found");
       if (!address) return;

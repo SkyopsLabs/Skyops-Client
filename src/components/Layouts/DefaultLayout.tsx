@@ -7,6 +7,7 @@ import { createAppKit, ThemeMode } from "@reown/appkit/react";
 
 import { projectId, wagmiAdapter } from "@/config";
 import { mainnet } from "@reown/appkit/networks";
+import { CloudAuthSIWX } from "@reown/appkit-siwx";
 import { type Config, cookieToInitialState, WagmiProvider } from "wagmi";
 
 import useColorMode from "@/hooks/useColorMode";
@@ -73,6 +74,7 @@ export default function DefaultLayout({
       analytics: true,
     },
     allWallets: "SHOW", // default to SHOW
+    siwx: new CloudAuthSIWX(),
   });
 
   return (
