@@ -413,7 +413,7 @@ const Tasks = () => {
       label: "Post your opinion",
       verified: false,
       setter: () => "",
-      desc: "Post your opinion on X about Skyops.",
+      desc: "Post your opinion on X about Skyops. ",
       input: true,
       placeholder: "Drop your X post link here...",
     },
@@ -906,6 +906,13 @@ const Tasks = () => {
                   <p className="text-sm text-black/[.48] dark:text-white/[.48]">
                     {item.desc}
                   </p>
+                  {item.input && (
+                    <p className="mt-2 text-xs text-black/[.48] dark:text-white/[.48]">
+                      Make sure you add the{" "}
+                      <span className="text-blue-700">$SKYOPS</span> ticker in
+                      your {item.label.includes("thread") ? "thread" : "post"}!
+                    </p>
+                  )}
                 </div>
                 {item.input && (
                   <div className="flex h-[40px] w-full items-center justify-between border-[1px] border-[#E6E6E6] px-[18px] text-black/[.48] dark:border-white/10 dark:text-white/[.80]">

@@ -40,3 +40,5 @@ next-env.d.ts
 id.json
 bun.lock
 yarn.lock
+
+src/playground.js
