@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     if (chatId != groupId)
       return NextResponse.json(
         { message: "Not from our group" },
-        { status: 403 },
+        { status: 200 },
       );
 
     // Save user message activity
