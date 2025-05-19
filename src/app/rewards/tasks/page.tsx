@@ -70,7 +70,7 @@ const Tasks = () => {
     },
     messages: {
       client: address,
-      points: user.points,
+      points: user?.points,
       server: process.env.NEXT_PUBLIC_REWARDS_CA,
       // server: address,
     },
@@ -101,7 +101,7 @@ const Tasks = () => {
       return;
     }
     const post = { link: link, type: typ };
-    const data = await addPostToUser(user.wallet, post);
+    const data = await addPostToUser(user?.wallet, post);
     if (data.error) {
       toast.error(data.message);
     }
@@ -346,7 +346,7 @@ const Tasks = () => {
       ),
       points: "+25",
       label: "Follow us on X",
-      verified: user.followed ?? false,
+      verified: user?.followed ?? false,
       setter: () => window.open("https://x.com/SkyopsLabs", "_blank"),
       desc: "Follow SkyopsLabs on X to get points",
     },
@@ -524,7 +524,7 @@ const Tasks = () => {
   useEffect(() => {
     const getAll = async () => {
       const res = await getAllUsers();
-      const singleUser = res.find((item) => item.wallet == user.wallet);
+      const singleUser = res.find((item) => item.wallet == user?.wallet);
       if (singleUser) {
         dispatch(setUserWithRank(singleUser));
       }
@@ -533,18 +533,18 @@ const Tasks = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  useEffect(() => {
-    console.log("isConfirming", isConfirming);
-    console.log("isConfirmed", isConfirmed);
-    console.log("error-message", error?.message);
-  }, [isConfirmed, isConfirming, error]);
+  // useEffect(() => {
+  //   console.log("isConfirming", isConfirming);
+  //   console.log("isConfirmed", isConfirmed);
+  //   console.log("error-message", error?.message);
+  // }, [isConfirmed, isConfirming, error]);
   useEffect(() => {
     let attempts = 0;
     const claimPoints = async () => {
       while (attempts < MAX_RETRIES) {
         const data = await deductPoints(
-          user.wallet as string,
-          user.points as number,
+          user?.wallet as string,
+          user?.points as number,
           "Claim",
         );
         if (data.error) {
@@ -567,10 +567,10 @@ const Tasks = () => {
       }
     };
 
-    if (isConfirmed && (user.points as number) > 0) {
+    if (isConfirmed && (user?.points as number) > 0) {
       claimPoints();
     }
-  }, [isConfirmed, txId, user.wallet, user.points, address]);
+  }, [isConfirmed, txId, user?.wallet, user?.points, address]);
 
   useEffect(() => {
     if (isError) {
@@ -684,8 +684,8 @@ const Tasks = () => {
                 </p>
               </div>
               <div className="max-h-[60vh] overflow-y-scroll">
-                {Array.isArray(user.pointsHistory) &&
-                  [...user.pointsHistory].reverse().map((item, index) => (
+                {Array.isArray(user?.pointsHistory) &&
+                  [...user?.pointsHistory].reverse().map((item, index) => (
                     <div
                       key={index.toString()}
                       className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"

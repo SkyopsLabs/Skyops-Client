@@ -27,7 +27,7 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
     }
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.points, isConnected, isError, error]);
+  }, [user?.points, isConnected, isError, error]);
 
   return (
     <div className=" flex w-full justify-between lg:h-full  lg:w-max lg:flex-col lg:justify-start">
