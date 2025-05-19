@@ -87,6 +87,9 @@ export const addPoints = async (
 };
 
 export const getUserDetails = async (wallet: string): Promise<any> => {
+  if (!wallet || wallet.length < 2) {
+    return;
+  }
   const client = await clientPromise;
   const db = client.db("AIOps");
   const user = await db.collection("users").findOne(
