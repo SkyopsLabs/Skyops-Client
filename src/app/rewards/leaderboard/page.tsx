@@ -99,7 +99,9 @@ const LeaderBoard = () => {
         )}
         <div className="max-h-[60vh]   flex-1 overflow-y-scroll lg:max-h-[68vh]">
           {users
-            .filter((item) => (search ? item.wallet.includes(search) : true))
+            .filter((item) =>
+              search ? item.wallet.includes(search) : item.points > 0,
+            )
             .map((item, index) => (
               <div
                 key={index.toString()}
