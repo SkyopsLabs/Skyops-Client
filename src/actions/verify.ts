@@ -186,7 +186,7 @@ export const authenticateTwitter = async (
     return { ok: false, message: "Failed to connect Twitter" };
   }
 
-  await addPoints(address, 15, "Connect Twitter");
+  // await addPoints(address, 15, "Connect Twitter");
   return { ok: true, message: "Twitter connected successfully" };
 };
 
@@ -229,7 +229,7 @@ export const authenticateDiscord = async (
     return { ok: false, message: "Failed to connect Discord" };
   }
 
-  await addPoints(address, 15, "Connect Discord");
+  // await addPoints(address, 15, "Connect Discord");
   return { ok: true, message: "Discord connected successfully" };
 };
 
@@ -268,7 +268,7 @@ export const authenticateGmail = async (
     return { ok: false, message: "Failed to connect Gmail" };
   }
 
-  await addPoints(address, 15, "Connect Gmail");
+  // await addPoints(address, 15, "Connect Gmail");
   return { ok: true, message: "Gmail connected successfully" };
 };
 
@@ -311,7 +311,7 @@ export const authenticateTelegram = async (
     return { ok: false, message: "Failed to connect Telegram" };
   }
 
-  await addPoints(address, 15, "Connect Telegram");
+  // await addPoints(address, 15, "Connect Telegram");
   return { ok: true, message: "Telegram connected successfully" };
 };
 
