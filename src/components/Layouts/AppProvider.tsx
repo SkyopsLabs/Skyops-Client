@@ -25,6 +25,7 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
 
   useEffect(() => {
     console.log(invite, "invite");
+
     if (localStorage.getItem("authToken")) {
       console.log("authToken found");
       setAuthToken(localStorage.getItem("authToken"));

@@ -7,6 +7,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import DarkModeSwitcher from "../Header/DarkModeSwitcher";
 import Logo from "../Logo";
+import { fetchLeaderboard } from "@/redux/slices/leaderboardSlice";
+import { useAppKitAccount } from "@reown/appkit/react";
+import { useEffect } from "react";
+import { useAppDispatch } from "@/redux/hooks";
 
 interface SidebarProps {
   sidebarOpen?: boolean;
@@ -242,8 +246,16 @@ const container = {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
+  const { address } = useAppKitAccount();
+  const dispatch = useAppDispatch();
 
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
+
+  useEffect(() => {
+    if (address) {
+      dispatch(fetchLeaderboard());
+    }
+  }, [address]);
 
   return (
     <aside
@@ -277,6 +289,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           ))}
         </motion.ul>
       </nav>
+      <Link
+        target="_blank"
+        className="mt-12 hidden px-5 text-cyan-400 underline lg:px-10"
+        href={
+          "https://chromewebstore.google.com/detail/skyops/ifcnombjdiogkmhebkoameogpihkfkgi?authuser=0&hl=en"
+        }
+      >
+        Install Skyops
+      </Link>
       {/* Dark Mode Toggle */}
       <div className="mx-auto  my-12 flex lg:hidden">
         {sidebarOpen && <DarkModeSwitcher />}

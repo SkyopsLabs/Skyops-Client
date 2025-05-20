@@ -2,29 +2,29 @@
 import { getAllUsers } from "@/actions/verify";
 import SelectGroup from "@/components/FormElements/SelectGroup/SelectGroup";
 import SearchForm from "@/components/Header/SearchForm";
+import { useAppSelector } from "@/redux/hooks";
 import { ILeaderboard } from "@/types";
 import { getRandomColor, leaderboardPalette } from "@/utils/helpers";
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useEffect, useState } from "react";
 
+// Simple spinner component
+const Spinner = () => (
+  <div className="flex h-full w-full items-center justify-center border-black/70">
+    <div className="h-16 w-16 animate-spin rounded-full border-b-4 border-t-4 border-opacity-60 dark:border-white/70 "></div>
+  </div>
+);
+
 const LeaderBoard = () => {
   // --------------------------------------------VARIABLES
   const [search, setSearch] = useState<string>("");
-  const [users, setUsers] = useState<ILeaderboard[]>([]);
+  // Get leaderboard state from Redux
+  const users = useAppSelector((state) => state.leaderboard.users);
+  const loading = useAppSelector((state) => state.leaderboard.loading);
   const { address } = useAppKitAccount();
   const user = users.find((item) => item.wallet == (address as string));
 
   //-----------------------------------------------------------FUNCTIONS
-
-  //------------------------------------------------------------------USE EFFECTS
-
-  useEffect(() => {
-    const getAll = async () => {
-      const res = await getAllUsers();
-      setUsers(res);
-    };
-    getAll();
-  }, []);
 
   return (
     <div className="mt-16 flex flex-1 flex-col lg:mt-0">
@@ -53,96 +53,108 @@ const LeaderBoard = () => {
         />
       </div>
       <div className="flex flex-1 flex-col">
-        <div className="grid h-[56px] grid-cols-[1fr,2fr,1fr] px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
-          <p className="flex items-center text-sm text-appBlack/[.48] dark:text-white/[.48]">
-            Rank
-          </p>
-          <p className="flex items-center text-sm text-appBlack/[.48] dark:text-white/[.48]">
-            Name
-          </p>
-          <p className="hidden items-center text-sm text-appBlack/[.48] dark:text-white/[.48] lg:flex">
-            Invited By
-          </p>
-          <p className="flex items-center justify-end text-sm text-appBlack/[.48] dark:text-white/[.48] lg:justify-start">
-            Total Points
-          </p>
-        </div>
-        {(user?.rank as number) > 10 && (
-          <div className="mb-1.5 grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-appBlack px-5 dark:bg-white/15 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
-            <p className="flex items-center text-sm text-white">
-              {user?.rank}(you)
-            </p>
-            <div className="flex items-center gap-1.5 text-sm text-white">
-              <div
-                style={{ backgroundColor: getRandomColor() }}
-                className="h-6 w-6 rounded-full"
-              />
-              {user?.wallet?.slice(0, 7)}...
-              {user?.wallet?.slice(-6)}
-            </div>
-            <div className="hidden items-center gap-1.5 text-sm text-white lg:flex">
-              <div
-                style={{ backgroundColor: getRandomColor() }}
-                className="h-6 w-6 rounded-full"
-              />
-              {!user?.referee
-                ? "-"
-                : user?.referee
-                    ?.slice(0, 7)
-                    .concat("...")
-                    .concat(user?.referee?.slice(-6))}
-            </div>
-            <p className="flex items-center justify-end text-sm text-white lg:justify-start">
-              {user?.points}
-            </p>
+        {loading ? (
+          <div className="flex h-full flex-1 items-center justify-center">
+            <Spinner />
           </div>
-        )}
-        <div className="max-h-[60vh]   flex-1 overflow-y-scroll lg:max-h-[68vh]">
-          {users
-            .filter((item) =>
-              search ? item.wallet.includes(search) : item.points > 0,
-            )
-            .map((item, index) => (
-              <div
-                key={index.toString()}
-                className={`mb-[6px] ${user?.wallet == item.wallet ? "bg-appBlack text-white dark:bg-white/15" : "text-appBlack dark:bg-dark-2 dark:text-white "} grid h-[56px] grid-cols-[1fr,2fr,1fr]  px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10`}
-              >
-                <p className="flex items-center text-sm ">
-                  {item.rank}
-                  {user?.rank == item.rank && " (you)"}
+        ) : (
+          <>
+            <div className="grid h-[56px] grid-cols-[1fr,2fr,1fr] px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
+              <p className="flex items-center text-sm text-appBlack/[.48] dark:text-white/[.48]">
+                Rank
+              </p>
+              <p className="flex items-center text-sm text-appBlack/[.48] dark:text-white/[.48]">
+                Name
+              </p>
+              <p className="hidden items-center text-sm text-appBlack/[.48] dark:text-white/[.48] lg:flex">
+                Invited By
+              </p>
+              <p className="flex items-center justify-end text-sm text-appBlack/[.48] dark:text-white/[.48] lg:justify-start">
+                Total Points
+              </p>
+            </div>
+            {(user?.rank as number) > 10 && user !== undefined && (
+              <div className="mb-1.5 grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-appBlack px-5 dark:bg-white/15 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
+                <p className="flex items-center text-sm text-white">
+                  {user?.rank}(you)
                 </p>
-                <div className="flex items-center gap-1.5 text-sm ">
+                <div className="flex items-center gap-1.5 text-sm text-white">
                   <div
-                    style={{
-                      backgroundColor:
-                        leaderboardPalette[
-                          Math.floor(Math.random() * leaderboardPalette.length)
-                        ],
-                    }}
+                    style={{ backgroundColor: getRandomColor() }}
                     className="h-6 w-6 rounded-full"
                   />
-                  {item?.wallet?.slice(0, 7)}...
-                  {item?.wallet?.slice(-6)}
+                  {user?.wallet?.slice(0, 7)}...
+                  {user?.wallet?.slice(-6)}
                 </div>
-                <div className="hidden items-center gap-1.5 text-sm  lg:flex">
+                <div className="hidden items-center gap-1.5 text-sm text-white lg:flex">
                   <div
-                    style={{
-                      backgroundColor:
-                        leaderboardPalette[
-                          Math.floor(Math.random() * leaderboardPalette.length)
-                        ],
-                    }}
+                    style={{ backgroundColor: getRandomColor() }}
                     className="h-6 w-6 rounded-full"
                   />
-                  {item?.referee?.slice(0, 7)}...
-                  {item?.referee?.slice(-6)}
+                  {!user?.referee
+                    ? "-"
+                    : user?.referee
+                        ?.slice(0, 7)
+                        ?.concat("...")
+                        ?.concat(user?.referee?.slice(-6))}
                 </div>
-                <p className="flex items-center justify-end text-sm  lg:justify-start">
-                  {item.points}
+                <p className="flex items-center justify-end text-sm text-white lg:justify-start">
+                  {user?.points}
                 </p>
               </div>
-            ))}
-        </div>
+            )}
+            <div className="max-h-[60vh]   flex-1 overflow-y-scroll lg:max-h-[68vh]">
+              {users
+                .filter((item) =>
+                  search ? item.wallet.includes(search) : true,
+                )
+                .map((item, index) => (
+                  <div
+                    key={index.toString()}
+                    className={`mb-[6px] ${user?.wallet == item.wallet ? "bg-appBlack text-white dark:bg-white/15" : "text-appBlack dark:bg-dark-2 dark:text-white "} grid h-[56px] grid-cols-[1fr,2fr,1fr]  px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10`}
+                  >
+                    <p className="flex items-center text-sm ">
+                      {item.rank}
+                      {user?.rank == item.rank && " (you)"}
+                    </p>
+                    <div className="flex items-center gap-1.5 text-sm ">
+                      <div
+                        style={{
+                          backgroundColor:
+                            leaderboardPalette[
+                              Math.floor(
+                                Math.random() * leaderboardPalette.length,
+                              )
+                            ],
+                        }}
+                        className="h-6 w-6 rounded-full"
+                      />
+                      {item?.wallet?.slice(0, 7)}...
+                      {item?.wallet?.slice(-6)}
+                    </div>
+                    <div className="hidden items-center gap-1.5 text-sm  lg:flex">
+                      <div
+                        style={{
+                          backgroundColor:
+                            leaderboardPalette[
+                              Math.floor(
+                                Math.random() * leaderboardPalette.length,
+                              )
+                            ],
+                        }}
+                        className="h-6 w-6 rounded-full"
+                      />
+                      {item?.referee?.slice(0, 7)}...
+                      {item?.referee?.slice(-6)}
+                    </div>
+                    <p className="flex items-center justify-end text-sm  lg:justify-start">
+                      {item.points}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

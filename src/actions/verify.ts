@@ -118,20 +118,18 @@ export const getAllUsers = async (): Promise<ILeaderboard[]> => {
   const users = (await db
     .collection("users")
     .find(
-      {},
+      {
+        wallet: { $exists: true, $ne: null },
+        points: { $gt: 0 },
+      },
       { projection: { wallet: 1, points: 1, referee: 1, code: 1, _id: 0 } },
     )
+    .sort({ points: -1 })
     .toArray()) as unknown as ILeaderboard[];
-
-  // Filter users with valid wallet and non-negative points
-  const filteredUsers = users.filter((item) => item.wallet && item.points >= 0);
-
-  // Sort users by points in descending order
-  const sortedUsers = filteredUsers.sort((a, b) => b.points - a.points);
 
   // Add rank and referee fields after sorting
   const usersWithRankAndReferee = await Promise.all(
-    sortedUsers.map(async (user, index) => {
+    users.map(async (user, index) => {
       const refereeWallet = user.referee
         ? await getUserByCode(user.referee)
         : "";
