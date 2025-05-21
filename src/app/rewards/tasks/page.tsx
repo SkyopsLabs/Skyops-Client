@@ -861,7 +861,7 @@ const Tasks = () => {
           </div>
         </div>
       </section>
-      <section className="my-5 border-t-[1px] border-border p-5 lg:my-4 lg:p-0 lg:pt-6">
+      {/* <section className="my-5 border-t-[1px] border-border p-5 lg:my-4 lg:p-0 lg:pt-6">
         <h5 className="mb-4 text-[22px] font-semibold text-appBlack dark:text-white lg:mb-6 lg:px-10">
           Special rewards tasks
         </h5>
@@ -965,7 +965,7 @@ const Tasks = () => {
             );
           })}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };
