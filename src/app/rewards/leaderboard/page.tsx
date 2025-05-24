@@ -1,160 +1,166 @@
 "use client";
-import { getAllUsers } from "@/actions/verify";
-import SelectGroup from "@/components/FormElements/SelectGroup/SelectGroup";
-import SearchForm from "@/components/Header/SearchForm";
-import { useAppSelector } from "@/redux/hooks";
-import { ILeaderboard } from "@/types";
-import { getRandomColor, leaderboardPalette } from "@/utils/helpers";
-import { useAppKitAccount } from "@reown/appkit/react";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 
-// Simple spinner component
-const Spinner = () => (
-  <div className="flex h-full w-full items-center justify-center border-black/70">
-    <div className="h-16 w-16 animate-spin rounded-full border-b-4 border-t-4 border-opacity-60 dark:border-white/70 "></div>
-  </div>
+// Trophy icon for the completed quest
+const TrophyIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="120"
+    height="120"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="text-amber-500"
+  >
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+    <path d="M4 22h16" />
+    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+  </svg>
 );
 
-const LeaderBoard = () => {
-  // --------------------------------------------VARIABLES
-  const [search, setSearch] = useState<string>("");
-  // Get leaderboard state from Redux
-  const users = useAppSelector((state) => state.leaderboard.users);
-  const loading = useAppSelector((state) => state.leaderboard.loading);
-  const { address } = useAppKitAccount();
-  const user = users.find((item) => item.wallet == (address as string));
+// Confetti animation component
+const Confetti = () => {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50">
+      {Array.from({ length: 50 }).map((_, index) => {
+        const size = Math.random() * 10 + 5;
+        const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        const left = `${Math.random() * 100}%`;
+        const animationDuration = `${Math.random() * 3 + 2}s`;
+        const delay = `${Math.random() * 2}s`;
 
-  //-----------------------------------------------------------FUNCTIONS
+        return (
+          <motion.div
+            key={index}
+            className="absolute"
+            style={{
+              width: size,
+              height: size,
+              backgroundColor: color,
+              borderRadius: "2px",
+              left,
+              top: "-10px",
+            }}
+            animate={{
+              y: ["0vh", "100vh"],
+              rotate: [0, 360],
+            }}
+            transition={{
+              duration: parseFloat(animationDuration),
+              delay: parseFloat(delay),
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+const LeaderBoard = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Show animation after component mount
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="mt-16 flex flex-1 flex-col lg:mt-0">
-      <div className="grid w-full grid-cols-2 grid-rows-[64px,64px] items-center justify-end border-b border-border  dark:border-dark-3 lg:flex lg:h-[64px] lg:px-10">
-        <h4 className="mr-auto px-5 text-2xl font-medium text-appBlack dark:text-white  lg:px-0 lg:text-[28px]">
+      <div className="grid w-full grid-cols-1 items-center justify-end border-b border-border dark:border-dark-3 lg:flex lg:h-[64px] lg:px-10">
+        <h4 className="mr-auto px-5 text-2xl font-medium text-appBlack dark:text-white lg:px-0 lg:text-[28px]">
           LeaderBoard
         </h4>
-
-        <SelectGroup
-          className={"ml-auto w-[135px] lg:ml-0 lg:w-[180px]"}
-          options={["By Points", "By Growth"]}
-        />
-        <SearchForm
-          className={
-            "col-span-2 flex border-t-[1px] border-border px-5 dark:border-dark-3  lg:hidden"
-          }
-          search={search}
-          placeholder={"Search by address"}
-          setSearch={setSearch}
-        />
-        <SearchForm
-          placeholder={"Search by address"}
-          className={"hidden lg:flex"}
-          search={search}
-          setSearch={setSearch}
-        />
       </div>
-      <div className="flex flex-1 flex-col">
-        {loading ? (
-          <div className="flex h-full flex-1 items-center justify-center">
-            <Spinner />
-          </div>
-        ) : (
-          <>
-            <div className="grid h-[56px] grid-cols-[1fr,2fr,1fr] px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
-              <p className="flex items-center text-sm text-appBlack/[.48] dark:text-white/[.48]">
-                Rank
-              </p>
-              <p className="flex items-center text-sm text-appBlack/[.48] dark:text-white/[.48]">
-                Name
-              </p>
-              <p className="hidden items-center text-sm text-appBlack/[.48] dark:text-white/[.48] lg:flex">
-                Invited By
-              </p>
-              <p className="flex items-center justify-end text-sm text-appBlack/[.48] dark:text-white/[.48] lg:justify-start">
-                Total Points
-              </p>
+
+      <div className="flex flex-1 items-center justify-center">
+        <Confetti />
+
+        <motion.div
+          className="mx-5 flex w-full max-w-3xl flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-8 text-center shadow-lg dark:from-gray-800/50 dark:to-gray-900/80"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 50 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: isVisible ? 1 : 0 }}
+            transition={{ delay: 0.3, duration: 0.5, type: "spring" }}
+            className="relative mb-6"
+          >
+            <div
+              className="absolute inset-0 animate-ping rounded-full bg-amber-200/30 dark:bg-amber-800/30"
+              style={{ animationDuration: "3s" }}
+            ></div>
+            <div className="relative">
+              <TrophyIcon />
             </div>
-            {(user?.rank as number) > 10 && user !== undefined && (
-              <div className="mb-1.5 grid h-[56px] grid-cols-[1fr,2fr,1fr] bg-appBlack px-5 dark:bg-white/15 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10">
-                <p className="flex items-center text-sm text-white">
-                  {user?.rank}(you)
-                </p>
-                <div className="flex items-center gap-1.5 text-sm text-white">
-                  <div
-                    style={{ backgroundColor: getRandomColor() }}
-                    className="h-6 w-6 rounded-full"
-                  />
-                  {user?.wallet?.slice(0, 7)}...
-                  {user?.wallet?.slice(-6)}
-                </div>
-                <div className="hidden items-center gap-1.5 text-sm text-white lg:flex">
-                  <div
-                    style={{ backgroundColor: getRandomColor() }}
-                    className="h-6 w-6 rounded-full"
-                  />
-                  {!user?.referee
-                    ? "-"
-                    : user?.referee
-                        ?.slice(0, 7)
-                        ?.concat("...")
-                        ?.concat(user?.referee?.slice(-6))}
-                </div>
-                <p className="flex items-center justify-end text-sm text-white lg:justify-start">
-                  {user?.points}
-                </p>
-              </div>
-            )}
-            <div className="max-h-[60vh]   flex-1 overflow-y-scroll lg:max-h-[68vh]">
-              {users
-                .filter((item) =>
-                  search ? item.wallet.includes(search) : true,
-                )
-                .map((item, index) => (
-                  <div
-                    key={index.toString()}
-                    className={`mb-[6px] ${user?.wallet == item.wallet ? "bg-appBlack text-white dark:bg-white/15" : "text-appBlack dark:bg-dark-2 dark:text-white "} grid h-[56px] grid-cols-[1fr,2fr,1fr]  px-5 lg:h-[64px] lg:grid-cols-[1.5fr,2fr,2fr,1fr] lg:px-10`}
-                  >
-                    <p className="flex items-center text-sm ">
-                      {item.rank}
-                      {user?.rank == item.rank && " (you)"}
-                    </p>
-                    <div className="flex items-center gap-1.5 text-sm ">
-                      <div
-                        style={{
-                          backgroundColor:
-                            leaderboardPalette[
-                              Math.floor(
-                                Math.random() * leaderboardPalette.length,
-                              )
-                            ],
-                        }}
-                        className="h-6 w-6 rounded-full"
-                      />
-                      {item?.wallet?.slice(0, 7)}...
-                      {item?.wallet?.slice(-6)}
-                    </div>
-                    <div className="hidden items-center gap-1.5 text-sm  lg:flex">
-                      <div
-                        style={{
-                          backgroundColor:
-                            leaderboardPalette[
-                              Math.floor(
-                                Math.random() * leaderboardPalette.length,
-                              )
-                            ],
-                        }}
-                        className="h-6 w-6 rounded-full"
-                      />
-                      {item?.referee?.slice(0, 7)}...
-                      {item?.referee?.slice(-6)}
-                    </div>
-                    <p className="flex items-center justify-end text-sm  lg:justify-start">
-                      {item.points}
-                    </p>
-                  </div>
-                ))}
-            </div>
-          </>
-        )}
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mb-4 bg-gradient-to-r from-amber-500 to-amber-300 bg-clip-text text-3xl font-bold text-appBlack text-transparent dark:text-white lg:text-4xl"
+          >
+            The Quest is Complete!
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+            className="mb-6 text-lg text-gray-700 dark:text-gray-300 lg:text-xl"
+          >
+            Thank you to everyone who participated in our reward quest campaign.
+            All points have been tallied and the top 60 have been granted access
+            to the extenstion.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isVisible ? 1 : 0 }}
+            transition={{ delay: 1, duration: 0.5 }}
+            className="mb-6 rounded-lg border border-gray-200 bg-white/20 p-4 dark:border-gray-700 dark:bg-gray-800/20"
+          >
+            <p className="text-sm italic text-gray-600 dark:text-gray-400">
+              &quot;Stay tuned for our next exciting campaign. Follow us on
+              social media for updates!&quot;
+            </p>
+          </motion.div>
+
+          {/* <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+            className="mt-2 flex flex-wrap justify-center gap-4"
+          >
+            <Link href="/models/marketplace">
+              <button className="transform rounded-lg bg-blue-600 px-6 py-3 text-white shadow-md transition-all hover:-translate-y-1 hover:bg-blue-700 hover:shadow-lg">
+                Explore Model Marketplace
+              </button>
+            </Link>
+            <Link href="/instances">
+              <button className="transform rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-white shadow-md transition-all hover:-translate-y-1 hover:from-amber-600 hover:to-amber-700 hover:shadow-lg">
+                Deploy An Instance
+              </button>
+            </Link>
+          </motion.div> */}
+        </motion.div>
       </div>
     </div>
   );

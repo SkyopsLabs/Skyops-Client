@@ -42,8 +42,10 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
       <Link
         href={!item.disabled ? item.route : "#"}
         onClick={handleClick}
+        target={item.external ? "_blank" : "_self"}
+        rel={item.external ? "noopener noreferrer" : ""}
         className={`
-            item-center group  relative hidden h-full w-full items-center justify-start gap-3 rounded-[7px] font-medium duration-300 ease-in-out lg:flex`}
+            item-center group relative hidden h-full w-full items-center justify-start gap-3 rounded-[7px] font-medium duration-300 ease-in-out lg:flex`}
         style={{ cursor: item.disabled ? "not-allowed" : "pointer" }}
       >
         {/* {item.icon} */}
@@ -103,8 +105,10 @@ const SidebarItem = ({ item, pageName, setPageName, setSidebarOpen }: any) => {
       <Link
         href={!item.disabled ? item.route : "#"}
         onClick={item.children ? handleClick : closeSideBar}
+        target={item.external ? "_blank" : "_self"}
+        rel={item.external ? "noopener noreferrer" : ""}
         className={`
-            item-center group  relative flex h-full w-full items-center justify-start gap-3 rounded-[7px] font-medium duration-300 ease-in-out lg:hidden`}
+            item-center group relative flex h-full w-full items-center justify-start gap-3 rounded-[7px] font-medium duration-300 ease-in-out lg:hidden`}
         style={{ cursor: item.disabled ? "not-allowed" : "pointer" }}
       >
         {/* {item.icon} */}

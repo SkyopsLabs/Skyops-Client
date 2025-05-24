@@ -88,6 +88,7 @@ const menuGroups = [
 
         children: [{ label: "Marketplace", route: "/models/marketplace" }],
       },
+
       {
         label: "AI Explorer",
         image: "/images/icon/icon.svg",
@@ -227,6 +228,29 @@ const menuGroups = [
           },
         ],
       },
+      {
+        icon: (
+          <svg
+            width="24"
+            height="24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+              stroke="currentColor"
+              strokeOpacity="currentOpacity"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ),
+        label: "Install Skyops Extension",
+        route:
+          "https://chromewebstore.google.com/detail/skyops/ifcnombjdiogkmhebkoameogpihkfkgi",
+        external: true,
+      },
     ],
   },
 ];
@@ -289,17 +313,82 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           ))}
         </motion.ul>
       </nav>
-      <Link
-        target="_blank"
-        className="mt-12 hidden px-5 text-cyan-400 underline lg:px-10"
-        href={
-          "https://chromewebstore.google.com/detail/skyops/ifcnombjdiogkmhebkoameogpihkfkgi?authuser=0&hl=en"
-        }
-      >
-        Install Skyops
-      </Link>
+      {/* Social Links */}
+      <div className="mt-12 flex flex-col px-5 lg:px-10">
+        <div className="flex space-x-4">
+          <Link
+            href="https://twitter.com/skyopslabs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-300 text-gray-500 hover:bg-blue-100 hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-blue-900 dark:hover:text-blue-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </Link>
+          <Link
+            href="https://discord.gg/SkyopsLabs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-300 text-gray-500 hover:bg-indigo-100 hover:text-indigo-500 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-indigo-900 dark:hover:text-indigo-400"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.39-.444.976-.608 1.41a18.565 18.565 0 0 0-5.487 0 12.041 12.041 0 0 0-.617-1.409.077.077 0 0 0-.079-.037A19.235 19.235 0 0 0 3.677 4.492c-.012 0-.024.006-.034.018-3.1 4.586-3.95 9.052-3.533 13.46.001.017.01.033.023.042a19.392 19.392 0 0 0 5.832 2.936.078.078 0 0 0 .084-.027c.463-.623.87-1.28 1.226-1.968.021-.04.001-.088-.044-.104a12.757 12.757 0 0 1-1.822-.867.077.077 0 0 1-.008-.128 10.543 10.543 0 0 0 .372-.291.074.074 0 0 1 .078-.01c3.928 1.782 8.18 1.782 12.062 0a.074.074 0 0 1 .078.009c.12.098.245.198.372.292.044.032.04.101-.008.128-.598.35-1.22.645-1.822.866a.077.077 0 0 0-.044.105c.36.687.772 1.344 1.225 1.967a.076.076 0 0 0 .084.028 19.32 19.32 0 0 0 5.835-2.936.075.075 0 0 0 .023-.042c.5-5.146-.838-9.578-3.549-13.459a.062.062 0 0 0-.034-.018ZM8.02 15.33c-1.183 0-2.157-1.083-2.157-2.419 0-1.335.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.335-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.083-2.157-2.419 0-1.335.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.335-.946 2.418-2.157 2.418Z" />
+            </svg>
+          </Link>
+          <Link
+            href="https://t.me/SkyopsLabs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-300 text-gray-500 hover:bg-blue-100 hover:text-blue-500 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-blue-900 dark:hover:text-blue-400"
+          >
+            <svg
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M24 12c0 6.627-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0s12 5.373 12 12zM12.43 8.859c-1.167.485-3.5 1.49-6.998 3.014-.568.226-.866.447-.893.663-.046.366.412.51 1.034.705.085.027.173.054.263.084.613.199 1.437.432 1.865.441.389.008.823-.152 1.302-.48 3.268-2.207 4.955-3.322 5.061-3.346.075-.017.179-.039.249.024.07.062.063.18.056.212-.046.193-1.84 1.862-2.77 2.726-.29.269-.495.46-.537.504-.094.097-.19.19-.282.279-.57.548-.996.96.024 1.632.49.323.882.59 1.273.856.427.291.853.581 1.405.943.14.092.274.187.405.28.497.355.944.673 1.496.623.32-.03.652-.331.82-1.23.397-2.126 1.179-6.73 1.36-8.628a2.123 2.123 0 00-.02-.472.506.506 0 00-.172-.325c-.143-.117-.365-.142-.465-.14-.451.008-1.143.249-4.476 1.635z"
+              />
+            </svg>
+          </Link>
+          <Link
+            href="https://skyopslabs.medium.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-300 text-gray-500 hover:bg-green-100 hover:text-green-600 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-green-900 dark:hover:text-green-400"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+
       {/* Dark Mode Toggle */}
-      <div className="mx-auto  my-12 flex lg:hidden">
+      <div className="mx-auto my-6 flex lg:hidden">
         {sidebarOpen && <DarkModeSwitcher />}
       </div>
       {/* <!-- Sidebar Menu --> */}

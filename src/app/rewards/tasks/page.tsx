@@ -65,7 +65,7 @@ const Tasks = () => {
     domain: {
       name: "skyopslabs.ai",
       version: "1",
-      chainId: 11155111,
+      chainId: 1,
       verifyingContract: process.env.NEXT_PUBLIC_REWARDS_CA,
     },
     messages: {
@@ -112,8 +112,6 @@ const Tasks = () => {
   };
   // Write to the smart contract and check if the transaction is successful with useEffect
   const handleWriteSmartContract = async () => {
-    toast.success("Coming Soon!!");
-    return;
     if ((user?.points as number) == 0 || !user.points) {
       toast.error("No points to claim");
       return;
@@ -544,7 +542,7 @@ const Tasks = () => {
       while (attempts < MAX_RETRIES) {
         const data = await deductPoints(
           user?.wallet as string,
-          user?.points as number,
+          (user?.points as number) * 0.4, // Deduct 40% of points
           "Claim",
         );
         if (data.error) {
