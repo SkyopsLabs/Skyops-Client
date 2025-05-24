@@ -644,7 +644,7 @@ const Tasks = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex flex-row items-center  gap-1">
                     <p className="flex items-end  text-[32px] font-medium leading-none text-white">
-                      {`${0}`}
+                      {`${(user?.points ?? 0) * 4.2}`}
                     </p>
                     <Image
                       width={18}

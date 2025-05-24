@@ -40,5 +40,7 @@ next-env.d.ts
 id.json
 bun.lock
 yarn.lock
+users.csv
+users.json
 
 src/playground.js
