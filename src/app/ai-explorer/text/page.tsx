@@ -8,6 +8,7 @@ import {
 import SelectComponent from "@/components/FormElements/SelectGroup/SelectComponent";
 import SyntaxComponent from "@/components/SyntaxHighliter";
 import { IChat, IModel } from "@/types";
+import { form } from "@reown/appkit/networks";
 import { AnimatePresence, motion } from "framer-motion";
 import "highlight.js/styles/github-dark.css"; // Choose any highlight.js theme
 import Image from "next/image";
@@ -64,7 +65,7 @@ const AIExplorerTextPage = () => {
       setChats(data);
     })();
   }, []);
-
+  console.log(formData, "formData");
   const handleChange = (e: any) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -126,7 +127,7 @@ const AIExplorerTextPage = () => {
               width={25}
               height={20}
             />
-            <div className=" no-scrollbar bord max-w-max px-2 text-sm font-medium dark:text-white/[.48]">
+            <div className=" no-scrollbar max-w-max px-2 text-sm font-medium dark:text-white/[.48]">
               <SyntaxComponent code={chat.message.replace(/\\n/g, "\n")} />
             </div>
           </div>
@@ -405,7 +406,7 @@ const AIExplorerTextPage = () => {
                           placeholder=""
                           name={param.name}
                           value={formData[param.name as keyof typeof formData]}
-                          disabled
+                          // disabled
                           onChange={handleChange}
                           className="w-[45px] rounded-[11px] border-[1px] border-black/10 bg-transparent py-2 text-center text-appBlack  outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-gray-2 dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
                         />

@@ -7,7 +7,7 @@ export default function CodeComponent({ code }: { code: string }) {
   const messageParts = code.split(/```/);
   const { colorMode } = useColorMode();
   return (
-    <section className="no-scrollbar bord w-full overflow-x-hidden pb-[100x] text-white">
+    <section className="no-scrollbar w-full overflow-x-hidden pb-[100x] text-white">
       {messageParts.map((part, i) =>
         i % 2 === 0 ? (
           <Markdown
