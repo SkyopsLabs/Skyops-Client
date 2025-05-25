@@ -36,7 +36,13 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
       </p>
       <div className="flex items-center  gap-1">
         <p className="text-[#01020C] dark:text-white">
-          {data ? parseInt(data?.value.toString() as string) / 10 ** 18 : 0}
+          {data
+            ? (() => {
+                const value =
+                  parseInt(data?.value.toString() as string) / 10 ** 18;
+                return value % 1 === 0 ? value : value.toFixed(2);
+              })()
+            : 0}
         </p>
         <Image
           width={16}
