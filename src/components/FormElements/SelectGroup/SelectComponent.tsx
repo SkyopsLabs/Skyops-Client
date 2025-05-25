@@ -147,7 +147,7 @@ const SelectComponent = ({
                 transition={{ duration: 0.1, type: "tween" }}
                 className={`absolute top-[105%] flex h-max max-h-[408px] w-full flex-col rounded-[4px] bg-white ${darkModeClass("dark:bg-dark-4")}`}
               >
-                <div className="z-50 flex h-max flex-col overflow-y-scroll">
+                <div className="no-scrollbar z-50 flex h-max flex-col overflow-y-scroll">
                   {filteredItems.map((item, i) => (
                     <button
                       key={i.toString()}

@@ -126,7 +126,7 @@ const AIExplorerTextPage = () => {
               width={25}
               height={20}
             />
-            <div className=" max-w-max px-2  text-sm font-medium dark:text-white/[.48]">
+            <div className=" no-scrollbar bord max-w-max px-2 text-sm font-medium dark:text-white/[.48]">
               <SyntaxComponent code={chat.message.replace(/\\n/g, "\n")} />
             </div>
           </div>
