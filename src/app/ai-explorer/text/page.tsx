@@ -35,7 +35,7 @@ const parameters = [
 const AIExplorerTextPage = () => {
   const isDesktop = typeof window !== "undefined" && window.innerWidth > 1024;
   const [formData, setFormData] = useState(initialState);
-  const [models, setModels] = useState<IModel[] | null>(null);
+  const [models, setModels] = useState<IModel[]>([]);
   const [isSelectedModel, setSelectedModel] = useState<IModel | null>(null);
   const [prompt, setPrompt] = useState<string | null>(null);
   const [systemPrompt, setSystemPrompt] = useState<string>("");
@@ -55,9 +55,11 @@ const AIExplorerTextPage = () => {
 
   useEffect(() => {
     (async () => {
+      console.log("fetching models and conversations...");
       const _ = await getAiModels();
       const data = await getConversationsById();
       console.log("models", _);
+      console.log("data", data);
       setModels(_);
       setChats(data);
     })();
@@ -83,7 +85,7 @@ const AIExplorerTextPage = () => {
       tokens: 0,
       created_at: new Date().toISOString(),
     };
-    if (chats.length == 0) {
+    if (chats?.length == 0) {
       // New Conversation
       const newChats: IChat[] = [];
       newChats.push(chatObj);

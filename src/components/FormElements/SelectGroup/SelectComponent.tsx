@@ -56,17 +56,17 @@ const SelectComponent = ({
       case "ArrowDown":
         e.preventDefault();
         setFocusedIndex((prev) =>
-          prev < filteredItems.length - 1 ? prev + 1 : 0,
+          prev < filteredItems?.length - 1 ? prev + 1 : 0,
         ); // Move focus down
         break;
       case "ArrowUp":
         e.preventDefault();
         setFocusedIndex((prev) =>
-          prev > 0 ? prev - 1 : filteredItems.length - 1,
+          prev > 0 ? prev - 1 : filteredItems?.length - 1,
         ); // Move focus up
         break;
       case "Enter":
-        if (focusedIndex >= 0 && focusedIndex < filteredItems.length) {
+        if (focusedIndex >= 0 && focusedIndex < filteredItems?.length) {
           const selectedItem = filteredItems[focusedIndex];
           onChange(selectedItem);
           setVal(selectedItem);
@@ -137,7 +137,11 @@ const SelectComponent = ({
                 initial={{ opacity: 100, height: 0 }}
                 animate={{
                   opacity: 100,
-                  height: models ? 408 : items.length > 5 ? 250 : "max-content",
+                  height: models
+                    ? 408
+                    : items?.length > 5
+                      ? 250
+                      : "max-content",
                 }}
                 exit={{ opacity: 100, height: 0 }}
                 transition={{ duration: 0.1, type: "tween" }}

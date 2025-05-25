@@ -58,7 +58,7 @@ export const getAiModels = async () => {
     return data;
   } catch (error) {
     console.error("Error in getting ai models: ", error);
-    return null;
+    return [];
   }
 };
 
@@ -77,12 +77,12 @@ export const getAiModelById = async (id: string) => {
 // Get Conversations by userId
 export const getConversationsById = async () => {
   try {
-    const { data } = await api.get(`/chats`);
+    const { data } = await api.get(`/users/chats`);
 
     return data;
   } catch (error) {
     console.error("Error in getting conversations by id: ", error);
-    return null;
+    return [];
   }
 };
 // Get Services
