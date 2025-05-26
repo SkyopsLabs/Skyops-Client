@@ -406,10 +406,10 @@ const SwapSection = () => {
             value={
               swapDirection === "iSKYOPS_TO_SKYOPS"
                 ? amount
-                  ? (Number(amount) * 4.2).toFixed(2)
+                  ? (Number(amount) * 1).toFixed(2)
                   : ""
                 : amount
-                  ? (Number(amount) / 4.2).toFixed(2)
+                  ? (Number(amount) / 1).toFixed(2)
                   : ""
             }
             readOnly
