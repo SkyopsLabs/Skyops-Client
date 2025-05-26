@@ -168,7 +168,7 @@ const AIExplorerTextPage = () => {
     <div className="mt-[64px] flex flex-1 flex-col lg:mt-0">
       <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-white/10  lg:px-10">
         <h4 className="text-2xl font-medium text-appBlack dark:text-white   lg:text-[28px]">
-          Ai-Explorer/Text
+          AI-Explorer/Text
         </h4>
         <div className="flex h-full w-[20%] items-center justify-center border-l border-border dark:border-dark-3 lg:hidden">
           <button onClick={() => setShowSettings(!showSettings)}>
@@ -461,9 +461,8 @@ const AIExplorerTextPage = () => {
               <button className="mx-auto mt-3 h-[40px] w-[95%] bg-prim2 font-medium text-white  dark:bg-white dark:text-appBlack lg:w-full">
                 Apply
               </button>
-
               {/* iSKYOPS Balance Section - now below parameters, mobile responsive */}
-              <div className="mx-auto mb-2 mt-4 flex w-full max-w-xs items-center justify-between rounded-2xl bg-gradient-to-r from-[#23263B] to-[#2B2E4A] p-4 shadow-lg ring-1 ring-[#23263B]/40 dark:from-[#23263B] dark:to-[#181A20] sm:max-w-sm sm:p-5 md:max-w-md lg:max-w-lg xl:max-w-xl">
+              <div className="mx-auto mb-2 mt-4 flex w-full max-w-xs items-center justify-between  bg-gradient-to-r from-[#23263B] to-[#2B2E4A] p-4 shadow-lg ring-1 ring-[#23263B]/40 dark:from-[#23263B] dark:to-[#181A20] sm:max-w-sm sm:p-5 md:max-w-md lg:max-w-lg xl:max-w-xl">
                 <div className="flex items-center gap-3 sm:gap-4">
                   <div className="grid h-10 w-10 place-content-center rounded-full bg-[#23263B] sm:h-12 sm:w-12">
                     <Image

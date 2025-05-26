@@ -21,8 +21,8 @@ import SwapSection from "./SwapSection";
 
 const Tasks = () => {
   // --------------------------------------------VARIABLES
-
-  const { user } = useAppSelector((state) => state.user);
+  const { address } = useAppKitAccount();
+  const { user, userWithRank, balance } = useAppSelector((state) => state.user);
 
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
@@ -34,6 +34,26 @@ const Tasks = () => {
   };
 
   //------------------------------------------------------------------USE EFFECTS
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchUser = async () => {
+      if (isMounted) {
+        const userDetails = await getUserDetails(address as string);
+
+        dispatch(setUser(userDetails));
+      }
+    };
+
+    fetchUser();
+
+    return () => {
+      isMounted = false;
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
 
   useEffect(() => {
     const getAll = async () => {
@@ -58,52 +78,111 @@ const Tasks = () => {
       <section className="flex w-full flex-col  gap-4  lg:flex-row lg:gap-3 lg:p-4">
         <div className="flex w-full flex-col lg:w-[50%]">
           <div className="w-full bg-white dark:bg-dark-2">
-            <div className="m-5 flex  h-max flex-col  bg-black lg:m-2">
-              {/* Swap Section Start */}
-              <SwapSection />
-              {/* Swap Section End */}
-            </div>
-          </div>
-          <div className="mt- w-full bg-white pb-8 pt-5 dark:bg-dark-2 lg:mt-5 lg:pt-6">
-            <h6 className="px-5 text-xl font-medium text-appBlack dark:text-white lg:px-6 lg:text-[22px]">
-              History
-            </h6>
+            <div className=" m-5 flex items-center gap-3 lg:m-6 lg:gap-3.5">
+              <div className="h-12 w-12 rounded-full bg-[#F24924]" />
 
-            <div className="w-full ">
-              <div className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6">
-                <p className="flex items-start text-sm text-appBlack dark:text-white/[0.48]">
-                  Date
+              <div>
+                <p className="font-semibold text-black dark:text-white">
+                  Bound Point Account
                 </p>
-                <p className="flex items-start text-sm text-appBlack dark:text-white/[0.48]">
-                  Type
+
+                <p className="text-black/[0.48] dark:text-white/[.48]">
+                  {address?.slice(0, 7)}...
+                  {address?.slice(-6)}
                 </p>
-                <p className="flex justify-end text-sm text-appBlack dark:text-white/[0.48]">
-                  iSKYOPS
-                </p>
-              </div>
-              <div className="max-h-[60vh] overflow-y-scroll">
-                {Array.isArray(user?.pointsHistory) &&
-                  [...user?.pointsHistory].reverse().map((item, index) => (
-                    <div
-                      key={index.toString()}
-                      className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"
-                    >
-                      <p className="flex items-start text-sm text-appBlack dark:text-white">
-                        {item.date}
-                      </p>
-                      <p className="flex items-start text-sm text-appBlack dark:text-white">
-                        {item.type}
-                      </p>
-                      <p
-                        className={`flex justify-end text-sm ${item.points > 0 ? "text-green" : "text-red"}`}
-                      >
-                        {item.points > 0 ? "+" : ""}
-                        {item.points}
-                      </p>
-                    </div>
-                  ))}
               </div>
             </div>
+
+            <div className="m-5 flex h-[232px] flex-col bg-black  lg:m-2 lg:h-[336px]">
+              <div className="flex h-1/2 border-b-[1px] border-white/10 px-4 ">
+                <div className="w-1/2 border-r-[1px] border-white/10">
+                  <p className="h-1/2 pt-4 text-sm font-medium text-white/[.49]">
+                    Total iSKYOPS
+                  </p>
+
+                  <p className="flex h-1/2 items-end pb-4 text-[32px] font-medium leading-none text-white">
+                    {`${user?.points ?? 0}`}
+                  </p>
+                </div>
+
+                <div className="w-1/2 px-4 ">
+                  <p className="h-1/2 pt-4 text-sm font-medium text-white/[.49]">
+                    Rank
+                  </p>
+
+                  <p className="flex h-1/2 items-end pb-4 text-[32px] font-medium leading-none text-white">
+                    {userWithRank.rank ? userWithRank.rank : 0}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-1 flex-col justify-between  p-4 ">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-white/[.49]">
+                    Total SKYOPS
+                  </p>
+
+                  <p className="text-sm  text-white underline">What is this?</p>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-row items-center  gap-1">
+                    <p className="flex items-end  text-[32px] font-medium leading-none text-white">
+                      {`${balance}`}
+                    </p>
+
+                    <Image
+                      width={18}
+                      height={18}
+                      alt="icon"
+                      className="flex "
+                      src={"/images/icon/icon-white.svg"}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* <div className="mt- w-full bg-white pb-8 pt-5 dark:bg-dark-2 lg:mt-5 lg:pt-6">
+              <h6 className="px-5 text-xl font-medium text-appBlack dark:text-white lg:px-6 lg:text-[22px]">
+                History
+              </h6>
+
+              <div className="w-full ">
+                <div className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6">
+                  <p className="flex items-start text-sm text-appBlack dark:text-white/[0.48]">
+                    Date
+                  </p>
+                  <p className="flex items-start text-sm text-appBlack dark:text-white/[0.48]">
+                    Type
+                  </p>
+                  <p className="flex justify-end text-sm text-appBlack dark:text-white/[0.48]">
+                    iSKYOPS
+                  </p>
+                </div>
+                <div className="max-h-[60vh] overflow-y-scroll">
+                  {Array.isArray(user?.pointsHistory) &&
+                    [...user?.pointsHistory].reverse().map((item, index) => (
+                      <div
+                        key={index.toString()}
+                        className="grid h-[56px] grid-cols-[0.8fr,1fr,0.4fr] place-content-center border-b-[1px] border-border2 px-5 dark:border-dark-3 lg:h-[64px] lg:px-6"
+                      >
+                        <p className="flex items-start text-sm text-appBlack dark:text-white">
+                          {item.date}
+                        </p>
+                        <p className="flex items-start text-sm text-appBlack dark:text-white">
+                          {item.type}
+                        </p>
+                        <p
+                          className={`flex justify-end text-sm ${item.points > 0 ? "text-green" : "text-red"}`}
+                        >
+                          {item.points > 0 ? "+" : ""}
+                          {item.points}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div> */}
           </div>
         </div>
         <div className="flex w-full flex-col lg:w-[50%]">
@@ -259,111 +338,6 @@ const Tasks = () => {
           </div>
         </div>
       </section>
-      {/* <section className="my-5 border-t-[1px] border-border p-5 lg:my-4 lg:p-0 lg:pt-6">
-        <h5 className="mb-4 text-[22px] font-semibold text-appBlack dark:text-white lg:mb-6 lg:px-10">
-          Special rewards tasks
-        </h5>
-        <div className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-4 lg:gap-[11px] lg:px-4">
-          {tasks.map((item, index) => {
-            return (
-              <div
-                onClick={item.setter}
-                key={index.toString()}
-                className={`flex h-[152px] ${item.input ? "" : !item.verified ? "  hover:cursor-pointer hover:rounded-md hover:bg-prim3/20 dark:hover:bg-primary" : ""} w-full flex-col justify-between bg-white  dark:bg-dark-2 ${item.input && "h-[208px] lg:h-[252px]   "} ${item.label.includes("thread") && " lg:col-span-2"} p-5  lg:h-[224px] lg:p-6`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-appGray text-appBlack dark:bg-dark dark:text-white">
-                    {item.image ? (
-                      <Image
-                        src={item.image}
-                        width={20}
-                        height={20}
-                        alt={index.toString()}
-                      />
-                    ) : (
-                      item.icon
-                    )}
-                  </div>
-                  {item.verified ? (
-                    <Image
-                      src={"/images/icon/tick-circle.svg"}
-                      width={24}
-                      height={24}
-                      alt="good"
-                    />
-                  ) : (
-                    <p className="text-[22px] font-semibold text-black dark:text-white">
-                      {item.points}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <p className="text-lg font-medium text-black dark:text-white">
-                    {item.label}
-                  </p>
-                  <p className="text-sm text-black/[.48] dark:text-white/[.48]">
-                    {item.desc}
-                  </p>
-                  {item.input && (
-                    <p className="mt-2 text-xs text-black/[.48] dark:text-white/[.48]">
-                      Make sure you add the{" "}
-                      <span className="text-blue-700">$SKYOPS</span> ticker in
-                      your {item.label.includes("thread") ? "thread" : "post"}!
-                    </p>
-                  )}
-                </div>
-                {item.input && (
-                  <div className="flex h-[40px] w-full items-center justify-between border-[1px] border-[#E6E6E6] px-[18px] text-black/[.48] dark:border-white/10 dark:text-white/[.80]">
-                    <input
-                      placeholder={item.placeholder}
-                      value={tweetLinks[index] || ""}
-                      onChange={(e) =>
-                        setTweetLinks((prev) => ({
-                          ...prev,
-                          [index]: e.target.value,
-                        }))
-                      }
-                      className="h-full w-full bg-transparent text-black/[.80]  focus:outline-none dark:text-white/[.80]"
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          if (item.label.includes("thread")) {
-                            addPost(tweetLinks[index] || "", "Thread", index);
-                          } else if (item.label.includes("Post")) {
-                            addPost(tweetLinks[index] || "", "Post", index);
-                          }
-                        }
-                      }}
-                    />
-                    <svg
-                      onClick={() => {
-                        if (item.label.includes("thread")) {
-                          addPost(tweetLinks[index] || "", "Thread", index);
-                        } else if (item.label.includes("Post")) {
-                          addPost(tweetLinks[index] || "", "Post", index);
-                        }
-                      }}
-                      width="18"
-                      height="18"
-                      fill="none"
-                      className="cursor-pointer"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7.877 9H3.752m-.063.219l-1.752 5.23c-.137.412-.206.617-.157.744.043.11.135.193.249.225.13.036.328-.053.724-.23l12.533-5.64c.386-.174.579-.261.638-.382a.375.375 0 000-.332c-.06-.12-.252-.207-.638-.381L2.748 2.81c-.394-.177-.59-.266-.722-.23a.375.375 0 00-.248.225c-.05.126.018.331.154.741L3.69 8.839c.023.07.035.106.04.142a.375.375 0 010 .096c-.005.036-.017.071-.04.142z"
-                        stroke="currentColor"
-                        strokeOpacity=".28"
-                        strokeWidth="1.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </section> */}
     </div>
   );
 };

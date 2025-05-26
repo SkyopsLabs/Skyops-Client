@@ -165,9 +165,9 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Top-up",
+        label: "Swap",
 
-        route: "/top-up",
+        route: "/swap",
       },
       {
         icon: (
@@ -313,9 +313,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           ))}
         </motion.ul>
       </nav>
-      {/* Social Links */}
-      <div className="mt-12 flex flex-col px-5 lg:px-10">
-        <div className="flex space-x-4">
+      {/* Social Links - stick to bottom and center */}
+      <div className="mt-auto flex w-full flex-col items-center justify-center pb-6 pt-8">
+        <div className="flex justify-center space-x-4">
           <Link
             href="https://twitter.com/skyopslabs"
             target="_blank"
