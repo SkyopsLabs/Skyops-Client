@@ -258,6 +258,26 @@ const SwapSection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConfirmed, isError]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchUser = async () => {
+      if (isMounted) {
+        const userDetails = await getUserDetails(address as string);
+
+        dispatch(setUser(userDetails));
+      }
+    };
+
+    fetchUser();
+
+    return () => {
+      isMounted = false;
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
+
   // Modern Uniswap-like UI
   return (
     <div className="mx-auto w-full rounded-2xl border-[#23263B]  p-6 shadow-lg">
