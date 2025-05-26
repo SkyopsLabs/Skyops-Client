@@ -62,28 +62,41 @@ export const addPoints = async (
   address: string,
   points: number,
   type: string,
-): Promise<void> => {
-  const client = await clientPromise;
-  const db = client.db("AIOps");
-  const user = await getUserDetails(address);
-  if (!user) {
-    throw Error("Wallet not registered");
+): Promise<{ error: boolean; message: string }> => {
+  try {
+    const client = await clientPromise;
+    const db = client.db("AIOps");
+    const user = await getUserDetails(address);
+    if (!user) {
+      return { error: true, message: "Wallet not registered" };
+    }
+
+    const pointsEntry = {
+      date: new Date().toLocaleDateString("de-DE"),
+      type: type,
+      points: points,
+    };
+
+    const result = await db.collection("users").updateOne(
+      { wallet: address },
+      {
+        $inc: { points: points },
+        // @ts-ignore
+        $push: { pointsHistory: pointsEntry },
+      },
+    );
+
+    if (result.matchedCount === 0) {
+      return {
+        error: true,
+        message: "Add points failed — user not found",
+      };
+    }
+
+    return { error: false, message: "Points added successfully" };
+  } catch (err: any) {
+    return { error: true, message: `An error occurred: ${err.message}` };
   }
-
-  const pointsEntry = {
-    date: new Date().toLocaleDateString("de-DE"),
-    type: type,
-    points: points,
-  };
-
-  await db.collection("users").updateOne(
-    { wallet: address },
-    {
-      $inc: { points: points },
-      // @ts-ignore
-      $push: { pointsHistory: pointsEntry },
-    },
-  );
 };
 
 export const getUserDetails = async (wallet: string): Promise<any> => {

@@ -103,7 +103,7 @@ const MarketplacePage = () => {
               alt="info"
             />
           </div>
-          <a
+          {/* <a
             href={model ? model.link : "#"}
             className="dark:bg-dark-500  col-span-1 flex  items-center justify-center gap-1 lg:ml-4 lg:w-auto"
           >
@@ -120,7 +120,7 @@ const MarketplacePage = () => {
               width={16}
               height={16}
             />
-          </a>
+          </a> */}
         </div>
         <div className="flex  w-full border-t border-border2 dark:border-dark-3 lg:mt-6 lg:w-auto  lg:gap-6">
           <div className="flex h-full w-1/2 flex-col  border-r border-border2 py-6 text-black dark:border-dark-3 dark:text-white lg:ml-6 lg:w-auto lg:flex-none lg:flex-grow-0 lg:pr-10">

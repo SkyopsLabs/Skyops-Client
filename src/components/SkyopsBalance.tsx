@@ -1,19 +1,21 @@
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setBalance } from "@/redux/slices/userSlice";
 import { useAppKitAccount } from "@reown/appkit/react";
 import Image from "next/image";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useBalance } from "wagmi";
 
-const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
+const SkyopsBalance = () => {
   // --------------------------------------------VARIABLES
-  const { user } = useAppSelector((state) => state.user);
+  const { user, balance } = useAppSelector((state) => state.user);
   const { isConnected, address } = useAppKitAccount();
 
   const { data, isError, isLoading, refetch, error } = useBalance({
     address: address as `0x${string}`,
     token: process.env.NEXT_PUBLIC_TOKEN_ADDRESS as `0x${string}`,
   });
+  const dispatch = useAppDispatch();
 
   //-----------------------------------------------------------FUNCTIONS
 
@@ -25,9 +27,16 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
       // toast.error("Error fetching balance. Please try again later.");
       return;
     }
+
+    if (data) {
+      const value = parseInt(data.value.toString()) / 10 ** 18;
+      const formattedBalance =
+        value % 1 === 0 ? value : Number(value.toFixed(2));
+      dispatch(setBalance(formattedBalance));
+    }
     refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.points, isConnected, isError, error]);
+  }, [user?.points, isConnected, isError, data, error]);
 
   return (
     <div className=" flex w-full justify-between lg:h-full  lg:w-max lg:flex-col lg:justify-start">
@@ -36,13 +45,7 @@ const SkyopsBalance = ({ balance = 0 }: { balance?: number }) => {
       </p>
       <div className="flex items-center  gap-1">
         <p className="text-[#01020C] dark:text-white">
-          {data
-            ? (() => {
-                const value =
-                  parseInt(data?.value.toString() as string) / 10 ** 18;
-                return value % 1 === 0 ? value : value.toFixed(2);
-              })()
-            : 0}
+          {isLoading ? "..." : balance}
         </p>
         <Image
           width={16}

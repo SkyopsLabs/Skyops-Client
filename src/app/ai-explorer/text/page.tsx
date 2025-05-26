@@ -13,28 +13,32 @@ import { AnimatePresence, motion } from "framer-motion";
 import "highlight.js/styles/github-dark.css"; // Choose any highlight.js theme
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "@/redux/hooks";
 import toast from "react-hot-toast";
 
 const initialState = {
   temperature: 0,
-  topP: 0,
+  // topP: 0,
   maxTokens: 0,
-  frequencyPenalty: 0,
-  presencePenalty: 0,
-  repetitionPenalty: 0,
+  // frequencyPenalty: 0,
+  // presencePenalty: 0,
+  // repetitionPenalty: 0,
 };
 
 const parameters = [
   { name: "temperature", label: "Temperature" },
-  { name: "topP", label: "Top P" },
+  // { name: "topP", label: "Top P" },
   { name: "maxTokens", label: "Max Tokens" },
-  { name: "frequencyPenalty", label: "Frequency Penalty" },
-  { name: "presencePenalty", label: "Presence Penalty" },
+  // { name: "frequencyPenalty", label: "Frequency Penalty" },
+  // { name: "presencePenalty", label: "Presence Penalty" },
   // { name: "repetitionPenalty", label: "Repetition Penalty" },
 ];
 
 const AIExplorerTextPage = () => {
   const isDesktop = typeof window !== "undefined" && window.innerWidth > 1024;
+  // Get iSKYOPS points from Redux
+  const user = useAppSelector((state) => state.user.user);
+  const points = user?.points ?? 0;
   const [formData, setFormData] = useState(initialState);
   const [models, setModels] = useState<IModel[]>([]);
   const [isSelectedModel, setSelectedModel] = useState<IModel | null>(null);
@@ -47,11 +51,11 @@ const AIExplorerTextPage = () => {
 
   const {
     temperature,
-    topP,
+    // topP,
     maxTokens,
-    frequencyPenalty,
-    presencePenalty,
-    repetitionPenalty,
+    // frequencyPenalty,
+    // presencePenalty,
+    // repetitionPenalty,
   } = formData;
 
   useEffect(() => {
@@ -99,6 +103,8 @@ const AIExplorerTextPage = () => {
       isSelectedModel._id,
       prompt,
       systemPrompt,
+      temperature,
+      maxTokens,
     );
     if (resp.error) {
       toast.error(resp.msg, { id: loading });
@@ -135,13 +141,20 @@ const AIExplorerTextPage = () => {
       } else {
         return (
           <div className="mb-4 flex items-end justify-end p-1" key={idx}>
-            <Image
-              className="mx-1 my-2"
-              src={"/images/ai-explorer/icon-mistral.png"}
-              alt="Logo"
-              width={25}
-              height={20}
-            />
+            <div className="relative mx-1 my-2 h-[20px] w-[25px]">
+              <Image
+                src={"/images/logos/logo-white.png"}
+                alt="Logo"
+                className="hidden object-contain dark:block"
+                fill
+              />
+              <Image
+                fill
+                src={"/images/logos/logo-grey.png"}
+                alt="Logo"
+                className="object-contain dark:hidden"
+              />
+            </div>
             <div className="max-w-max rounded-lg bg-gray  p-2 text-sm font-medium">
               {chat.message}
             </div>
@@ -177,6 +190,35 @@ const AIExplorerTextPage = () => {
           </button>
         </div>
       </div>
+
+      {/* iSKYOPS Balance Section */}
+      {/* <div className="mx-auto mb-2 mt-6 flex w-full max-w-xl items-center justify-between rounded-2xl bg-gradient-to-r from-[#23263B] to-[#2B2E4A] p-5 shadow-lg ring-1 ring-[#23263B]/40 dark:from-[#23263B] dark:to-[#181A20]">
+        <div className="flex items-center gap-4">
+          <div className="grid h-12 w-12 place-content-center rounded-full bg-[#23263B]">
+            <Image
+              src="/images/icon/icon-white.svg"
+              alt="iSKYOPS"
+              width={32}
+              height={32}
+            />
+          </div>
+          <div>
+            <div className="text-lg font-semibold text-white">
+              iSKYOPS for Chatting
+            </div>
+            <div className="text-xs text-[#A3A9BA]">
+              Available for AI conversations
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-end">
+          <span className="text-3xl font-bold text-white drop-shadow-lg">
+            {points}
+          </span>
+          <span className="text-xs font-medium text-[#A3A9BA]">iSKYOPS</span>
+        </div>
+      </div> */}
+
       <div className=" flex  h-[calc(100vh-148px)] w-full  flex-col gap-3  sm:flex-row  lg:p-4">
         <AnimatePresence mode="sync">
           {/* Left section */}
@@ -193,7 +235,8 @@ const AIExplorerTextPage = () => {
             lg:flex
             lg:p-0
             lg:px-6
-            lg:py-1
+            lg:pb-2
+            lg:pt-6
           "
           >
             <div className="  no-scrollbar  flex h-[95%] max-h-[95%]   w-full flex-col gap-2 overflow-y-scroll">
@@ -418,6 +461,34 @@ const AIExplorerTextPage = () => {
               <button className="mx-auto mt-3 h-[40px] w-[95%] bg-prim2 font-medium text-white  dark:bg-white dark:text-appBlack lg:w-full">
                 Apply
               </button>
+
+              {/* iSKYOPS Balance Section - now below parameters, mobile responsive */}
+              <div className="mx-auto mb-2 mt-4 flex w-full max-w-xs items-center justify-between rounded-2xl bg-gradient-to-r from-[#23263B] to-[#2B2E4A] p-4 shadow-lg ring-1 ring-[#23263B]/40 dark:from-[#23263B] dark:to-[#181A20] sm:max-w-sm sm:p-5 md:max-w-md lg:max-w-lg xl:max-w-xl">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="grid h-10 w-10 place-content-center rounded-full bg-[#23263B] sm:h-12 sm:w-12">
+                    <Image
+                      src="/images/icon/icon-white.svg"
+                      alt="iSKYOPS"
+                      width={28}
+                      height={28}
+                      className="sm:h-8 sm:w-8"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-xs text-[#A3A9BA]">
+                      Available for AI conversations
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-2xl font-bold text-white drop-shadow-lg sm:text-3xl">
+                    {points}
+                  </span>
+                  <span className="text-xs font-medium text-[#A3A9BA]">
+                    iSKYOPS
+                  </span>
+                </div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -137,6 +137,8 @@ export const generateAiText = async (
   model: string,
   prompt: string,
   systemPrompt: string,
+  temperature: number,
+  maxTokens: number,
 ) => {
   try {
     const { data } = await api.post("/explorer/text/generate", {
