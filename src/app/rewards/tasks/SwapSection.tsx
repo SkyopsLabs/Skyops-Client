@@ -10,7 +10,7 @@ import { ABI } from "@/utils/helpers";
 import { Wallet } from "ethers";
 import toast from "react-hot-toast";
 
-const REWARDS_CA = process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`;
+const iSKYOPS_CA = process.env.NEXT_PUBLIC_ISKYOPS_CA as `0x${string}`;
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1500;
@@ -30,7 +30,7 @@ const SwapSection = () => {
     value: number;
   }>(null);
   const { user, balance } = useAppSelector((state) => state.user);
-  const iSKYOPSBalance = user?.points ?? 0;
+  const iSKYOPSBalance = user?.token ?? 0;
   const SKYOPSBalance = balance;
 
   // wagmi hooks for tx status
@@ -86,14 +86,14 @@ const SwapSection = () => {
           },
           domain: {
             name: "skyopslabs.ai",
-            version: "1",
+            version: "2",
             chainId: 1, // Mainnet
-            verifyingContract: REWARDS_CA,
+            verifyingContract: iSKYOPS_CA,
           },
           messages: {
             client: address,
             points: points,
-            server: REWARDS_CA,
+            server: iSKYOPS_CA,
           },
         };
         const raw = await wallet.signTypedData(
@@ -102,14 +102,14 @@ const SwapSection = () => {
           messageParams.messages,
         );
         const tx = await writeContractAsync({
-          address: REWARDS_CA,
+          address: iSKYOPS_CA,
           abi: ABI,
           functionName: "claimRewards",
           args: [
             {
               client: address,
               points: points,
-              server: REWARDS_CA,
+              server: iSKYOPS_CA,
               signature: raw,
             },
           ],
@@ -146,7 +146,7 @@ const SwapSection = () => {
             address: process.env.NEXT_PUBLIC_TOKEN_ADDRESS as `0x${string}`,
             abi: abi,
             functionName: "transfer",
-            args: [REWARDS_CA, BigInt(Math.floor(skyopsAmount * 1e18))],
+            args: [iSKYOPS_CA, BigInt(Math.floor(skyopsAmount * 1e18))],
           });
           setTxHash(tx);
           setPendingSwap({
@@ -160,7 +160,14 @@ const SwapSection = () => {
         }
       }
     } catch (err: any) {
-      toast.error(err?.message || "Swap failed");
+      console.error(err.message, "Error");
+
+      const match = err.message?.match(/reverted: ([^\n]*)/i);
+
+      const revertReason = match ? match[1].trim() : "An error Occurred";
+
+      toast.error(revertReason || "An error occurred during the swap");
+      // toast.error("Swap failed");
       setLoading(false);
     }
   };
@@ -175,7 +182,12 @@ const SwapSection = () => {
         // Retry logic for deductPoints
         while (attempts < MAX_RETRIES) {
           try {
-            const res = await deductPoints(address, pendingSwap.value, "Swap");
+            const res = await deductPoints(
+              address,
+              pendingSwap.value,
+              "Swap",
+              true,
+            );
             if (res.error) {
               toast.error(res.message ?? "Error deducting points");
               attempts++;
@@ -210,7 +222,12 @@ const SwapSection = () => {
         // Retry logic for addPoints
         while (attempts < MAX_RETRIES) {
           try {
-            const res = await addPoints(address, pendingSwap.value, "Swap");
+            const res = await addPoints(
+              address,
+              pendingSwap.value,
+              "Swap",
+              true,
+            );
             if (res.error) {
               toast.error(res.message ?? "Error adding points");
               attempts++;

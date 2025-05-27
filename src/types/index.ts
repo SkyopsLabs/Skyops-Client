@@ -46,6 +46,7 @@ export interface IUser {
   pointsHistory?: IPointsHistory[];
   created_at?: Date;
   updated_at?: Date;
+  token?: number;
 }
 
 export interface IBilling {

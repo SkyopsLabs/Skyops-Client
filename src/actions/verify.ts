@@ -16,6 +16,7 @@ export const deductPoints = async (
   address: string,
   points: number,
   type: string = "reward-claim",
+  iSKYOPS: boolean = false,
 ): Promise<{ error: boolean; message: string }> => {
   const client = await clientPromise;
   const db = client.db("AIOps");
@@ -26,33 +27,44 @@ export const deductPoints = async (
       return { error: true, message: "Wallet not registered" };
     }
 
-    if (user.points < points) {
-      return { error: true, message: "Insufficient points" };
+    // If iSKYOPS, operate on tokens, else points
+    const field = iSKYOPS ? "tokens" : "points";
+    const userBalance = user[field] ?? 0;
+    if (userBalance < points) {
+      return { error: true, message: `Insufficient ${field}` };
     }
 
     const pointsEntry = {
       date: new Date().toLocaleDateString("de-DE"),
       type,
-      points: -points, // Log it as negative
+      [field]: -points, // Log it as negative
     };
 
-    const result = await db.collection("users").updateOne(
-      { wallet: address, points: { $gte: points } }, // Double check atomicity
-      {
-        $inc: { points: -points },
-        // @ts-ignore
-        $push: { pointsHistory: pointsEntry },
-      },
-    );
+    const updateQuery: any = {
+      $inc: { [field]: -points },
+      // @ts-ignore
+      $push: { pointsHistory: pointsEntry },
+    };
+
+    // Double check atomicity
+    const matchQuery: any = { wallet: address };
+    matchQuery[field] = { $gte: points };
+
+    const result = await db
+      .collection("users")
+      .updateOne(matchQuery, updateQuery);
 
     if (result.matchedCount === 0) {
       return {
         error: true,
-        message: "Deduction failed — not enough points or user not found",
+        message: `Deduction failed — not enough ${field} or user not found`,
       };
     }
 
-    return { error: false, message: "Points deducted successfully" };
+    return {
+      error: false,
+      message: `${iSKYOPS ? "Tokens" : "Points"} claimed successfully`,
+    };
   } catch (err: any) {
     return { error: true, message: `An error occurred: ${err.message}` };
   }
@@ -62,6 +74,7 @@ export const addPoints = async (
   address: string,
   points: number,
   type: string,
+  iSKYOPS: boolean = false,
 ): Promise<{ error: boolean; message: string }> => {
   try {
     const client = await clientPromise;
@@ -71,29 +84,35 @@ export const addPoints = async (
       return { error: true, message: "Wallet not registered" };
     }
 
+    // If iSKYOPS, operate on tokens, else points
+    const field = iSKYOPS ? "tokens" : "points";
     const pointsEntry = {
       date: new Date().toLocaleDateString("de-DE"),
       type: type,
-      points: points,
+      [field]: points,
     };
 
-    const result = await db.collection("users").updateOne(
-      { wallet: address },
-      {
-        $inc: { points: points },
-        // @ts-ignore
-        $push: { pointsHistory: pointsEntry },
-      },
-    );
+    const updateQuery: any = {
+      $inc: { [field]: points },
+      // @ts-ignore
+      $push: { pointsHistory: pointsEntry },
+    };
+
+    const result = await db
+      .collection("users")
+      .updateOne({ wallet: address }, updateQuery);
 
     if (result.matchedCount === 0) {
       return {
         error: true,
-        message: "Add points failed — user not found",
+        message: `Add ${field} failed — user not found`,
       };
     }
 
-    return { error: false, message: "Points added successfully" };
+    return {
+      error: false,
+      message: `${iSKYOPS ? "Tokens" : "Points"} added successfully`,
+    };
   } catch (err: any) {
     return { error: true, message: `An error occurred: ${err.message}` };
   }

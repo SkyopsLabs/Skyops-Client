@@ -1,36 +1,133 @@
 "use client";
-import {
-  authenticateDiscord,
-  authenticateGmail,
-  authenticateTwitter,
-  getAllUsers,
-  getUserDetails,
-} from "@/actions/verify";
+import { deductPoints, getAllUsers, getUserDetails } from "@/actions/verify";
 import { useAppSelector } from "@/redux/hooks";
 import { setUser, setUserWithRank } from "@/redux/slices/userSlice";
-import { AppSession } from "@/types";
+import { ABI } from "@/utils/helpers";
 import { useAppKitAccount } from "@reown/appkit/react";
-import { signOut, useSession } from "next-auth/react";
+import { Wallet } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import SwapSection from "./SwapSection";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+
+const MAX_RETRIES = 3;
+
+const RETRY_DELAY_MS = 1500;
+
+const wallet = new Wallet(process.env.NEXT_PUBLIC_PRIVATE_KEY as string);
 
 const Tasks = () => {
   // --------------------------------------------VARIABLES
   const { address } = useAppKitAccount();
   const { user, userWithRank, balance } = useAppSelector((state) => state.user);
+  const [txId, setTxId] = useState<string | null>(null);
+  const { writeContractAsync, data: txData } = useWriteContract();
+
+  const {
+    isLoading: isConfirming,
+
+    isSuccess: isConfirmed,
+
+    isError,
+
+    error,
+  } = useWaitForTransactionReceipt({
+    hash: txData,
+  });
 
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
+
+  const messageParams = {
+    types: {
+      ExtensionClientData: [
+        { name: "client", type: "address" },
+
+        { name: "points", type: "uint256" },
+
+        { name: "server", type: "address" },
+      ],
+    },
+
+    domain: {
+      name: "skyopslabs.ai",
+
+      version: "1",
+
+      chainId: 1,
+
+      verifyingContract: process.env.NEXT_PUBLIC_REWARDS_CA,
+    },
+
+    messages: {
+      client: address,
+
+      points: user?.points,
+
+      server: process.env.NEXT_PUBLIC_REWARDS_CA,
+
+      // server: address,
+    },
+  };
 
   //-----------------------------------------------------------FUNCTIONS
   const copyInviteLink = () => {
     navigator.clipboard.writeText(refUrl);
     toast.success("Invite link copied");
+  };
+
+  const handleWriteSmartContract = async () => {
+    if ((user?.points as number) == 0 || !user.points) {
+      toast.error("No points to claim");
+
+      return;
+    }
+
+    const id = toast.loading("Signing...");
+
+    setTxId(id);
+
+    try {
+      const raw = await wallet.signTypedData(
+        messageParams.domain,
+
+        messageParams.types,
+
+        messageParams.messages,
+      );
+
+      console.log("CA", process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`);
+
+      await writeContractAsync({
+        address: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`,
+
+        abi: ABI,
+
+        functionName: "claimRewards",
+
+        args: [
+          {
+            client: address, // Replace with actual client address
+
+            points: user.points, // Replace with actual points
+
+            server: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`, // Replace with actual server address
+
+            signature: raw, // Replace with actual signature (hex string)
+          },
+        ],
+      });
+    } catch (err: any) {
+      console.error(err.message, "Error");
+
+      const match = err.message?.match(/reverted: ([^\n]*)/i);
+
+      const revertReason = match ? match[1].trim() : "An error Occurred";
+
+      toast.error(revertReason, { id: id });
+    }
   };
 
   //------------------------------------------------------------------USE EFFECTS
@@ -67,6 +164,57 @@ const Tasks = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  useEffect(() => {
+    let attempts = 0;
+
+    const claimPoints = async () => {
+      while (attempts < MAX_RETRIES) {
+        const data = await deductPoints(
+          user?.wallet as string,
+
+          (user?.points as number) * 0.4, // Deduct 40% of points
+
+          "Claim",
+        );
+
+        if (data.error) {
+          toast.error(data.message ?? "Error deducting points", {
+            id: txId as string,
+          });
+
+          attempts++;
+
+          console.error(`Attempt ${attempts} failed:`, data.message);
+
+          if (attempts < MAX_RETRIES) {
+            await new Promise((r) => setTimeout(r, RETRY_DELAY_MS * attempts)); // Exponential-ish backoff
+          } else {
+            toast.error("Failed to deduct points after retries.");
+          }
+        } else {
+          toast.success(data.message, { id: txId as string });
+
+          const userDetails = await getUserDetails(address as string);
+
+          dispatch(setUser(userDetails));
+
+          return;
+        }
+      }
+    };
+
+    if (isConfirmed && (user?.points as number) > 0) {
+      claimPoints();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConfirmed, txId, user?.wallet, user?.points, address]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Transaction not confirmed", { id: txId as string });
+    }
+  }, [isError, txId]);
+
   return (
     <div className="w-full">
       <div className="flex h-[64px] items-center justify-between border-b border-border px-5 dark:border-dark-3 lg:px-10">
@@ -97,7 +245,7 @@ const Tasks = () => {
               <div className="flex h-1/2 border-b-[1px] border-white/10 px-4 ">
                 <div className="w-1/2 border-r-[1px] border-white/10">
                   <p className="h-1/2 pt-4 text-sm font-medium text-white/[.49]">
-                    Total iSKYOPS
+                    Mining Points
                   </p>
 
                   <p className="flex h-1/2 items-end pb-4 text-[32px] font-medium leading-none text-white">
@@ -105,7 +253,7 @@ const Tasks = () => {
                   </p>
                 </div>
 
-                <div className="w-1/2 px-4 ">
+                {/* <div className="w-1/2 px-4 ">
                   <p className="h-1/2 pt-4 text-sm font-medium text-white/[.49]">
                     Rank
                   </p>
@@ -113,13 +261,13 @@ const Tasks = () => {
                   <p className="flex h-1/2 items-end pb-4 text-[32px] font-medium leading-none text-white">
                     {userWithRank.rank ? userWithRank.rank : 0}
                   </p>
-                </div>
+                </div> */}
               </div>
 
               <div className="flex flex-1 flex-col justify-between  p-4 ">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-white/[.49]">
-                    Total SKYOPS
+                    SKYOPS Available for Claim
                   </p>
 
                   <p className="text-sm  text-white underline">What is this?</p>
@@ -128,7 +276,7 @@ const Tasks = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex flex-row items-center  gap-1">
                     <p className="flex items-end  text-[32px] font-medium leading-none text-white">
-                      {`${balance}`}
+                      {`${user?.points ?? 0} `}
                     </p>
 
                     <Image
@@ -139,6 +287,12 @@ const Tasks = () => {
                       src={"/images/icon/icon-white.svg"}
                     />
                   </div>
+                  <button
+                    onClick={handleWriteSmartContract}
+                    className="bg-prim2 px-8 py-2 font-medium text-white duration-200 active:scale-90 dark:bg-white dark:text-black"
+                  >
+                    Claim
+                  </button>
                 </div>
               </div>
             </div>
