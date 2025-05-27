@@ -98,12 +98,23 @@ const BillingPage = () => {
                   <p className="flex items-start text-sm text-appBlack dark:text-white">
                     {item.type}
                   </p>
-                  <p
-                    className={`flex justify-end text-sm ${item.points > 0 ? "text-green" : "text-red"}`}
-                  >
-                    {item.points > 0 ? "+" : ""}
-                    {item.points}
-                  </p>
+                  {item.points ? (
+                    <p
+                      className={`flex justify-end text-sm ${(item.points ?? 0 > 0) ? "text-green" : "text-red"}`}
+                    >
+                      {(item.points ?? 0) > 0 ? "+" : ""}
+                      {item.points ?? 0}
+                    </p>
+                  ) : (
+                    item.tokens && (
+                      <p
+                        className={`flex justify-end text-sm ${(item.tokens ?? 0 > 0) ? "text-green" : "text-red"}`}
+                      >
+                        {(item.tokens ?? 0) > 0 ? "+" : ""}
+                        {item.tokens ?? 0}
+                      </p>
+                    )
+                  )}
                 </div>
               ))}
           </div>

@@ -20,7 +20,8 @@ export interface ILeaderboard {
 export interface IPointsHistory {
   date: String;
   type: string; // e.g., "earned", "spent", "bonus"
-  points: number;
+  points?: number;
+  tokens?: number;
 }
 
 export interface IUser {
@@ -42,11 +43,10 @@ export interface IUser {
   points?: number;
   claimedDiscord?: boolean;
   claimedTelegram?: boolean;
-  tokens?: number;
   pointsHistory?: IPointsHistory[];
   created_at?: Date;
   updated_at?: Date;
-  token?: number;
+  tokens?: number;
 }
 
 export interface IBilling {

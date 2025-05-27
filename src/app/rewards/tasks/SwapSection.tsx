@@ -30,7 +30,7 @@ const SwapSection = () => {
     value: number;
   }>(null);
   const { user, balance } = useAppSelector((state) => state.user);
-  const iSKYOPSBalance = user?.token ?? 0;
+  const iSKYOPSBalance = user?.tokens ?? 0;
   const SKYOPSBalance = balance;
 
   // wagmi hooks for tx status
