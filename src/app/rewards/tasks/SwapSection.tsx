@@ -115,7 +115,7 @@ const SwapSection = () => {
           ],
         });
         setTxHash(tx);
-        setPendingSwap({ direction: "iSKYOPS_TO_SKYOPS", value: points * 0.4 });
+        setPendingSwap({ direction: "iSKYOPS_TO_SKYOPS", value: points });
       } else {
         // SKYOPS to iSKYOPS: transfer SKYOPS to rewards contract address, then add points after tx confirmed
         const skyopsAmount = Number(amount);
