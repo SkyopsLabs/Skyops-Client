@@ -153,10 +153,10 @@ const SelectComponent = ({
                       key={i.toString()}
                       style={{ fontSize: 14 }}
                       onClick={() => {
-                        if (item.name.toLowerCase().includes("deepseek")) {
-                          toast.error("DeepSeek is not available yet");
-                          return;
-                        }
+                        // if (item.name.toLowerCase().includes("deepseek")) {
+                        //   toast.error("DeepSeek is not available yet");
+                        //   return;
+                        // }
                         if (models) {
                           onChange(item);
                           setVal(item);
