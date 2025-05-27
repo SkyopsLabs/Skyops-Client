@@ -38,7 +38,7 @@ const AIExplorerTextPage = () => {
   const isDesktop = typeof window !== "undefined" && window.innerWidth > 1024;
   // Get iSKYOPS points from Redux
   const user = useAppSelector((state) => state.user.user);
-  const points = user?.token ?? 0;
+  const points = user?.tokens ?? 0;
   const [formData, setFormData] = useState(initialState);
   const [models, setModels] = useState<IModel[]>([]);
   const [isSelectedModel, setSelectedModel] = useState<IModel | null>(null);
