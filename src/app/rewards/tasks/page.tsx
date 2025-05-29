@@ -186,11 +186,11 @@ const Tasks = () => {
       }
     };
 
-    if (isConfirmed && (user?.points as number) > 0) {
+    if (isConfirmed) {
       claimPoints();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConfirmed, txId, user?.wallet, user?.points, address]);
+  }, [isConfirmed, user?.wallet, address]);
 
   useEffect(() => {
     if (isError) {
