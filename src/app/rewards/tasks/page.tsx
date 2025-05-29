@@ -22,6 +22,7 @@ const Tasks = () => {
   // --------------------------------------------VARIABLES
   const { address } = useAppKitAccount();
   const { user, userWithRank, balance } = useAppSelector((state) => state.user);
+  const [claimAmount, setClaimAmount] = useState("");
   const [txId, setTxId] = useState<string | null>(null);
   const { writeContractAsync, data: txData } = useWriteContract();
 
@@ -40,37 +41,27 @@ const Tasks = () => {
   const refUrl = `https://app.skyopslabs.ai?invite=${user?.code ?? ""}`;
   const dispatch = useDispatch();
 
-  const messageParams = {
+  // Helper to build messageParams for a given claim amount
+  const getMessageParams = (amount: number) => ({
     types: {
       ExtensionClientData: [
         { name: "client", type: "address" },
-
         { name: "points", type: "uint256" },
-
         { name: "server", type: "address" },
       ],
     },
-
     domain: {
       name: "skyopslabs.ai",
-
       version: "1",
-
       chainId: 1,
-
       verifyingContract: process.env.NEXT_PUBLIC_REWARDS_CA,
     },
-
     messages: {
       client: address,
-
-      points: user?.points,
-
+      points: amount,
       server: process.env.NEXT_PUBLIC_REWARDS_CA,
-
-      // server: address,
     },
-  };
+  });
 
   //-----------------------------------------------------------FUNCTIONS
   const copyInviteLink = () => {
@@ -78,54 +69,46 @@ const Tasks = () => {
     toast.success("Invite link copied");
   };
 
-  const handleWriteSmartContract = async () => {
-    if ((user?.points as number) == 0 || !user.points) {
+  const handleWriteSmartContract = async (amount?: number) => {
+    const claimVal = typeof amount === "number" ? amount : Number(claimAmount);
+    if (!user?.points || user.points === 0) {
       toast.error("No points to claim");
-
       return;
     }
-
+    if (!claimVal || isNaN(claimVal) || claimVal <= 0) {
+      toast.error("Enter a valid claim amount");
+      return;
+    }
+    if (claimVal > user.points) {
+      toast.error("Cannot claim more than available points");
+      return;
+    }
     const id = toast.loading("Signing...");
-
     setTxId(id);
-
     try {
+      const params = getMessageParams(claimVal);
       const raw = await wallet.signTypedData(
-        messageParams.domain,
-
-        messageParams.types,
-
-        messageParams.messages,
+        params.domain,
+        params.types,
+        params.messages,
       );
-
-      console.log("CA", process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`);
-
       await writeContractAsync({
         address: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`,
-
         abi: ABI,
-
         functionName: "claimRewards",
-
         args: [
           {
-            client: address, // Replace with actual client address
-
-            points: user.points, // Replace with actual points
-
-            server: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`, // Replace with actual server address
-
-            signature: raw, // Replace with actual signature (hex string)
+            client: address,
+            points: claimVal,
+            server: process.env.NEXT_PUBLIC_REWARDS_CA as `0x${string}`,
+            signature: raw,
           },
         ],
       });
     } catch (err: any) {
       console.error(err.message, "Error");
-
       const match = err.message?.match(/reverted: ([^\n]*)/i);
-
       const revertReason = match ? match[1].trim() : "An error Occurred";
-
       toast.error(revertReason, { id: id });
     }
   };
@@ -172,7 +155,7 @@ const Tasks = () => {
         const data = await deductPoints(
           user?.wallet as string,
 
-          (user?.points as number) * 0.4, // Deduct 40% of points
+          Number(claimAmount) * 0.4, // Deduct 40% of points
 
           "Claim",
         );
@@ -241,7 +224,7 @@ const Tasks = () => {
               </div>
             </div>
 
-            <div className="m-5 flex h-[232px] flex-col bg-black  lg:m-2 lg:h-[336px]">
+            <div className=" m-5 flex h-[232px] flex-col bg-black  lg:m-2 lg:h-[336px]">
               <div className="flex h-1/2 border-b-[1px] border-white/10 px-4 ">
                 <div className="w-1/2 border-r-[1px] border-white/10">
                   <p className="h-1/2 pt-4 text-sm font-medium text-white/[.49]">
@@ -264,8 +247,8 @@ const Tasks = () => {
                 </div> */}
               </div>
 
-              <div className="flex flex-1 flex-col justify-between  p-4 ">
-                <div className="flex items-center justify-between">
+              <div className=" flex flex-1 flex-col justify-between  p-4 ">
+                <div className=" flex items-center justify-between">
                   <p className="text-sm font-medium text-white/[.49]">
                     SKYOPS Available for Claim
                   </p>
@@ -273,23 +256,57 @@ const Tasks = () => {
                   <p className="text-sm  text-white underline">What is this?</p>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-row items-center  gap-1">
-                    <p className="flex items-end  text-[32px] font-medium leading-none text-white">
-                      {`${user?.points ?? 0} `}
-                    </p>
-
+                <div className="flex w-full items-center justify-between">
+                  <div className="flex w-[40%] flex-row  items-center gap-1 rounded-lg bg-dark-2 p-2">
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      pattern="^[0-9]*[.,]?[0-9]*$"
+                      value={claimAmount}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (/^\d*\.?\d*$/.test(val)) {
+                          const num = Number(val);
+                          if (num <= (user?.points ?? 0)) {
+                            setClaimAmount(val);
+                          }
+                        }
+                      }}
+                      className={`min-w-0 flex-1 border-none bg-transparent text-2xl font-semibold text-white outline-none`}
+                      placeholder="0.0"
+                      disabled={!user?.points}
+                      autoComplete="off"
+                      style={{ width: 100 }}
+                    />
+                    <button
+                      className="whitespace-nowrap rounded bg-dark px-2 py-1 text-xs text-[#A3A9BA] hover:bg-dark/10"
+                      onClick={() =>
+                        setClaimAmount((user?.points ?? 0).toString())
+                      }
+                      type="button"
+                      disabled={!user?.points}
+                    >
+                      Max
+                    </button>
                     <Image
                       width={18}
                       height={18}
                       alt="icon"
-                      className="flex "
+                      className="flex"
                       src={"/images/icon/icon-white.svg"}
                     />
                   </div>
                   <button
-                    onClick={handleWriteSmartContract}
-                    className="bg-prim2 px-8 py-2 font-medium text-white duration-200 active:scale-90 dark:bg-white dark:text-black"
+                    onClick={() =>
+                      handleWriteSmartContract(Number(claimAmount))
+                    }
+                    className="bg-prim2 px-8 py-2 font-medium text-white duration-200 active:scale-90 disabled:cursor-not-allowed disabled:active:scale-100 dark:bg-white dark:text-black dark:disabled:opacity-30"
+                    disabled={
+                      !claimAmount ||
+                      isNaN(Number(claimAmount)) ||
+                      Number(claimAmount) <= 0 ||
+                      Number(claimAmount) > (user?.points ?? 0)
+                    }
                   >
                     Claim
                   </button>
