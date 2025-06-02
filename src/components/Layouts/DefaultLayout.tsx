@@ -48,6 +48,9 @@ export default function DefaultLayout({
   const { colorMode } = useColorMode();
   const path = usePathname();
 
+  // Check if current path is CLI auth - hide sidebar and header
+  const isCliAuthPage = path === "/auth/cli";
+
   if (!projectId) {
     throw new Error("Project ID is not defined");
   }
@@ -84,36 +87,48 @@ export default function DefaultLayout({
         >
           <QueryClientProvider client={queryClient}>
             <AppProvider>
-              {/* <!-- ===== Page Wrapper Star ===== --> */}
-              <div className="relative flex h-screen w-full overflow-hidden">
-                {/* <!-- ===== Sidebar Star ===== --> */}
-                <Sidebar
-                  sidebarOpen={sidebarOpen}
-                  setSidebarOpen={setSidebarOpen}
-                />
-                {/* <!-- ===== Sidebar End ===== --> */}
-
-                {/* <!-- ===== Content Area Star ===== --> */}
-                <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-                  {/* <!-- ===== Header Star ===== --> */}
-                  <Header
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
-                  />
-                  {/* <!-- ===== Header End ===== --> */}
-
-                  {/* <!-- ===== Main Content Star ===== --> */}
-                  <main
-                    style={{ marginTop: path == "/" ? "0" : "initial" }}
-                    className="mt-[64px] flex h-full flex-col lg:mt-0"
-                  >
+              {isCliAuthPage ? (
+                // Simple layout for CLI auth - no sidebar or header
+                <div className="flex h-screen w-full">
+                  <main className="flex h-full w-full flex-col">
                     {children}
                   </main>
-                  {/* <!-- ===== Main Content End ===== --> */}
                 </div>
-                {/* <!-- ===== Content Area End ===== --> */}
-              </div>
-              {/* <!-- ===== Page Wrapper End ===== --> */}
+              ) : (
+                // Normal layout with sidebar and header
+                <>
+                  {/* <!-- ===== Page Wrapper Star ===== --> */}
+                  <div className="relative flex h-screen w-full overflow-hidden">
+                    {/* <!-- ===== Sidebar Star ===== --> */}
+                    <Sidebar
+                      sidebarOpen={sidebarOpen}
+                      setSidebarOpen={setSidebarOpen}
+                    />
+                    {/* <!-- ===== Sidebar End ===== --> */}
+
+                    {/* <!-- ===== Content Area Star ===== --> */}
+                    <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+                      {/* <!-- ===== Header Star ===== --> */}
+                      <Header
+                        sidebarOpen={sidebarOpen}
+                        setSidebarOpen={setSidebarOpen}
+                      />
+                      {/* <!-- ===== Header End ===== --> */}
+
+                      {/* <!-- ===== Main Content Star ===== --> */}
+                      <main
+                        style={{ marginTop: path == "/" ? "0" : "initial" }}
+                        className="mt-[64px] flex h-full flex-col lg:mt-0"
+                      >
+                        {children}
+                      </main>
+                      {/* <!-- ===== Main Content End ===== --> */}
+                    </div>
+                    {/* <!-- ===== Content Area End ===== --> */}
+                  </div>
+                  {/* <!-- ===== Page Wrapper End ===== --> */}
+                </>
+              )}
             </AppProvider>
           </QueryClientProvider>
         </WagmiProvider>
