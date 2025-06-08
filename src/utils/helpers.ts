@@ -459,3 +459,80 @@ export const ABI = [
     type: "function",
   },
 ];
+
+// Country code to region mapping
+export const getRegionFromCountry = (countryCode: string): string => {
+  const regionMap: { [key: string]: string } = {
+    US: "North America",
+    CA: "North America",
+    MX: "North America",
+    GB: "Europe",
+    DE: "Europe",
+    FR: "Europe",
+    IT: "Europe",
+    ES: "Europe",
+    NL: "Europe",
+    SE: "Europe",
+    NO: "Europe",
+    DK: "Europe",
+    FI: "Europe",
+    PL: "Europe",
+    RU: "Europe",
+    JP: "Asia Pacific",
+    CN: "Asia Pacific",
+    KR: "Asia Pacific",
+    SG: "Asia Pacific",
+    AU: "Asia Pacific",
+    NZ: "Asia Pacific",
+    IN: "Asia Pacific",
+    TH: "Asia Pacific",
+    VN: "Asia Pacific",
+    ID: "Asia Pacific",
+    MY: "Asia Pacific",
+    PH: "Asia Pacific",
+    BR: "South America",
+    AR: "South America",
+    CL: "South America",
+    CO: "South America",
+    PE: "South America",
+    VE: "South America",
+    UY: "South America",
+    NG: "Africa",
+    ZA: "Africa",
+    EG: "Africa",
+    KE: "Africa",
+    MA: "Africa",
+    GH: "Africa",
+    TN: "Africa",
+    AE: "Middle East",
+    SA: "Middle East",
+    IL: "Middle East",
+    TR: "Middle East",
+    IR: "Middle East",
+  };
+  return regionMap[countryCode] || "Other";
+};
+
+// Country code to country name mapping
+export const getCountryName = (code: string): string => {
+  const countries: { [key: string]: string } = {
+    NG: "Nigeria",
+    US: "United States",
+    CA: "Canada",
+    GB: "United Kingdom",
+    DE: "Germany",
+    FR: "France",
+    JP: "Japan",
+    CN: "China",
+    IN: "India",
+    BR: "Brazil",
+    AU: "Australia",
+    SG: "Singapore",
+    KR: "South Korea",
+    RU: "Russia",
+    ZA: "South Africa",
+    AE: "United Arab Emirates",
+    // Add more as needed
+  };
+  return countries[code] || code;
+};

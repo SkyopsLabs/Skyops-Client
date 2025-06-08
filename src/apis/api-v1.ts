@@ -26,6 +26,18 @@ export const getCurrentUser = async () => {
   }
 };
 
+// Get current user with auth token
+export const getNodes = async () => {
+  try {
+    const { data } = await api.get("/v1/agents/list");
+
+    return data.agents;
+  } catch (error) {
+    console.error("Error in getting user info: ", error);
+    return null;
+  }
+};
+
 // Save Billing tx
 export const saveBillingTx = async (amount: number) => {
   try {
