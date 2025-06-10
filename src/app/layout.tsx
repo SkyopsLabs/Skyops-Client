@@ -37,13 +37,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const headersObj = headers();
-  const cookies = headersObj.get("cookie");
+  const cookies = (await headersObj).get("cookie");
   const session = (await getServerAuthSession()) as unknown as string;
   // console.log(session, "session");
   return (
     <html lang="en">
       <body
-        className={`${archivo.variable} font-archivo bg-appGray dark:bg-dark`}
+        className={`${archivo.variable} bg-appGray font-archivo dark:bg-dark`}
         suppressHydrationWarning={false}
       >
         <Providers>
