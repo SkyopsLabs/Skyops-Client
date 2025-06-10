@@ -3,7 +3,7 @@ name: Deploy frontend to VPS
 on:
   push:
     branches:
-      - main  # Change this if your default branch is different
+      - staging  # Change this if your default branch is different
 
 jobs:
   deploy:
@@ -16,21 +16,20 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:  
-          host: ${{ secrets.VPS_HOST }}
+          host: ${{ secrets.VPS_HOST_NEW }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e  # Exit on first error
 
-            cd client || { echo "Error: 'fe' directory not found"; exit 1; }
+            cd staging-client || { echo "Error: 'fe' directory not found"; exit 1; }
             
-            # eval "$(ssh-agent -s)" || { echo "Error: could not start agent"; exit 1; }
 
             # ssh-add ~/.ssh/skyops || { echo "Error: could not start agent"; exit 1; }
 
             # Pull latest changes
-            git fetch origin main || { echo "Error: Git fetch failed"; exit 1; }
-            git reset --hard origin/main || { echo "Error: Git reset    failed"; exit 1; }
+            git fetch origin staging || { echo "Error: Git fetch failed"; exit 1; }
+            git reset --hard origin/staging || { echo "Error: Git reset    failed"; exit 1; }
 
             # Ensure Node.js and npm are available
             export NVM_DIR=~/.nvm
@@ -53,6 +52,6 @@ jobs:
             bun run build || { echo "Error: bun build failed"; exit 1; }
 
             # Restart frontend with PM2
-            pm2 restart client || { echo "Error: PM2 restart failed"; exit 1; }
+            pm2 restart staging-client || { echo "Error: PM2 restart failed"; exit 1; }
 
             echo "✅ Deployment successful!"
