@@ -11,6 +11,7 @@ const config: Config = {
   theme: {
     fontFamily: {
       satoshi: ["Satoshi", "sans-serif"],
+      archivo: ["var(--font-archivo)", "Archivo", "sans-serif"],
     },
     screens: {
       "2xsm": "375px",
@@ -19,6 +20,10 @@ const config: Config = {
       ...defaultTheme.screens,
     },
     extend: {
+      transitionDuration: {
+        '2000': '2000ms',
+        '3000': '3000ms',
+      },
       colors: {
         prim: "#0100fb",
         prim2: "#290DF6",
@@ -370,6 +375,9 @@ const config: Config = {
         },
       },
       animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'shine': 'shine 3s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
         linspin: "linspin 1568.2353ms linear infinite",
         easespin: "easespin 5332ms cubic-bezier(0.4, 0, 0.2, 1) infinite both",
         "left-spin":

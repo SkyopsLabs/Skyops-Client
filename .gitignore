@@ -27,7 +27,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
 
 # vercel
 .vercel
@@ -44,3 +43,5 @@ users.csv
 users.json
 
 src/playground.js
+package-lock.json
+config.bat

@@ -29,6 +29,28 @@ const menuGroups = [
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              d="M10.001 13.333V17.5m5 0l-3.292-2.744c-.608-.506-.912-.76-1.25-.856a1.668 1.668 0 00-.915 0c-.339.097-.643.35-1.25.856L5.001 17.5m1.667-8.333V10m3.333-2.5V10m3.334-4.167V10m5-7.5H1.668m.833 0h15v6.833c0 1.4 0 2.1-.272 2.635a2.5 2.5 0 01-1.093 1.093c-.534.272-1.235.272-2.635.272h-7c-1.4 0-2.1 0-2.635-.272a2.5 2.5 0 01-1.092-1.093C2.5 11.434 2.5 10.733 2.5 9.333V2.5z"
+              stroke="currentColor"
+              strokeOpacity="currentOpacity"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ),
+        label: "Analytics",
+        route: "/analytics",
+        // disabled: true,
+      },
+      {
+        icon: (
+          <svg
+            width="24"
+            height="24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
               d="M20.5 7.209L12 12m0 0L3.5 7.209M12 12v9.639m9-5.521V7.882c0-.347 0-.521-.05-.676a1.018 1.018 0 00-.215-.37c-.109-.12-.258-.204-.558-.373l-7.4-4.171c-.284-.16-.425-.24-.575-.271a.987.987 0 00-.403 0c-.15.031-.292.111-.576.27l-7.4 4.172c-.3.169-.45.253-.558.373-.097.107-.17.233-.215.37C3 7.36 3 7.535 3 7.882v8.236c0 .348 0 .521.05.676.045.137.118.263.215.37.109.12.258.204.558.373l7.4 4.171c.284.16.425.24.575.271.133.028.27.028.403 0 .15-.031.292-.111.576-.27l7.4-4.172c.3-.169.45-.253.558-.373.097-.107.17-.233.215-.37.05-.155.05-.329.05-.676z"
               stroke="currentColor"
               strokeOpacity="currentOpacity"
@@ -42,6 +64,7 @@ const menuGroups = [
         route: "/instances",
         // disabled: true,
       },
+
       {
         icon: (
           <svg
@@ -101,52 +124,52 @@ const menuGroups = [
           { label: "Audio", route: "/ai-explorer/audio", disabled: true },
         ],
       },
-      {
-        icon: (
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 17.659V20a2 2 0 104 0v-2.341M12 2v1m-9 9H2m3.5-6.5l-.6-.6m13.6.6l.6-.6M22 12h-1m-3 0a6 6 0 11-12 0 6 6 0 0112 0z"
-              stroke="currentColor"
-              strokeOpacity="currentOpacity"
-              strokeWidth="1.2"
-              strokeLinecap="square"
-            />
-          </svg>
-        ),
-        label: "Inference",
-        route: "/inference",
-
-        // disabled: true,
-      },
-      {
-        icon: (
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M16 12a4 4 0 01-8 0m8 0a4 4 0 00-8 0m8 0h6M8 12H2"
-              stroke="currentColor"
-              strokeOpacity="currentOpacity"
-              strokeWidth="1.2"
-              strokeLinecap="square"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ),
-        label: "Fine-Tune",
-        route: "/fine-tune",
-
-        disabled: true,
-      },
       ,
+      // {
+      //   icon: (
+      //     <svg
+      //       width="24"
+      //       height="24"
+      //       fill="none"
+      //       xmlns="http://www.w3.org/2000/svg"
+      //     >
+      //       <path
+      //         d="M10 17.659V20a2 2 0 104 0v-2.341M12 2v1m-9 9H2m3.5-6.5l-.6-.6m13.6.6l.6-.6M22 12h-1m-3 0a6 6 0 11-12 0 6 6 0 0112 0z"
+      //         stroke="currentColor"
+      //         strokeOpacity="currentOpacity"
+      //         strokeWidth="1.2"
+      //         strokeLinecap="square"
+      //       />
+      //     </svg>
+      //   ),
+      //   label: "Inference",
+      //   route: "/inference",
+
+      //   // disabled: true,
+      // },
+      // {
+      //   icon: (
+      //     <svg
+      //       width="24"
+      //       height="24"
+      //       fill="none"
+      //       xmlns="http://www.w3.org/2000/svg"
+      //     >
+      //       <path
+      //         d="M16 12a4 4 0 01-8 0m8 0a4 4 0 00-8 0m8 0h6M8 12H2"
+      //         stroke="currentColor"
+      //         strokeOpacity="currentOpacity"
+      //         strokeWidth="1.2"
+      //         strokeLinecap="square"
+      //         strokeLinejoin="round"
+      //       />
+      //     </svg>
+      //   ),
+      //   label: "Fine-Tune",
+      //   route: "/fine-tune",
+
+      //   disabled: true,
+      // },
       {
         icon: (
           <svg

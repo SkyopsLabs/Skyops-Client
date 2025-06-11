@@ -9,7 +9,12 @@ import { headers } from "next/headers";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 
-const archivo = Archivo({ subsets: ["latin"] });
+const archivo = Archivo({
+  subsets: ["latin", "latin-ext"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-archivo",
+});
 
 export const metadata: Metadata = {
   title: "Skyops dApp | Scalable. Efficient. Unstoppable.",
@@ -32,14 +37,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const headersObj = headers();
-  const cookies = headersObj.get("cookie");
+  const cookies = (await headersObj).get("cookie");
   const session = (await getServerAuthSession()) as unknown as string;
   // console.log(session, "session");
   return (
     <html lang="en">
       <body
-        style={archivo.style}
-        className={`bg-appGray dark:bg-dark`}
+        className={`${archivo.variable} bg-appGray font-archivo dark:bg-dark`}
         suppressHydrationWarning={false}
       >
         <Providers>
