@@ -102,3 +102,73 @@ export interface AppSession {
   expires: string;
   email: string;
 }
+
+export interface TransformedNodeData {
+  id: number;
+  name: string;
+  country: string;
+  countryCode: string;
+  coordinates: [number, number];
+  count: number;
+  region: string;
+  status: string;
+  load: number;
+  tier: string;
+  agentId: string;
+  hostname: string;
+  cpuCount: number;
+  ramTotal: number;
+  ramFree: number;
+  diskTotal: number;
+  diskFree: number;
+  gpuName?: string;
+  gpuRamTotal?: number;
+  gpuRamFree?: number;
+  reputationScore: number;
+  totalJobsCompleted: number;
+  uptime: number;
+  lastSeen: Date;
+}
+
+export // Interface for the raw node data from database
+interface RawNodeData {
+  _id: { $oid: string };
+  agent_id: string;
+  hostname: string;
+  location: {
+    ip: string;
+    city: string;
+    region: string;
+    country: string;
+    loc: string;
+    org: string;
+    timezone: string;
+    readme: string;
+  };
+  system_info: {
+    hostname: string;
+    platform: string;
+    platform_family: string;
+    platform_version: string;
+    kernel_version: string;
+    architecture: string;
+    cpu_count: number;
+    boot_time: string;
+    uptime: number;
+  };
+  wallet_address: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  last_seen: string;
+  reputation_score: number;
+  total_jobs_completed: number;
+  cpu_count: number;
+  disk_free: number;
+  disk_total: number;
+  gpu_name?: string;
+  gpu_ram_free?: number;
+  gpu_ram_total?: number;
+  ram_free: number;
+  ram_total: number;
+}
